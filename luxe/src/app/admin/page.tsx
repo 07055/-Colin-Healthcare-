@@ -4,6 +4,7 @@ import { createProduct, deleteProduct } from '@/lib/actions'
 import ProductChart from '@/components/ProductChart'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import type { User } from '@prisma/client'
 
 export default async function AdminDashboard() {
   const cookieStore = await cookies()
@@ -11,7 +12,7 @@ export default async function AdminDashboard() {
 
   if (!token) redirect('/login')
 
-  let user = null
+  let user: User | null = null
   try {
     const session = await prisma.session.findUnique({
       where: { token },

@@ -1,9 +1,0 @@
-{
-  "name": "sam-suma-mart",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "build": "cd luxe && npm run build",
-    "dev": "cd luxe && npm run dev"
-  }
-}
