@@ -10,7 +10,6 @@ export default defineConfig({
     seed: "bun prisma/seed.ts",
   },
   datasource: {
-    url: process.env.DATABASE_URL,
-    adapter: "pg",
+    url: process.env.DATABASE_URL!,
   },
 });
