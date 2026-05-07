@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --medical-blue: #007bff;
+  --medical-blue-dark: #0056b3;
+  --bg-light: #f4f6f9;
+  --white: #ffffff;
+  --primary-text: #2c3e50;
+  --secondary-text: #6c757d;
+  --border-light: #dee2e6;
+  --success: #28a745;
+  --error: #dc3545;
+  --link: #007bff;
+
+  --font-main: 'Roboto', 'Inter', sans-serif;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 50, 150, 0.1);
+  --radius: 8px;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg-light);
+  color: var(--primary-text);
+  font-family: var(--font-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  font-family: var(--font-main);
+  cursor: pointer;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.section-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border-light);
+}
+
+.btn-primary {
+  background: var(--medical-blue);
+  color: var(--white);
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--radius);
+  font-weight: 600;
+  transition: background 0.2s, transform 0.1s;
+  font-size: 0.9rem;
+}
+
+.btn-primary:hover {
+  background: var(--medical-blue-dark);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.badge-blue {
+  background: #e8f0fe;
+  color: var(--medical-blue);
+  padding: 0.25rem 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 4px;
+}
+
+.price-old {
+  text-decoration: line-through;
+  color: var(--secondary-text);
+  font-size: 0.85rem;
+  margin-right: 0.5rem;
+}
+
+.price-new {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--medical-blue-dark);
+}
+
+h2.section-title {
+  font-size: 1.25rem;
+  padding: 0.75rem 1rem;
+  background: var(--medical-blue);
+  color: white;
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}

@@ -1,0 +1,23 @@
+<svg viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f68b1e"/>
+      <stop offset="100%" stop-color="#e07b1a"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Icon Box -->
+  <rect x="10" y="15" width="90" height="90" rx="20" fill="url(#bg)" filter="url(#shadow)"/>
+  
+  <!-- Medical Cross -->
+  <path d="M 35 50 h 30 v -15 h 30 v 30 h -30 v 15 h -30 z" fill="#ffffff"/>
+  
+  <!-- Text: SSM -->
+  <text x="120" y="92" font-family="'Inter', sans-serif" font-weight="900" font-size="68" fill="#333" letter-spacing="4">SSM</text>
+  
+  <!-- Subtitle -->
+  <text x="123" y="112" font-family="'Inter', sans-serif" font-weight="600" font-size="16" fill="#888" letter-spacing="2">SAM'S SUMA MART</text>
+</svg>
