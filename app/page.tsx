@@ -1,5 +1,5 @@
 import ProductGrid from "@/components/ProductGrid";
-import Hero from "@/components/Hero";
+import SlidingHero from "@/components/SlidingHero";
 import { getFeaturedProducts, getLatestProducts } from "@/lib/products";
 import Link from "next/link";
 
@@ -9,7 +9,7 @@ export default function Home() {
 
   return (
     <div>
-      <Hero />
+      <SlidingHero />
 
       <div className="container" style={{ padding: '2rem 0' }}>
         {featuredProducts.length > 0 && (
