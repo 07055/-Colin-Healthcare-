@@ -3,15 +3,16 @@
 import { useCart } from '@/lib/CartContext';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { createOrder } from '@/lib/actions';
 
 export default function CheckoutPage() {
-    const { cart, cartTotal, clearCart } = useCart();
-    const router = useRouter();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [paymentMethod, setPaymentMethod] = useState('PAYSTACK');
+  const { cart, cartTotal, clearCart } = useCart();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('PAYSTACK');
 
-    if (cart.length === 0) {
+  if (cart.length === 0) {
         return (
             <div className="container" style={{ padding: '6rem 1rem', textAlign: 'center' }}>
                 <h1>Your cart is empty</h1>
@@ -52,23 +53,39 @@ export default function CheckoutPage() {
         }
 
         try {
-            const response = await fetch('/api/paystack/initialize', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: email || 'customer@example.com',
-                    amount: grandTotal,
-                    metadata: { fullName, phone, city, address }
-                })
-            });
+            const formData = new FormData();
+            formData.append('fullName', fullName);
+            formData.append('phone', phone);
+            formData.append('email', email);
+            formData.append('city', city);
+            formData.append('address', address);
+            formData.append('paymentMethod', 'PAYSTACK');
+            formData.append('total', String(grandTotal));
+            formData.append('items', JSON.stringify(cart));
 
-            const data = await response.json();
+            const result = await createOrder(formData);
 
-            if (data.authorization_url) {
-                clearCart();
-                window.location.href = data.authorization_url;
+            if (result.success) {
+                const payResponse = await fetch('/api/paystack/initialize', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email || 'customer@example.com',
+                        amount: grandTotal,
+                        metadata: { orderId: result.orderId }
+                    })
+                });
+
+                const payData = await payResponse.json();
+
+                if (payData.authorization_url) {
+                    clearCart();
+                    window.location.href = payData.authorization_url;
+                } else {
+                    setError(payData.error || 'Payment initialization failed');
+                }
             } else {
-                setError(data.error || 'Payment initialization failed');
+                setError(result.error || 'Order creation failed');
             }
         } catch (err) {
             setError('Payment failed. Please try again.');
