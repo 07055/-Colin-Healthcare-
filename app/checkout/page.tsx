@@ -2,7 +2,6 @@
 
 import { useCart } from '@/lib/CartContext';
 import { useState } from 'react';
-import { checkoutOrder } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
 
 export default function CheckoutPage() {
@@ -26,29 +25,6 @@ export default function CheckoutPage() {
     const deliveryFee = 200;
     const grandTotal = cartTotal + deliveryFee;
 
-    const handleSubmit = async (formData: FormData) => {
-        setLoading(true);
-        setError('');
-
-        formData.append('paymentMethod', paymentMethod);
-        formData.append('total', String(grandTotal));
-        formData.append('items', JSON.stringify(cart));
-
-        try {
-            const result = await checkoutOrder(formData);
-            if (result.success) {
-                clearCart();
-                router.push(`/order-confirmation?id=${result.orderId}`);
-            } else {
-                setError(result.error || 'Checkout failed');
-            }
-        } catch (err) {
-            setError('Something went wrong. Please try again.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const handlePaystackPayment = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
@@ -60,9 +36,7 @@ export default function CheckoutPage() {
             phone: HTMLInputElement;
             email: HTMLInputElement;
             city: HTMLInputElement;
-            postalCode: HTMLInputElement;
             address: HTMLTextAreaElement;
-            deliveryNotes: HTMLTextAreaElement;
         };
 
         const fullName = formElements.fullName.value;
@@ -70,7 +44,6 @@ export default function CheckoutPage() {
         const email = formElements.email.value;
         const city = formElements.city.value;
         const address = formElements.address.value;
-        const deliveryNotes = formElements.deliveryNotes?.value || '';
 
         if (!fullName || !phone || !city || !address) {
             setError('Please fill in all required fields');
@@ -79,40 +52,23 @@ export default function CheckoutPage() {
         }
 
         try {
-            const formData = new FormData();
-            formData.append('fullName', fullName);
-            formData.append('phone', phone);
-            formData.append('email', email);
-            formData.append('city', city);
-            formData.append('address', address);
-            formData.append('deliveryNotes', deliveryNotes);
-            formData.append('paymentMethod', 'PAYSTACK');
-            formData.append('total', String(grandTotal));
-            formData.append('items', JSON.stringify(cart));
+            const response = await fetch('/api/paystack/initialize', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: email || 'customer@example.com',
+                    amount: grandTotal,
+                    metadata: { fullName, phone, city, address }
+                })
+            });
 
-            const orderResult = await checkoutOrder(formData);
-            
-            if (orderResult.success) {
-                const payResponse = await fetch('/api/paystack/initialize', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        email: email || 'customer@example.com',
-                        amount: grandTotal,
-                        metadata: { orderId: orderResult.orderId }
-                    })
-                });
+            const data = await response.json();
 
-                const payData = await payResponse.json();
-
-                if (payData.authorization_url) {
-                    clearCart();
-                    window.location.href = payData.authorization_url;
-                } else {
-                    setError(payData.error || 'Payment initialization failed');
-                }
+            if (data.authorization_url) {
+                clearCart();
+                window.location.href = data.authorization_url;
             } else {
-                setError(orderResult.error || 'Order creation failed');
+                setError(data.error || 'Payment initialization failed');
             }
         } catch (err) {
             setError('Payment failed. Please try again.');
@@ -137,42 +93,31 @@ export default function CheckoutPage() {
                         <h2 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '1rem' }}>Delivery Information</h2>
 
                         <form onSubmit={handlePaystackPayment} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                <div>
-                                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Full Name *</label>
-                                    <input type="text" name="fullName" required style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
-                                </div>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Full Name *</label>
+                                <input type="text" name="fullName" required style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
+                            </div>
 
-                                <div>
-                                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Phone Number *</label>
-                                    <input type="tel" name="phone" required placeholder="0712 345 678" style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
-                                </div>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Phone Number *</label>
+                                <input type="tel" name="phone" required placeholder="0712 345 678" style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
+                            </div>
 
-                                <div>
-                                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Email Address</label>
-                                    <input type="email" name="email" style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
-                                </div>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Email Address</label>
+                                <input type="email" name="email" style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
+                            </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                                    <div>
-                                        <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>City *</label>
-                                        <input type="text" name="city" required style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
-                                    </div>
-                                    <div>
-                                        <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Postal Code</label>
-                                        <input type="text" name="postalCode" style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
-                                    </div>
-                                </div>
-
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                                 <div>
-                                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Delivery Address *</label>
-                                    <textarea name="address" required rows={3} placeholder="Street address, building, apartment..." style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
+                                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>City *</label>
+                                    <input type="text" name="city" required style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
                                 </div>
+                            </div>
 
-                                <div>
-                                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Delivery Notes (optional)</label>
-                                    <textarea name="deliveryNotes" rows={2} placeholder="Any special instructions..." style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
-                                </div>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Delivery Address *</label>
+                                <textarea name="address" required rows={3} placeholder="Street address, building, apartment..." style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
                             </div>
 
                             <div className="section-card" style={{ padding: '1.5rem', marginTop: '1rem', background: '#f8f9fa' }}>
@@ -200,13 +145,14 @@ export default function CheckoutPage() {
                     </div>
                 </div>
 
+                {/* Order Summary */}
                 <div className="section-card" style={{ padding: '1.5rem', position: 'sticky', top: '2rem' }}>
                     <h2 style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '1rem' }}>ORDER SUMMARY</h2>
 
                     {cart.map((item) => (
                         <div key={item.id} style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem', paddingBottom: '1rem', borderBottom: '1px solid #eee' }}>
                             <div style={{ width: '60px', height: '60px', background: '#f5f5f5', borderRadius: '4px', overflow: 'hidden', flexShrink: 0 }}>
-                                    <img src={item.images?.[0] || '/placeholder.jpg'} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <img src={item.images?.[0] || '/placeholder.jpg'} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             </div>
                             <div style={{ flex: 1 }}>
                                 <p style={{ fontSize: '0.85rem', fontWeight: '500' }}>{item.name}</p>
