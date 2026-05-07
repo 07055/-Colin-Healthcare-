@@ -1,6 +1,0 @@
-{
-  "buildCommand": "cd luxe && npm run build",
-  "outputDirectory": "luxe/.next",
-  "installCommand": "cd luxe && npm install",
-  "framework": "nextjs"
-}
