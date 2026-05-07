@@ -1,14 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getPrisma } from '@/lib/prisma'
 
 const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY || ''
-
-const getPrisma = () => {
-  if (!process.env.DATABASE_URL) {
-    throw new Error('DATABASE_URL not configured')
-  }
-  const { prisma } = require('@/lib/prisma')
-  return prisma
-}
 
 export async function POST(request: NextRequest) {
     try {

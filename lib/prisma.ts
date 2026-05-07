@@ -4,16 +4,13 @@ const globalForPrisma = globalThis as typeof globalThis & {
   prisma: PrismaClient | undefined
 }
 
-export const prisma = (() => {
+export function getPrisma() {
   if (globalForPrisma.prisma) return globalForPrisma.prisma
 
   if (!process.env.DATABASE_URL) {
-    if (process.env.NODE_ENV === 'production') {
-      console.warn('DATABASE_URL not set')
-    }
-    return {} as PrismaClient
+    throw new Error('DATABASE_URL not configured')
   }
 
   globalForPrisma.prisma = new PrismaClient()
   return globalForPrisma.prisma
-})()
+}
