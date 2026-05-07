@@ -11,18 +11,22 @@ export default async function AdminDashboard() {
 
   if (!token) redirect('/login')
 
-  const session = await prisma.session.findUnique({
-    where: { token },
-    include: { user: true }
-  })
+  let user = null
+  try {
+    const session = await prisma.session.findUnique({
+      where: { token },
+      include: { user: true }
+    })
 
-  if (!session || session.expiresAt < new Date()) {
+    if (session && session.expiresAt > new Date()) {
+      user = session.user
+    }
+  } catch (error) {
+    console.error('Session validation error:', error)
     redirect('/login')
   }
 
-  const user = session.user
-
-  if (user?.role !== 'ADMIN') {
+  if (!user || user?.role !== 'ADMIN') {
     return (
       <div className="container" style={{ padding: '4rem 0', textAlign: 'center' }}>
         <h1>Unauthorized</h1>
