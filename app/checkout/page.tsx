@@ -26,7 +26,7 @@ export default function CheckoutPage() {
     const deliveryFee = 200;
     const grandTotal = cartTotal + deliveryFee;
 
-    const handlePaystackPayment = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handlePayment = async (e: React.FormEvent<HTMLFormElement>, method: string) => {
         e.preventDefault();
         setLoading(true);
         setError('');
@@ -39,6 +39,44 @@ export default function CheckoutPage() {
             city: HTMLInputElement;
             address: HTMLTextAreaElement;
         };
+
+        const fullName = formElements.fullName.value;
+        const phone = formElements.phone.value;
+        const email = formElements.email.value;
+        const city = formElements.city.value;
+        const address = formElements.address.value;
+
+        if (!fullName || !phone || !city || !address) {
+            setError('Please fill in all required fields');
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const formData = new FormData();
+            formData.append('fullName', fullName);
+            formData.append('phone', phone);
+            formData.append('email', email);
+            formData.append('city', city);
+            formData.append('address', address);
+            formData.append('paymentMethod', method);
+            formData.append('total', String(grandTotal));
+            formData.append('items', JSON.stringify(cart));
+
+            const orderResult = await createOrder(formData);
+
+            if (orderResult.success) {
+                clearCart();
+                router.push(`/order-confirmation?id=${orderResult.orderId}`);
+            } else {
+                setError(orderResult.error || 'Order creation failed');
+            }
+        } catch (err) {
+            setError('Order failed. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
         const fullName = formElements.fullName.value;
         const phone = formElements.phone.value;
@@ -151,12 +189,23 @@ export default function CheckoutPage() {
                             </div>
 
                             <button
-                                type="submit"
+                                type="button"
                                 className="btn-primary"
                                 disabled={loading}
+                                onClick={(e) => handlePayment(e as any, 'CASH_ON_DELIVERY')}
                                 style={{ width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: '700', marginTop: '0.5rem' }}
                             >
-                                {loading ? 'Processing...' : `PAY KSh ${grandTotal.toLocaleString()}`}
+                                {loading ? 'Processing...' : `CASH ON DELIVERY - KSh ${grandTotal.toLocaleString()}`}
+                            </button>
+
+                            <button
+                                type="button"
+                                className="btn-primary"
+                                disabled={loading}
+                                onClick={(e) => handlePayment(e as any, 'PAYSTACK')}
+                                style={{ width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: '700', marginTop: '0.5rem', background: '#6772e5' }}
+                            >
+                                {loading ? 'Processing...' : `PAY WITH PAYSTACK - KSh ${grandTotal.toLocaleString()}`}
                             </button>
                         </form>
                     </div>
