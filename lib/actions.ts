@@ -1,8 +1,15 @@
 'use server'
 
-import { prisma } from './prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+
+const getPrisma = () => {
+  if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL not configured')
+  }
+  const { prisma } = require('./prisma')
+  return prisma
+}
 
 export async function createOrder(formData: FormData) {
   const fullName = formData.get('fullName') as string
@@ -19,6 +26,7 @@ export async function createOrder(formData: FormData) {
   }
 
   try {
+    const prisma = getPrisma()
     const order = await prisma.order.create({
       data: {
         customerName: fullName,
@@ -39,17 +47,18 @@ export async function createOrder(formData: FormData) {
       }
     })
 
-    revalidatePath('/admin')
-    return { success: true, orderId: order.id }
-  } catch (error) {
-    console.error('Order creation failed:', error)
-    return { success: false, error: 'Failed to create order' }
+      revalidatePath('/admin')
+      return { success: true, orderId: order.id }
+    } catch (error) {
+      console.error('Order creation failed:', error)
+      return { success: false, error: 'Failed to create order' }
+    }
   }
-}
 
-export async function getOrders() {
-  return prisma.order.findMany({
-    orderBy: { createdAt: 'desc' },
-    include: { items: true }
-  })
-}
+  export async function getOrders() {
+    const prisma = getPrisma()
+    return prisma.order.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: { items: true }
+    })
+  }

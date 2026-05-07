@@ -8,7 +8,7 @@ interface Product {
     name: string;
     category: string;
     price: number;
-    images: string;
+    images: string[];
 }
 
 interface ProductGridProps {
