@@ -7,11 +7,21 @@ import { redirect } from 'next/navigation'
 
 export default async function AdminDashboard() {
   const cookieStore = await cookies()
-  const userId = cookieStore.get('session_token')?.value
+  const token = cookieStore.get('session_token')?.value
 
-  if (!userId) redirect('/login')
+  if (!token) redirect('/login')
 
-  const user = await prisma.user.findUnique({ where: { id: userId } })
+  const session = await prisma.session.findUnique({
+    where: { token },
+    include: { user: true }
+  })
+
+  if (!session || session.expiresAt < new Date()) {
+    redirect('/login')
+  }
+
+  const user = session.user
+
   if (user?.role !== 'ADMIN') {
     return (
       <div className="container" style={{ padding: '4rem 0', textAlign: 'center' }}>
@@ -146,10 +156,10 @@ export default async function AdminDashboard() {
             
             <input type="text" name="category" required placeholder="Category" style={{ padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px', width: '100%' }} />
             
-            <div style={{ border: '2px dashed #ddd', padding: '2rem', textAlign: 'center', borderRadius: '4px', background: '#f9f9f9' }}>
-                <p style={{ marginBottom: '0.5rem', fontSize: '0.9rem', color: '#666' }}>Upload Product Image</p>
-                <input type="file" name="imageFile" accept="image/*" required style={{ maxWidth: '100%' }} />
-            </div>
+             <div style={{ border: '2px dashed #ddd', padding: '2rem', textAlign: 'center', borderRadius: '4px', background: '#f9f9f9' }}>
+                 <p style={{ marginBottom: '0.5rem', fontSize: '0.9rem', color: '#666' }}>Upload Product Images (Multiple)</p>
+                 <input type="file" name="imageFiles" accept="image/*" multiple required style={{ maxWidth: '100%' }} />
+             </div>
             
             <button type="submit" className="btn-primary" style={{ padding: '0.8rem', fontWeight: '700', width: '100%' }}>ADD PRODUCT</button>
           </form>
@@ -162,8 +172,8 @@ export default async function AdminDashboard() {
             {products.map((product: any) => (
               <div key={product.id} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1rem', background: '#fff', border: '1px solid #eee', borderRadius: '8px' }}>
                 <div style={{ height: '150px', width: '100%', background: '#f5f5f5', borderRadius: '4px', overflow: 'hidden' }}>
-                  <img src={product.images?.split(',')[0] || '/placeholder.jpg'} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                </div>
+                   <img src={(() => { try { const imgs = JSON.parse(product.images); return Array.isArray(imgs) && imgs[0] ? imgs[0] : '/placeholder.jpg' } catch { return product.images || '/placeholder.jpg' } })()} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
                     <h3 style={{ fontSize: '0.95rem', fontWeight: '600' }}>{product.name}</h3>
