@@ -7,12 +7,15 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
     const category = params.category;
 
     let products: any[] = [];
-    const categories = await prisma.product.findMany({
-        select: { category: true },
-        distinct: ['category']
-    });
+    let categories: any[] = [];
+    let error: string | null = null;
 
     try {
+        categories = await prisma.product.findMany({
+            select: { category: true },
+            distinct: ['category']
+        });
+
         const where: any = {};
         if (query) {
             where.OR = [
@@ -29,8 +32,9 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
             where,
             orderBy: { createdAt: 'desc' }
         });
-    } catch (error) {
-        console.error("[ShopPage] Failed to fetch products:", error);
+    } catch (e: any) {
+        console.error("[ShopPage] Failed to fetch products:", e);
+        error = e.message || "Database connection failed";
     }
 
     return (
@@ -81,6 +85,13 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
 
                 {/* Products */}
                 <div style={{ flex: 1 }}>
+                    {error && (
+                        <div style={{ textAlign: 'center', padding: '2rem', color: '#dc3545', background: '#f8d7da', borderRadius: '8px', marginBottom: '2rem' }}>
+                            <p><strong>Database Error:</strong> {error}</p>
+                            <p style={{ fontSize: '0.85rem', marginTop: '0.5rem' }}>Check Vercel environment variables</p>
+                        </div>
+                    )}
+
                     <div style={{ marginBottom: '1.5rem' }}>
                         <h1 style={{ fontSize: '1.5rem', fontWeight: '700' }}>
                             {query ? `Search: "${query}"` : category ? category : 'Shop All Products'}
@@ -88,9 +99,9 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
                         <p style={{ fontSize: '0.85rem', color: '#666' }}>{products.length} product{products.length !== 1 ? 's' : ''} found</p>
                     </div>
 
-                    {products.length > 0 ? (
+                    {!error && products.length > 0 ? (
                         <ProductGrid products={products} />
-                    ) : (
+                    ) : !error && (
                         <div className="section-card" style={{ textAlign: 'center', padding: '3rem' }}>
                             <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔍</div>
                             <p style={{ color: '#666' }}>No products found. Try a different search or category.</p>
