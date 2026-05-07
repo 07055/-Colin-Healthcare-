@@ -34,12 +34,9 @@ export default function Header() {
 
         <div className={styles.actions}>
           <div style={{ display: 'flex', gap: '1rem' }}>
-            <Link href="/login" className={styles.actionItem}>
-              <span>Sign In</span>
-            </Link>
-            <Link href="/register" className={styles.actionItem} style={{ color: 'var(--jumia-orange)' }}>
-              <span>Register</span>
-            </Link>
+            <a href="https://wa.me/254796388790" target="_blank" rel="noopener noreferrer" className={styles.actionItem} style={{ color: '#25D366' }}>
+              <span>💬 WhatsApp</span>
+            </a>
           </div>
 
           <Link href="/cart" className={styles.actionItem}>
