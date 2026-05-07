@@ -1,0 +1,59 @@
+.footer {
+    background: #002b5c;
+    color: #fff;
+    font-size: 0.8rem;
+}
+
+.grid {
+    padding: 2rem 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .grid {
+        padding: 3rem 0;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+    }
+}
+
+.heading {
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #007bff;
+}
+
+.text {
+    color: #ccc;
+    line-height: 1.6;
+}
+
+.whatsapp {
+    margin-top: 1rem;
+}
+
+.whatsapp a {
+    color: #25D366;
+    font-weight: 600;
+}
+
+.list {
+    color: #ccc;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.list a {
+    color: #ccc;
+}
+
+.copyright {
+    border-top: 1px solid #004080;
+    padding: 1.5rem 0;
+    text-align: center;
+    color: #888;
+    font-size: 0.7rem;
+}
