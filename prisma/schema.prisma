@@ -34,6 +34,11 @@ model Product {
   images      String   // JSON string or comma separated
   category    String
   featured    Boolean  @default(false)
+  ingredients String?
+  benefits    String?
+  usage       String?
+  stockUnit   String?
+  inStock     Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   orderItems  OrderItem[]
