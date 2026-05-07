@@ -3,7 +3,17 @@ import Link from 'next/link';
 export default function Footer() {
     return (
         <footer style={{ background: '#002b5c', color: '#fff', fontSize: '0.8rem' }}>
-            <div className="container" style={{ padding: '3rem 0', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2rem' }}>
+            <div className="container" style={{
+                padding: '2rem 1rem',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: '1.5rem',
+                '@media (min-width: 768px)': {
+                    padding: '3rem 0',
+                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    gap: '2rem'
+                }
+            }}>
                 <div>
                     <h4 style={{ fontWeight: '700', marginBottom: '1rem', color: '#007bff' }}>SSM</h4>
                     <p style={{ color: '#ccc', lineHeight: '1.6' }}>Sam's Suma Mart - Your trusted partner for high-quality medical supplies and healthcare products.</p>
