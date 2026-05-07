@@ -206,7 +206,7 @@ export default function CheckoutPage() {
                     {cart.map((item) => (
                         <div key={item.id} style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem', paddingBottom: '1rem', borderBottom: '1px solid #eee' }}>
                             <div style={{ width: '60px', height: '60px', background: '#f5f5f5', borderRadius: '4px', overflow: 'hidden', flexShrink: 0 }}>
-                                <img src={item.images || '/placeholder.jpg'} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    <img src={item.images?.[0] || '/placeholder.jpg'} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             </div>
                             <div style={{ flex: 1 }}>
                                 <p style={{ fontSize: '0.85rem', fontWeight: '500' }}>{item.name}</p>

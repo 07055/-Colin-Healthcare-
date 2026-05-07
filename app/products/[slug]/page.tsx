@@ -1,13 +1,11 @@
-import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import AddToCartButton from '@/components/AddToCartButton';
+import { getProductBySlug } from '@/lib/products';
 
-export default async function ProductPage({ params }: { params: { slug: string } }) {
-    const { slug } = await params;
+export default function ProductPage({ params }: { params: { slug: string } }) {
+    const { slug } = params;
 
-    const product = await prisma.product.findUnique({
-        where: { slug },
-    });
+    const product = getProductBySlug(slug);
 
     if (!product) {
         notFound();
@@ -27,7 +25,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
                 <div className="section-card" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
                     <div style={{ background: '#fff', borderRadius: '4px', overflow: 'hidden' }}>
                         <img
-                            src={product.images || '/placeholder.jpg'}
+                            src={product.images[0] || '/placeholder.jpg'}
                             alt={product.name}
                             style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
                         />

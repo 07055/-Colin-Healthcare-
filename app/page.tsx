@@ -1,29 +1,11 @@
 import ProductGrid from "@/components/ProductGrid";
 import Hero from "@/components/Hero";
-import { prisma } from "@/lib/prisma";
+import { getFeaturedProducts, getLatestProducts } from "@/lib/products";
 import Link from "next/link";
 
-export default async function Home() {
-  let products: any[] = [];
-  let featuredProducts: any[] = [];
-  let error: string | null = null;
-
-  try {
-    products = await prisma.product.findMany({
-      select: { id: true, name: true, slug: true, price: true, images: true, category: true, featured: true },
-      orderBy: { createdAt: 'desc' },
-      take: 8
-    });
-    featuredProducts = await prisma.product.findMany({
-      select: { id: true, name: true, slug: true, price: true, images: true, category: true, featured: true },
-      where: { featured: true },
-      orderBy: { createdAt: 'desc' },
-      take: 4
-    });
-  } catch (e: any) {
-    console.error("Failed to fetch products:", e);
-    error = e.message || "Database connection failed";
-  }
+export default function Home() {
+  const products = getLatestProducts(8);
+  const featuredProducts = getFeaturedProducts();
 
   return (
     <div>
@@ -50,14 +32,7 @@ export default async function Home() {
           </div>
         )}
 
-        {error && (
-          <div style={{ textAlign: 'center', padding: '2rem', color: '#dc3545', background: '#f8d7da', borderRadius: '8px', marginBottom: '2rem' }}>
-            <p><strong>Error:</strong> {error}</p>
-            <p style={{ fontSize: '0.85rem', marginTop: '0.5rem' }}>Check Vercel environment variables (DATABASE_URL)</p>
-          </div>
-        )}
-
-        {!error && products.length === 0 && featuredProducts.length === 0 && (
+        {products.length === 0 && featuredProducts.length === 0 && (
           <div style={{ textAlign: 'center', padding: '4rem', color: '#666' }}>
             <p>No products available yet. Check back soon!</p>
             <Link href="/shop" className="btn-primary" style={{ marginTop: '1rem', display: 'inline-block' }}>Browse Shop</Link>

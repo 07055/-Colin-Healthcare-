@@ -10,25 +10,20 @@ interface Product {
     slug: string;
     price: number;
     category: string;
-    images: string;
+    images: string[];
 }
 
-function getFirstImage(images: string): string {
-    try {
-        const parsed = JSON.parse(images);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-            return parsed[0];
-        }
-    } catch {
-        // If not JSON, treat as single image URL
+function getFirstImage(images: string[]): string {
+    if (Array.isArray(images) && images.length > 0) {
+        return images[0];
     }
-    return images || '/placeholder.jpg';
+    return '/placeholder.jpg';
 }
 
 export default function ProductCard({ product }: { product: Product }) {
     const { addToCart } = useCart();
     const oldPrice = product.price * 1.25; // Mock discount
-    const firstImage = getFirstImage(product.images);
+    const firstImage = getFirstImage(product.images || []);
 
     return (
         <div className={styles.card}>

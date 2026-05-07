@@ -36,7 +36,7 @@ export default function CartPage() {
                         }}>
                             <div style={{ width: '80px', height: '80px', background: '#fff', borderRadius: '4px', overflow: 'hidden' }}>
                                 <img
-                                    src={item.images || '/placeholder.jpg'}
+                                    src={item.images?.[0] || '/placeholder.jpg'}
                                     alt={item.name}
                                     style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                                 />

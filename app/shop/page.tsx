@@ -1,42 +1,18 @@
 import ProductGrid from "@/components/ProductGrid";
-import { prisma } from "@/lib/prisma";
+import { products, searchProducts, getProductsByCategory, getCategories } from "@/lib/products";
 
 export default async function ShopPage({ searchParams }: { searchParams: Promise<{ q?: string; category?: string }> }) {
     const params = await searchParams;
     const query = params.q;
     const category = params.category;
 
-    let products: any[] = [];
-    let categories: any[] = [];
-    let error: string | null = null;
+    const categories = getCategories();
 
-    try {
-        categories = await prisma.product.findMany({
-            select: { category: true },
-            distinct: ['category']
-        });
-
-        const where: any = {};
-        if (query) {
-            where.OR = [
-                { name: { contains: query, mode: 'insensitive' as any } },
-                { description: { contains: query, mode: 'insensitive' as any } },
-                { category: { contains: query, mode: 'insensitive' as any } },
-            ];
-        }
-        if (category) {
-            where.category = category;
-        }
-
-        products = await prisma.product.findMany({
-            select: { id: true, name: true, slug: true, price: true, images: true, category: true, featured: true, description: true },
-            where,
-            orderBy: { createdAt: 'desc' }
-        });
-    } catch (e: any) {
-        console.error("[ShopPage] Failed to fetch products:", e);
-        error = e.message || "Database connection failed";
-    }
+    const productsToShow = query
+        ? searchProducts(query)
+        : category
+            ? getProductsByCategory(category)
+            : products;
 
     return (
         <div className="container" style={{ padding: '2rem 0' }}>
@@ -62,21 +38,21 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
                                     All Products
                                 </a>
                             </li>
-                            {categories.map((cat: any) => (
-                                <li key={cat.category}>
+                            {categories.map((cat: string) => (
+                                <li key={cat}>
                                     <a
-                                        href={`/shop?category=${encodeURIComponent(cat.category)}`}
+                                        href={`/shop?category=${encodeURIComponent(cat)}`}
                                         style={{
                                             display: 'block',
                                             padding: '0.5rem',
                                             borderRadius: '4px',
                                             fontSize: '0.85rem',
-                                            background: category === cat.category ? '#f68b1e' : 'transparent',
-                                            color: category === cat.category ? '#fff' : '#333',
-                                            fontWeight: category === cat.category ? '600' : '400',
+                                            background: category === cat ? '#f68b1e' : 'transparent',
+                                            color: category === cat ? '#fff' : '#333',
+                                            fontWeight: category === cat ? '600' : '400',
                                         }}
                                     >
-                                        {cat.category}
+                                        {cat}
                                     </a>
                                 </li>
                             ))}
@@ -86,23 +62,16 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
 
                 {/* Products */}
                 <div style={{ flex: 1 }}>
-                    {error && (
-                        <div style={{ textAlign: 'center', padding: '2rem', color: '#dc3545', background: '#f8d7da', borderRadius: '8px', marginBottom: '2rem' }}>
-                            <p><strong>Database Error:</strong> {error}</p>
-                            <p style={{ fontSize: '0.85rem', marginTop: '0.5rem' }}>Check Vercel environment variables</p>
-                        </div>
-                    )}
-
                     <div style={{ marginBottom: '1.5rem' }}>
                         <h1 style={{ fontSize: '1.5rem', fontWeight: '700' }}>
                             {query ? `Search: "${query}"` : category ? category : 'Shop All Products'}
                         </h1>
-                        <p style={{ fontSize: '0.85rem', color: '#666' }}>{products.length} product{products.length !== 1 ? 's' : ''} found</p>
+                        <p style={{ fontSize: '0.85rem', color: '#666' }}>{productsToShow.length} product{productsToShow.length !== 1 ? 's' : ''} found</p>
                     </div>
 
-                    {!error && products.length > 0 ? (
-                        <ProductGrid products={products} />
-                    ) : !error && (
+                    {productsToShow.length > 0 ? (
+                        <ProductGrid products={productsToShow} />
+                    ) : (
                         <div className="section-card" style={{ textAlign: 'center', padding: '3rem' }}>
                             <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔍</div>
                             <p style={{ color: '#666' }}>No products found. Try a different search or category.</p>
