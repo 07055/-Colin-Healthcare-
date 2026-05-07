@@ -10,10 +10,12 @@ export default async function Home() {
 
   try {
     products = await prisma.product.findMany({
+      select: { id: true, name: true, slug: true, price: true, images: true, category: true, featured: true },
       orderBy: { createdAt: 'desc' },
       take: 8
     });
     featuredProducts = await prisma.product.findMany({
+      select: { id: true, name: true, slug: true, price: true, images: true, category: true, featured: true },
       where: { featured: true },
       orderBy: { createdAt: 'desc' },
       take: 4

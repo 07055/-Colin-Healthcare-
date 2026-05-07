@@ -11,11 +11,6 @@ const products = [
     stock: 100,
     images: JSON.stringify(["https://images.unsplash.com/photo-1556228578-0c98aaae08e1?auto=format&fit=crop&q=80&w=800"]),
     featured: false,
-    ingredients: "Niacinamide, lactobacillus",
-    benefits: "Nourishes and firms skin",
-    usage: "Apply morning and evening",
-    stockUnit: "Tube",
-    inStock: true,
   },
   {
     name: "NMN Sharp Mind Capsules",
@@ -26,11 +21,16 @@ const products = [
     stock: 50,
     images: JSON.stringify(["https://images.unsplash.com/photo-1550572018-73b3e3a4f4b?auto=format&fit=crop&q=80&w=800"]),
     featured: true,
-    ingredients: "NMN, Resveratrol, Ginkgo Biloba",
-    benefits: "Genetic repair, brain health",
-    usage: "2 capsules per day",
-    stockUnit: "Box of 60 capsules",
-    inStock: true,
+  },
+  {
+    name: "Suma Grand Cream",
+    slug: "suma-grand-cream",
+    category: "Skincare",
+    description: "Rich anti-aging cream for skin firmness.",
+    price: 5300,
+    stock: 100,
+    images: JSON.stringify(["https://images.unsplash.com/photo-1556228578-0c98aaae08e1?auto=format&fit=crop&q=80&w=800"]),
+    featured: true,
   }
 ]
 
