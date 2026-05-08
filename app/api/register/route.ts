@@ -23,8 +23,8 @@ export async function POST(request: NextRequest) {
     }
 
     const prisma = getPrisma()
-    const existing = await prisma.user.findUnique({ where: { email } })
     
+    const existing = await prisma.user.findUnique({ where: { email } })
     if (existing) {
       return NextResponse.json({ error: 'Email already registered' }, { status: 400 })
     }
@@ -34,15 +34,26 @@ export async function POST(request: NextRequest) {
       data: {
         name,
         email,
-        phone,
-        city,
-        location,
+        phone: phone || '',
+        city: city || '',
+        location: location || '',
         password: hashedPassword,
       }
     })
 
-    return NextResponse.json({ success: true, userId: user.id })
+    // Set httpOnly cookie
+    const response = NextResponse.json({ success: true })
+    response.cookies.set({
+      name: 'userId',
+      value: user.id,
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: '/',
+    })
+
+    return response
   } catch (error) {
+    console.error('Registration error:', error)
     return NextResponse.json({ error: 'Registration failed' }, { status: 500 })
   }
 }

@@ -7,10 +7,12 @@ import styles from './register.module.css'
 export default function RegisterPage({ searchParams }: { searchParams: { error?: string } }) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(searchParams.error || '')
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setLoading(true)
+    setError('')
 
     const formData = new FormData(e.currentTarget)
     
@@ -23,13 +25,13 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
       const data = await res.json()
 
       if (data.success) {
-        // Redirect to login with success message
-        router.push('/login?registered=true')
+        // Cookie is set by the API route, now redirect to dashboard
+        router.push('/dashboard')
       } else {
-        alert(data.error || 'Registration failed')
+        setError(data.error || 'Registration failed')
       }
-    } catch (error) {
-      alert('Registration failed. Please try again.')
+    } catch (err) {
+      setError('Registration failed. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -39,6 +41,12 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
     <div className="container" style={{ padding: '4rem 1rem', maxWidth: '500px', margin: '0 auto' }}>
       <h1 style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '0.5rem' }}>Create Account</h1>
       <p style={{ color: '#666', marginBottom: '2rem' }}>Join Sam's Suma Mart today</p>
+
+      {error && (
+        <div style={{ background: '#ffebee', color: '#c62828', padding: '0.75rem', borderRadius: '4px', marginBottom: '1rem', fontSize: '0.9rem' }}>
+          {decodeURIComponent(error)}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div>
