@@ -34,13 +34,17 @@ export default function Header() {
 
         <div className={styles.actions}>
           <div style={{ display: 'flex', gap: '1rem' }}>
-            <a href="https://wa.me/254796388790" target="_blank" rel="noopener noreferrer" className={styles.actionItem} style={{ color: '#25D366' }}>
-              <span>💬 WhatsApp</span>
-            </a>
+            <a href="/login" className={styles.actionItem}>Sign In</a>
+            <a href="/register" className={styles.actionItem} style={{ background: '#f68b1e', color: 'white', padding: '0.4rem 0.8rem', borderRadius: '4px' }}>Register</a>
           </div>
 
           <Link href="/cart" className={styles.actionItem}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <path d="M16 10a4 4 0 01-8 0"/>
+              </svg>
               <span>Cart</span>
               <CartCount />
             </div>

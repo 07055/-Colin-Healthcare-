@@ -6,6 +6,19 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  city      String?
+  location  String?
+  password  String
+  isAdmin   Boolean  @default(false)
+  orders    Order[]
+  createdAt DateTime @default(now())
+}
+
 model Order {
   id              String        @id @default(cuid())
   customerName    String
@@ -13,11 +26,14 @@ model Order {
   customerPhone   String
   city            String
   address         String
+  location        String?
   total           Float
   status          OrderStatus   @default(PENDING)
   paymentMethod   PaymentMethod @default(PAYSTACK)
   paymentStatus   PaymentStatus @default(UNPAID)
   transactionRef  String?
+  userId          String?
+  user            User?         @relation(fields: [userId], references: [id])
   items           OrderItem[]
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
