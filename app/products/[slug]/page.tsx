@@ -3,11 +3,12 @@ import { getProductBySlug, products } from '@/lib/products'
 import ProductDetail from '@/components/ProductDetail'
 
 interface ProductPageProps {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
-export default function ProductPage({ params }: ProductPageProps) {
-  const product = getProductBySlug(params.slug)
+export default async function ProductPage({ params }: ProductPageProps) {
+  const { slug } = await params
+  const product = getProductBySlug(slug)
 
   if (!product) {
     notFound()
