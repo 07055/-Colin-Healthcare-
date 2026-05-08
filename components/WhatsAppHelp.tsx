@@ -8,7 +8,7 @@ export default function WhatsAppHelp() {
 
   const handleHelp = () => {
     const message = encodeURIComponent('Hi! I need help with my order on Sam\'s Suma Mart.')
-    window.open(`https://wa.me/254700000000?text=${message}`, '_blank')
+    window.open(`https://wa.me/254796388790?text=${message}`, '_blank')
     setOpen(false)
   }
 
