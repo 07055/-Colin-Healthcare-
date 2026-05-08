@@ -15,7 +15,7 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
     setError('')
 
     const formData = new FormData(e.currentTarget)
-    
+
     try {
       const res = await fetch('/api/register', {
         method: 'POST',
@@ -25,7 +25,8 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
       const data = await res.json()
 
       if (data.success) {
-        // Cookie is set by the API route, now redirect to dashboard
+        // Set cookie manually and redirect to dashboard
+        document.cookie = `userId=${data.userId}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
         router.push('/dashboard')
       } else {
         setError(data.error || 'Registration failed')

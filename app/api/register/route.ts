@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs'
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
-    
+
     const name = formData.get('name') as string
     const email = formData.get('email') as string
     const phone = formData.get('phone') as string
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     }
 
     const prisma = getPrisma()
-    
+
     const existing = await prisma.user.findUnique({ where: { email } })
     if (existing) {
       return NextResponse.json({ error: 'Email already registered' }, { status: 400 })
@@ -41,17 +41,8 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // Set httpOnly cookie
-    const response = NextResponse.json({ success: true })
-    response.cookies.set({
-      name: 'userId',
-      value: user.id,
-      httpOnly: true,
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-      path: '/',
-    })
-
-    return response
+    // Return user ID so client can set cookie and redirect
+    return NextResponse.json({ success: true, userId: user.id })
   } catch (error) {
     console.error('Registration error:', error)
     return NextResponse.json({ error: 'Registration failed' }, { status: 500 })
