@@ -150,6 +150,16 @@ export default function CheckoutPage() {
                 {loading ? 'Processing...' : `CASH ON DELIVERY - KSh ${grandTotal.toLocaleString()}`}
               </button>
             </form>
+
+            <form onSubmit={(e) => handlePayment(e, 'PAYSTACK')} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <button
+                type="submit"
+                disabled={loading}
+                style={{ width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: '700', marginTop: '0.5rem', background: '#282828', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+              >
+                {loading ? 'Processing...' : `PAY NOW WITH PAYSTACK - KSh ${grandTotal.toLocaleString()}`}
+              </button>
+            </form>
           </div>
         </div>
 
