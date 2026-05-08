@@ -1,85 +1,116 @@
-import { notFound } from 'next/navigation';
-import AddToCartButton from '@/components/AddToCartButton';
-import { getProductBySlug } from '@/lib/products';
+import { notFound } from 'next/navigation'
+import { getProductBySlug, products } from '@/lib/products'
+import { useCart } from '@/lib/CartContext'
+import { useState } from 'react'
+import Link from 'next/link'
+import styles from '@/components/ProductCard.module.css'
 
-export default function ProductPage({ params }: { params: { slug: string } }) {
-    const { slug } = params;
+interface ProductPageProps {
+  params: { slug: string }
+}
 
-    const product = getProductBySlug(slug);
+export default function ProductPage({ params }: ProductPageProps) {
+  const product = getProductBySlug(params.slug)
+  const { addToCart } = useCart()
+  const [added, setAdded] = useState(false)
 
-    if (!product) {
-        notFound();
-    }
+  if (!product) {
+    notFound()
+  }
 
-    const oldPrice = product.price * 1.25;
+  const handleAddToCart = () => {
+    addToCart(product)
+    setAdded(true)
+    setTimeout(() => setAdded(false), 2000)
+  }
 
-    return (
-        <div className="container" style={{ padding: '2rem 1rem' }}>
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 300px',
-                gap: '1rem',
-                alignItems: 'start'
-            }}>
-                {/* Main Product Info */}
-                <div className="section-card" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-                    <div style={{ background: '#fff', borderRadius: '4px', overflow: 'hidden' }}>
-                        <img
-                            src={product.images[0] || '/placeholder.jpg'}
-                            alt={product.name}
-                            style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
-                        />
-                    </div>
+  const relatedProducts = products
+    .filter(p => p.category === product.category && p.id !== product.id)
+    .slice(0, 4)
 
-                    <div>
-                        <h4 style={{ fontSize: '0.9rem', color: 'var(--link)', marginBottom: '0.5rem' }}>Brand: Generic</h4>
-                        <h1 style={{ fontSize: '1.5rem', fontWeight: '400', marginBottom: '1rem' }}>{product.name}</h1>
-                        <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '1rem' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                <span style={{ fontSize: '1.8rem', fontWeight: '700' }}>KSh {product.price.toLocaleString()}</span>
-                                <span style={{ textDecoration: 'line-through', color: 'var(--secondary-text)' }}>KSh {oldPrice.toLocaleString()}</span>
-                                <span className="badge-orange">-25%</span>
-                            </div>
-                            <p style={{ color: 'var(--success)', fontSize: '0.8rem', marginTop: '0.5rem' }}>In Stock</p>
-                        </div>
+  return (
+    <div className="container" style={{ padding: '2rem 0' }}>
+      <Link href="/shop" style={{ color: '#f68b1e', fontSize: '0.9rem', marginBottom: '1rem', display: 'inline-block' }}>
+        ← Back to Shop
+      </Link>
 
-                        <div style={{ marginTop: '2rem' }}>
-                            <AddToCartButton product={JSON.parse(JSON.stringify(product))} />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Sidebar Info */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <div className="section-card">
-                        <h3 style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '1rem' }}>DELIVERY & RETURNS</h3>
-                        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
-                            <span>📍</span>
-                            <div style={{ fontSize: '0.8rem' }}>
-                                <p style={{ fontWeight: '700' }}>Delivery Information</p>
-                                <p>Shipped from overseas. Normally delivered between 9-15 business days.</p>
-                            </div>
-                        </div>
-                        <div style={{ display: 'flex', gap: '0.5rem' }}>
-                            <span>🔄</span>
-                            <div style={{ fontSize: '0.8rem' }}>
-                                <p style={{ fontWeight: '700' }}>Return Policy</p>
-                                <p>Free return within 15 days for Official Store items and 7 days for other items.</p>
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
-            </div>
-
-            {/* Description Section */}
-            <div className="section-card" style={{ marginTop: '1rem' }}>
-                <h2 style={{ fontSize: '1.1rem', paddingBottom: '1rem', borderBottom: '1px solid var(--border-light)', marginBottom: '1rem' }}>Product Details</h2>
-                <div style={{ fontSize: '0.9rem', lineHeight: '1.6' }}>
-                    {product.description}
-                </div>
-            </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', marginTop: '1rem' }}>
+        {/* Product Image */}
+        <div style={{ background: '#f5f5f5', borderRadius: '8px', overflow: 'hidden' }}>
+          <img
+            src={product.images?.[0] || '/placeholder.jpg'}
+            alt={product.name}
+            style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+          />
         </div>
-    );
+
+        {/* Product Details */}
+        <div>
+          <span style={{ fontSize: '0.8rem', color: '#f68b1e', fontWeight: '600' }}>{product.category}</span>
+          <h1 style={{ fontSize: '2rem', fontWeight: '800', margin: '0.5rem 0' }}>{product.name}</h1>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+            <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#f68b1e' }}>KSh {product.price.toLocaleString()}</span>
+            <span style={{ fontSize: '1.2rem', color: '#999', textDecoration: 'line-through' }}>KSh {(product.price * 1.25).toLocaleString()}</span>
+            <span style={{ background: '#4caf50', color: 'white', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>-25%</span>
+          </div>
+
+          <p style={{ color: '#666', lineHeight: '1.6', marginBottom: '2rem' }}>{product.description}</p>
+
+          {product.ingredients && (
+            <div style={{ marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.5rem' }}>Ingredients</h3>
+              <p style={{ fontSize: '0.85rem', color: '#666' }}>{product.ingredients}</p>
+            </div>
+          )}
+
+          {product.benefits && (
+            <div style={{ marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.5rem' }}>Benefits</h3>
+              <p style={{ fontSize: '0.85rem', color: '#666' }}>{product.benefits}</p>
+            </div>
+          )}
+
+          {product.usage && (
+            <div style={{ marginBottom: '2rem' }}>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.5rem' }}>How to Use</h3>
+              <p style={{ fontSize: '0.85rem', color: '#666' }}>{product.usage}</p>
+            </div>
+          )}
+
+          <button
+            onClick={handleAddToCart}
+            className="btn-primary"
+            style={{ width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: '700' }}
+          >
+            {added ? '✓ ADDED TO CART' : 'ADD TO CART'}
+          </button>
+        </div>
+      </div>
+
+      {/* Related Products */}
+      {relatedProducts.length > 0 && (
+        <div style={{ marginTop: '4rem' }}>
+          <h2 style={{ fontSize: '1.3rem', fontWeight: '700', marginBottom: '1.5rem' }}>Related Products</h2>
+          <div className={styles.grid}>
+            {relatedProducts.map((prod) => (
+              <Link key={prod.id} href={`/products/${prod.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div className={styles.card}>
+                  <div className={styles.imageContainer}>
+                    <img src={prod.images?.[0] || '/placeholder.jpg'} alt={prod.name} className={styles.image} />
+                  </div>
+                  <div className={styles.details}>
+                    <div className={styles.name}>{prod.name}</div>
+                    <div className={styles.priceContainer}>
+                      <span className={styles.priceNew}>KSh {prod.price.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }

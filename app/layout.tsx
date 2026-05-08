@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { CartProvider } from "@/lib/CartContext";
+import WhatsAppHelp from "@/components/WhatsAppHelp";
 
 export const metadata: Metadata = {
   title: "Sam's Suma Mart (SSM) | Medical Supplies & Healthcare Products",
@@ -21,6 +22,7 @@ export default function RootLayout({
           <Header />
           <main style={{ minHeight: '80vh' }}>{children}</main>
           <Footer />
+          <WhatsAppHelp />
         </CartProvider>
       </body>
     </html>
