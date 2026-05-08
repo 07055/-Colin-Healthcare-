@@ -2,14 +2,17 @@
     background: var(--white);
     border-radius: var(--radius);
     padding: 0.5rem;
-    transition: box-shadow 0.2s;
+    transition: all 0.2s;
     display: flex;
     flex-direction: column;
     position: relative;
+    border: 2px solid transparent;
 }
 
 .card:hover {
     box-shadow: var(--shadow-md);
+    border-color: #f68b1e;
+    transform: translateY(-2px);
 }
 
 .imageContainer {
@@ -84,10 +87,10 @@
     border-radius: var(--radius);
     font-weight: 700;
     font-size: 0.75rem;
-    opacity: 0;
-    transition: opacity 0.2s;
+    transition: background 0.2s;
+    margin-top: auto;
 }
 
-.card:hover .atcBtn {
-    opacity: 1;
+.atcBtn:hover {
+    background: #f68b1e;
 }
