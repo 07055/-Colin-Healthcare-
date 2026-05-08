@@ -1,62 +1,39 @@
-import { redirect } from 'next/navigation'
-import { getPrisma } from '@/lib/prisma'
-import bcrypt from 'bcryptjs'
-import { cookies } from 'next/headers'
+'use client';
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import styles from './register.module.css'
 
 export default function RegisterPage({ searchParams }: { searchParams: { error?: string } }) {
-  async function register(formData: FormData) {
-    'use server'
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
 
-    const name = formData.get('name') as string
-    const email = formData.get('email') as string
-    const phone = formData.get('phone') as string
-    const city = formData.get('city') as string
-    const location = formData.get('location') as string
-    const password = formData.get('password') as string
-    const confirmPassword = formData.get('confirmPassword') as string
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setLoading(true)
 
-    if (!name || !email || !password) {
-      redirect('/register?error=Name,+email+and+password+are+required')
-    }
-
-    if (password !== confirmPassword) {
-      redirect('/register?error=Passwords+do+not+match')
-    }
-
+    const formData = new FormData(e.currentTarget)
+    
     try {
-      const prisma = getPrisma()
-      const existing = await prisma.user.findUnique({ where: { email } })
-      if (existing) {
-        redirect('/register?error=Email+already+registered')
-      }
-
-      const hashedPassword = await bcrypt.hash(password, 10)
-      const user = await prisma.user.create({
-        data: {
-          name,
-          email,
-          phone,
-          city,
-          location,
-          password: hashedPassword,
-        }
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        body: formData,
       })
 
-      // Set cookie for auto-login
-      const cookieStore = await cookies()
-      cookieStore.set('userId', user.id, { httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
+      const data = await res.json()
 
-      // Don't redirect here - it will be caught by catch
-    } catch (error: any) {
-      if (error?.digest?.includes('NEXT_REDIRECT')) {
-        throw error
+      if (data.success) {
+        // Set cookie and redirect to dashboard
+        document.cookie = `userId=${data.userId}; path=/; max-age=${60 * 60 * 24 * 7}`
+        router.push('/dashboard')
+      } else {
+        router.push(`/register?error=${encodeURIComponent(data.error || 'Registration failed')}`)
       }
-      redirect('/register?error=Registration+failed')
+    } catch (error) {
+      router.push('/register?error=Registration+failed')
+    } finally {
+      setLoading(false)
     }
-
-    // If we get here, success - redirect to dashboard
-    redirect('/dashboard')
   }
 
   return (
@@ -70,7 +47,7 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
         </div>
       )}
 
-      <form action={register} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div>
           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.3rem' }}>Full Name *</label>
           <input type="text" name="name" required style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '4px' }} />
@@ -106,8 +83,8 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
           <input type="password" name="confirmPassword" required minLength={6} style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '4px' }} />
         </div>
 
-        <button type="submit" className="btn-primary" style={{ width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: '700', marginTop: '0.5rem' }}>
-          CREATE ACCOUNT
+        <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: '700', marginTop: '0.5rem' }}>
+          {loading ? 'CREATING...' : 'CREATE ACCOUNT'}
         </button>
       </form>
 
