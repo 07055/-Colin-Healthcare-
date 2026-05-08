@@ -15,7 +15,12 @@ export default async function DashboardPage() {
   const prisma = getPrisma()
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    include: { orders: { orderBy: { createdAt: 'desc' }, include: { items: true } }
+    include: {
+      orders: {
+        include: { items: true },
+        orderBy: { createdAt: 'desc' }
+      }
+    }
   })
 
   if (!user) {
