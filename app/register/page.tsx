@@ -43,14 +43,20 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
         }
       })
 
-      // Auto-login after registration
+      // Set cookie for auto-login
       const cookieStore = await cookies()
       cookieStore.set('userId', user.id, { httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
 
-      redirect('/dashboard')
-    } catch (error) {
+      // Don't redirect here - it will be caught by catch
+    } catch (error: any) {
+      if (error?.digest?.includes('NEXT_REDIRECT')) {
+        throw error
+      }
       redirect('/register?error=Registration+failed')
     }
+
+    // If we get here, success - redirect to dashboard
+    redirect('/dashboard')
   }
 
   return (
