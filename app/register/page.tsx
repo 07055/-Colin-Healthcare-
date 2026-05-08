@@ -3,7 +3,7 @@ import { getPrisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import styles from './register.module.css'
 
-export default function RegisterPage() {
+export default function RegisterPage({ searchParams }: { searchParams: { error?: string, registered?: string } }) {
   async function register(formData: FormData) {
     'use server'
 
@@ -16,18 +16,18 @@ export default function RegisterPage() {
     const confirmPassword = formData.get('confirmPassword') as string
 
     if (!name || !email || !password) {
-      return { error: 'Name, email and password are required' }
+      redirect('/register?error=Name,+email+and+password+are+required')
     }
 
     if (password !== confirmPassword) {
-      return { error: 'Passwords do not match' }
+      redirect('/register?error=Passwords+do+not+match')
     }
 
     try {
       const prisma = getPrisma()
       const existing = await prisma.user.findUnique({ where: { email } })
       if (existing) {
-        return { error: 'Email already registered' }
+        redirect('/register?error=Email+already+registered')
       }
 
       const hashedPassword = await bcrypt.hash(password, 10)
@@ -44,7 +44,7 @@ export default function RegisterPage() {
 
       redirect('/login?registered=true')
     } catch (error) {
-      return { error: 'Registration failed. Please try again.' }
+      redirect('/register?error=Registration+failed')
     }
   }
 
@@ -52,6 +52,12 @@ export default function RegisterPage() {
     <div className="container" style={{ padding: '4rem 1rem', maxWidth: '500px', margin: '0 auto' }}>
       <h1 style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '0.5rem' }}>Create Account</h1>
       <p style={{ color: '#666', marginBottom: '2rem' }}>Join Sam's Suma Mart today</p>
+
+      {searchParams.error && (
+        <div style={{ background: '#ffebee', color: '#c62828', padding: '0.75rem', borderRadius: '4px', marginBottom: '1rem', fontSize: '0.9rem' }}>
+          {decodeURIComponent(searchParams.error)}
+        </div>
+      )}
 
       <form action={register} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div>

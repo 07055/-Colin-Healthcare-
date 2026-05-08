@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs'
 import { cookies } from 'next/headers'
 import styles from './login.module.css'
 
-export default function LoginPage({ searchParams }: { searchParams: { registered?: string } }) {
+export default function LoginPage({ searchParams }: { searchParams: { error?: string } }) {
   async function login(formData: FormData) {
     'use server'
 
@@ -12,7 +12,7 @@ export default function LoginPage({ searchParams }: { searchParams: { registered
     const password = formData.get('password') as string
 
     if (!email || !password) {
-      return { error: 'Email and password are required' }
+      redirect('/login?error=Email+and+password+are+required')
     }
 
     try {
@@ -20,21 +20,21 @@ export default function LoginPage({ searchParams }: { searchParams: { registered
       const user = await prisma.user.findUnique({ where: { email } })
 
       if (!user) {
-        return { error: 'Invalid email or password' }
+        redirect('/login?error=Invalid+email+or+password')
       }
 
       const isValid = await bcrypt.compare(password, user.password)
       if (!isValid) {
-        return { error: 'Invalid email or password' }
+        redirect('/login?error=Invalid+email+or+password')
       }
 
-      // Set a simple cookie for auth (in production, use proper session management)
+      // Set a simple cookie for auth
       const cookieStore = await cookies()
-      cookieStore.set('userId', user.id, { httpOnly: true, maxAge: 60 * 60 * 24 * 7 }) // 7 days
+      cookieStore.set('userId', user.id, { httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
 
       redirect('/dashboard')
     } catch (error) {
-      return { error: 'Login failed. Please try again.' }
+      redirect('/login?error=Login+failed')
     }
   }
 
@@ -43,9 +43,9 @@ export default function LoginPage({ searchParams }: { searchParams: { registered
       <h1 style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '0.5rem' }}>Welcome Back</h1>
       <p style={{ color: '#666', marginBottom: '2rem' }}>Sign in to your account</p>
 
-      {searchParams.registered && (
-        <div style={{ background: '#e8f5e9', color: '#2e7d32', padding: '0.75rem', borderRadius: '4px', marginBottom: '1rem', fontSize: '0.9rem' }}>
-          Registration successful! Please sign in.
+      {searchParams.error && (
+        <div style={{ background: '#ffebee', color: '#c62828', padding: '0.75rem', borderRadius: '4px', marginBottom: '1rem', fontSize: '0.9rem' }}>
+          {decodeURIComponent(searchParams.error)}
         </div>
       )}
 
