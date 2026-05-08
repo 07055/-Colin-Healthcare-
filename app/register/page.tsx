@@ -1,40 +1,59 @@
-'use client';
-
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import styles from './register.module.css'
+import { redirect } from 'next/navigation'
+import { getPrisma } from '@/lib/prisma'
+import bcrypt from 'bcryptjs'
+import { cookies } from 'next/headers'
 
 export default function RegisterPage({ searchParams }: { searchParams: { error?: string } }) {
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(searchParams.error || '')
+  async function register(formData: FormData) {
+    'use server'
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
+    const name = formData.get('name') as string
+    const email = formData.get('email') as string
+    const phone = formData.get('phone') as string
+    const city = formData.get('city') as string
+    const location = formData.get('location') as string
+    const password = formData.get('password') as string
+    const confirmPassword = formData.get('confirmPassword') as string
 
-    const formData = new FormData(e.currentTarget)
+    if (!name || !email || !password) {
+      redirect('/register?error=Name, email and password are required')
+    }
+
+    if (password !== confirmPassword) {
+      redirect('/register?error=Passwords do not match')
+    }
 
     try {
-      const res = await fetch('/api/register', {
-        method: 'POST',
-        body: formData,
+      const prisma = getPrisma()
+      const existing = await prisma.user.findUnique({ where: { email } })
+      if (existing) {
+        redirect('/register?error=Email already registered')
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10)
+      const user = await prisma.user.create({
+        data: {
+          name,
+          email,
+          phone: phone || '',
+          city: city || '',
+          location: location || '',
+          password: hashedPassword,
+        }
       })
 
-      const data = await res.json()
+      // Set cookie for auto-login
+      const cookieStore = await cookies()
+      cookieStore.set('userId', user.id, { httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
 
-      if (data.success) {
-        // Set cookie manually and redirect to dashboard
-        document.cookie = `userId=${data.userId}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
-        router.push('/dashboard')
-      } else {
-        setError(data.error || 'Registration failed')
+      // This redirect should work - it throws a special NEXT_REDIRECT error
+      redirect('/dashboard')
+    } catch (error: any) {
+      // Re-throw NEXT_REDIRECT errors - Next.js handles these specially
+      if (error?.digest?.includes('NEXT_REDIRECT')) {
+        throw error
       }
-    } catch (err) {
-      setError('Registration failed. Please try again.')
-    } finally {
-      setLoading(false)
+      redirect('/register?error=Registration failed')
     }
   }
 
@@ -43,13 +62,13 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
       <h1 style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '0.5rem' }}>Create Account</h1>
       <p style={{ color: '#666', marginBottom: '2rem' }}>Join Sam's Suma Mart today</p>
 
-      {error && (
+      {searchParams.error && (
         <div style={{ background: '#ffebee', color: '#c62828', padding: '0.75rem', borderRadius: '4px', marginBottom: '1rem', fontSize: '0.9rem' }}>
-          {decodeURIComponent(error)}
+          {decodeURIComponent(searchParams.error)}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <form action={register} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div>
           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.3rem' }}>Full Name *</label>
           <input type="text" name="name" required style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '4px' }} />
@@ -85,8 +104,8 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
           <input type="password" name="confirmPassword" required minLength={6} style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '4px' }} />
         </div>
 
-        <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: '700', marginTop: '0.5rem' }}>
-          {loading ? 'CREATING...' : 'CREATE ACCOUNT'}
+        <button type="submit" className="btn-primary" style={{ width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: '700', marginTop: '0.5rem' }}>
+          CREATE ACCOUNT
         </button>
       </form>
 
