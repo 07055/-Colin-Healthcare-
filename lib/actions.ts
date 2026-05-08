@@ -52,6 +52,6 @@ export async function getOrders() {
   const prisma = getPrisma()
   return prisma.order.findMany({
     orderBy: { createdAt: 'desc' },
-    include: { items: true }
+    include: { items: true, user: true }
   })
 }

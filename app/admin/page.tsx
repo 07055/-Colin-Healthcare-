@@ -1,14 +1,22 @@
-import { getOrders } from '@/lib/actions'
+import { getPrisma } from '@/lib/prisma'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminPage() {
-  const orders = await getOrders()
+  const prisma = getPrisma()
+  const orders = await prisma.order.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: { items: true, user: true }
+  })
 
   const totalRevenue = orders
     .filter((o: any) => o.paymentStatus === 'PAID')
     .reduce((sum: number, o: any) => sum + o.total, 0)
+
+  const totalOrders = orders.length
+  const paidOrders = orders.filter((o: any) => o.paymentStatus === 'PAID').length
+  const pendingOrders = orders.filter((o: any) => o.paymentStatus === 'PENDING').length
 
   return (
     <div className="container" style={{ padding: '2rem 0' }}>
@@ -18,17 +26,25 @@ export default async function AdminPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
         <div style={{ background: '#f68b1e', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
           <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Total Orders</p>
-          <p style={{ fontSize: '2rem', fontWeight: '700' }}>{orders.length}</p>
+          <p style={{ fontSize: '2rem', fontWeight: '700' }}>{totalOrders}</p>
+        </div>
+        <div style={{ background: '#4caf50', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
+          <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Paid Orders</p>
+          <p style={{ fontSize: '2rem', fontWeight: '700' }}>{paidOrders}</p>
         </div>
         <div style={{ background: '#2196F3', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
           <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Revenue (Paid)</p>
           <p style={{ fontSize: '1.8rem', fontWeight: '700' }}>KSh {totalRevenue.toLocaleString()}</p>
         </div>
+        <div style={{ background: '#ff9800', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
+          <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Pending</p>
+          <p style={{ fontSize: '2rem', fontWeight: '700' }}>{pendingOrders}</p>
+        </div>
       </div>
 
       {/* Orders Table */}
       <div className="section-card">
-        <h2 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1rem' }}>Recent Orders</h2>
+        <h2 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1rem' }}>All Orders ({totalOrders})</h2>
 
         {orders.length === 0 ? (
           <div style={{ padding: '3rem', textAlign: 'center', color: '#666' }}>
@@ -41,7 +57,9 @@ export default async function AdminPage() {
                 <tr style={{ borderBottom: '2px solid #eee', textAlign: 'left' }}>
                   <th style={{ padding: '0.75rem' }}>Order ID</th>
                   <th style={{ padding: '0.75rem' }}>Customer</th>
-                  <th style={{ padding: '0.75rem' }}>City</th>
+                  <th style={{ padding: '0.75rem' }}>Contact</th>
+                  <th style={{ padding: '0.75rem' }}>Location</th>
+                  <th style={{ padding: '0.75rem' }}>Items</th>
                   <th style={{ padding: '0.75rem' }}>Total</th>
                   <th style={{ padding: '0.75rem' }}>Payment</th>
                   <th style={{ padding: '0.75rem' }}>Status</th>
@@ -52,10 +70,24 @@ export default async function AdminPage() {
                   <tr key={order.id} style={{ borderBottom: '1px solid #eee' }}>
                     <td style={{ padding: '0.75rem', fontFamily: 'monospace', fontWeight: '600' }}>{order.id.slice(-8).toUpperCase()}</td>
                     <td style={{ padding: '0.75rem' }}>
-                      <div>{order.customerName}</div>
-                      <div style={{ fontSize: '0.75rem', color: '#888' }}>{order.customerPhone}</div>
+                      <div style={{ fontWeight: '600' }}>{order.customerName}</div>
+                      {order.user && <div style={{ fontSize: '0.75rem', color: '#888' }}>User: {order.user.name}</div>}
                     </td>
-                    <td style={{ padding: '0.75rem' }}>{order.city}</td>
+                    <td style={{ padding: '0.75rem' }}>
+                      <div>{order.customerPhone}</div>
+                      <div style={{ fontSize: '0.75rem', color: '#888' }}>{order.customerEmail || 'N/A'}</div>
+                    </td>
+                    <td style={{ padding: '0.75rem' }}>
+                      <div>{order.city}</div>
+                      <div style={{ fontSize: '0.75rem', color: '#888' }}>{order.address}</div>
+                    </td>
+                    <td style={{ padding: '0.75rem' }}>
+                      {order.items.map((item: any) => (
+                        <div key={item.id} style={{ fontSize: '0.8rem', marginBottom: '0.2rem' }}>
+                          {item.name} x{item.quantity} (KSh {item.price})
+                        </div>
+                      ))}
+                    </td>
                     <td style={{ padding: '0.75rem', fontWeight: '700' }}>KSh {order.total.toLocaleString()}</td>
                     <td style={{ padding: '0.75rem' }}>
                       <span style={{
