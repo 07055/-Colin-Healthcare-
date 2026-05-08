@@ -1,9 +1,10 @@
 import { redirect } from 'next/navigation'
 import { getPrisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
+import { cookies } from 'next/headers'
 import styles from './register.module.css'
 
-export default function RegisterPage({ searchParams }: { searchParams: { error?: string, registered?: string } }) {
+export default function RegisterPage({ searchParams }: { searchParams: { error?: string } }) {
   async function register(formData: FormData) {
     'use server'
 
@@ -31,7 +32,7 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
       }
 
       const hashedPassword = await bcrypt.hash(password, 10)
-      await prisma.user.create({
+      const user = await prisma.user.create({
         data: {
           name,
           email,
@@ -42,7 +43,11 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
         }
       })
 
-      redirect('/login?registered=true')
+      // Auto-login after registration
+      const cookieStore = await cookies()
+      cookieStore.set('userId', user.id, { httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
+
+      redirect('/dashboard')
     } catch (error) {
       redirect('/register?error=Registration+failed')
     }

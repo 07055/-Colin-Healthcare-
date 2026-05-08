@@ -1,9 +1,39 @@
 import { getPrisma } from '@/lib/prisma'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
-export default async function AdminPage() {
+export default async function AdminPage({ searchParams }: { searchParams: { password?: string } }) {
+  const adminPassword = process.env.ADMIN_PASSWORD || 'samsuma2024'
+
+  if (searchParams.password !== adminPassword) {
+    return (
+      <div className="container" style={{ padding: '4rem 1rem', maxWidth: '500px', margin: '0 auto' }}>
+        <h1 style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '1rem' }}>Admin Access</h1>
+        <p style={{ color: '#666', marginBottom: '2rem' }}>Enter admin password to continue</p>
+
+        <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter password"
+            required
+            style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '4px' }}
+          />
+          <button
+            type="submit"
+            formAction={`/admin?password=${adminPassword}`}
+            className="btn-primary"
+            style={{ width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: '700' }}
+          >
+            ACCESS DASHBOARD
+          </button>
+        </form>
+      </div>
+    )
+  }
+
   const prisma = getPrisma()
   const orders = await prisma.order.findMany({
     orderBy: { createdAt: 'desc' },
