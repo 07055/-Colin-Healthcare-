@@ -23,14 +23,13 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
       const data = await res.json()
 
       if (data.success) {
-        // Set cookie and redirect to dashboard
-        document.cookie = `userId=${data.userId}; path=/; max-age=${60 * 60 * 24 * 7}`
-        router.push('/dashboard')
+        // Redirect to login with success message
+        router.push('/login?registered=true')
       } else {
-        router.push(`/register?error=${encodeURIComponent(data.error || 'Registration failed')}`)
+        alert(data.error || 'Registration failed')
       }
     } catch (error) {
-      router.push('/register?error=Registration+failed')
+      alert('Registration failed. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -40,12 +39,6 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
     <div className="container" style={{ padding: '4rem 1rem', maxWidth: '500px', margin: '0 auto' }}>
       <h1 style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '0.5rem' }}>Create Account</h1>
       <p style={{ color: '#666', marginBottom: '2rem' }}>Join Sam's Suma Mart today</p>
-
-      {searchParams.error && (
-        <div style={{ background: '#ffebee', color: '#c62828', padding: '0.75rem', borderRadius: '4px', marginBottom: '1rem', fontSize: '0.9rem' }}>
-          {decodeURIComponent(searchParams.error)}
-        </div>
-      )}
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div>
