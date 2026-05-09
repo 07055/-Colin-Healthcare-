@@ -9,11 +9,11 @@ export default async function Header() {
   const userId = cookieStore.get('userId')?.value
   const userRole = cookieStore.get('userRole')?.value
 
-  let userName = null
+  let userName: string | null = null
   if (userId) {
     const prisma = getPrisma()
     const user = await prisma.user.findUnique({ where: { id: userId } })
-    userName = user?.name
+    userName = user?.name || null
   }
 
   return (
