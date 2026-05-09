@@ -10,20 +10,23 @@ interface Product {
     slug: string;
     price: number;
     category: string;
-    images: string[];
+    images: string | string[];
 }
 
-function getFirstImage(images: string[]): string {
-    if (Array.isArray(images) && images.length > 0) {
-        return images[0];
+function getFirstImage(images: string | string[]): string {
+    if (Array.isArray(images)) {
+        return images[0] || '/placeholder.jpg';
+    }
+    if (typeof images === 'string' && images) {
+        return images;
     }
     return '/placeholder.jpg';
 }
 
 export default function ProductCard({ product }: { product: Product }) {
     const { addToCart } = useCart();
-    const oldPrice = product.price * 1.25; // Mock discount
-    const firstImage = getFirstImage(product.images || []);
+    const oldPrice = product.price * 1.25;
+    const firstImage = getFirstImage(product.images || '');
 
     return (
         <div className={styles.card}>
