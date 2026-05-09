@@ -10,6 +10,12 @@ interface ProductDetailProps {
   relatedProducts: any[]
 }
 
+function getFirstImage(images: any): string {
+  if (typeof images === 'string') return images || '/placeholder.jpg'
+  if (Array.isArray(images) && images.length > 0) return images[0]
+  return '/placeholder.jpg'
+}
+
 export default function ProductDetail({ product, relatedProducts }: ProductDetailProps) {
   const { addToCart } = useCart()
   const [added, setAdded] = useState(false)
@@ -22,7 +28,7 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
 
   return (
     <div className="container" style={{ padding: '2rem 0' }}>
-      <Link href="/shop" style={{ color: '#f68b1e', fontSize: '0.9rem', marginBottom: '1rem', display: 'inline-block' }}>
+      <Link href="/shop" style={{ color: '#007bff', fontSize: '0.9rem', marginBottom: '1rem', display: 'inline-block' }}>
         ← Back to Shop
       </Link>
 
@@ -30,7 +36,7 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
         {/* Product Image */}
         <div style={{ background: '#f5f5f5', borderRadius: '8px', overflow: 'hidden' }}>
           <img
-            src={product.images?.[0] || '/placeholder.jpg'}
+            src={getFirstImage(product.images)}
             alt={product.name}
             style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
           />
@@ -38,37 +44,16 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
 
         {/* Product Details */}
         <div>
-          <span style={{ fontSize: '0.8rem', color: '#f68b1e', fontWeight: '600' }}>{product.category}</span>
+          <span style={{ fontSize: '0.8rem', color: '#007bff', fontWeight: '600' }}>{product.category}</span>
           <h1 style={{ fontSize: '2rem', fontWeight: '800', margin: '0.5rem 0' }}>{product.name}</h1>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-            <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#f68b1e' }}>KSh {product.price.toLocaleString()}</span>
+            <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#007bff' }}>KSh {product.price.toLocaleString()}</span>
             <span style={{ fontSize: '1.2rem', color: '#999', textDecoration: 'line-through' }}>KSh {(product.price * 1.25).toLocaleString()}</span>
-            <span style={{ background: '#4caf50', color: 'white', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>-25%</span>
+            <span style={{ background: '#28a745', color: 'white', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>-25%</span>
           </div>
 
           <p style={{ color: '#666', lineHeight: '1.6', marginBottom: '2rem' }}>{product.description}</p>
-
-          {product.ingredients && (
-            <div style={{ marginBottom: '1rem' }}>
-              <h3 style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.5rem' }}>Ingredients</h3>
-              <p style={{ fontSize: '0.85rem', color: '#666' }}>{product.ingredients}</p>
-            </div>
-          )}
-
-          {product.benefits && (
-            <div style={{ marginBottom: '1rem' }}>
-              <h3 style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.5rem' }}>Benefits</h3>
-              <p style={{ fontSize: '0.85rem', color: '#666' }}>{product.benefits}</p>
-            </div>
-          )}
-
-          {product.usage && (
-            <div style={{ marginBottom: '2rem' }}>
-              <h3 style={{ fontSize: '0.9rem', fontWeight: '700', marginBottom: '0.5rem' }}>How to Use</h3>
-              <p style={{ fontSize: '0.85rem', color: '#666' }}>{product.usage}</p>
-            </div>
-          )}
 
           <button
             onClick={handleAddToCart}
@@ -89,7 +74,7 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
               <Link key={prod.id} href={`/products/${prod.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div className={styles.card}>
                   <div className={styles.imageContainer}>
-                    <img src={prod.images?.[0] || '/placeholder.jpg'} alt={prod.name} className={styles.image} />
+                    <img src={getFirstImage(prod.images)} alt={prod.name} className={styles.image} />
                   </div>
                   <div className={styles.details}>
                     <div className={styles.name}>{prod.name}</div>

@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { getProductBySlug, products } from '@/lib/products'
+import { getPrisma } from '@/lib/prisma'
 import ProductDetail from '@/components/ProductDetail'
 
 interface ProductPageProps {
@@ -8,15 +8,23 @@ interface ProductPageProps {
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params
-  const product = getProductBySlug(slug)
+  const prisma = getPrisma()
+
+  const product = await prisma.product.findUnique({
+    where: { slug }
+  })
 
   if (!product) {
     notFound()
   }
 
-  const relatedProducts = products
-    .filter(p => p.category === product.category && p.id !== product.id)
-    .slice(0, 4)
+  const relatedProducts = await prisma.product.findMany({
+    where: {
+      category: product.category,
+      id: { not: product.id }
+    },
+    take: 4
+  })
 
   return <ProductDetail product={product} relatedProducts={relatedProducts} />
 }
