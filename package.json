@@ -9,7 +9,10 @@
     "lint": "eslint",
     "vercel-build": "npx prisma generate && next build",
     "migrate": "prisma migrate deploy",
-    "seed": "echo 'No seed script defined'"
+    "seed": "npx prisma db seed"
+  },
+  "prisma": {
+    "seed": "npx tsx prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",

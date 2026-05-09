@@ -15,9 +15,29 @@ model User {
   city      String?
   location  String?
   password  String
-  isAdmin   Boolean  @default(false)
+  role      Role     @default(USER)
   orders    Order[]
   createdAt DateTime @default(now())
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String
+  price       Float
+  stock       Int      @default(0)
+  images      String
+  category    String
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  orderItems  OrderItem[]
 }
 
 model Order {
@@ -61,9 +81,11 @@ enum OrderStatus {
 }
 
 model OrderItem {
-  id        String  @id @default(cuid())
-  order     Order   @relation(fields: [orderId], references: [id])
+  id        String   @id @default(cuid())
+  order     Order    @relation(fields: [orderId], references: [id])
   orderId   String
+  product   Product? @relation(fields: [productId], references: [id])
+  productId String?
   name      String
   price     Float
   quantity  Int
