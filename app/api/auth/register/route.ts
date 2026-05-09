@@ -1,17 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getPrisma } from '@/lib/prisma'
+import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
+
+const prisma = new PrismaClient()
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, email, phone, city, location, password } = await request.json()
+    const body = await request.json()
+    const { name, email, phone, city, location, password } = body
+
+    console.log('Registration attempt:', { name, email, phone, city, location })
 
     if (!name || !email || !password) {
       return NextResponse.json({ error: 'Name, email and password are required' }, { status: 400 })
     }
 
-    const prisma = getPrisma()
-    
     const existing = await prisma.user.findUnique({ where: { email } })
     if (existing) {
       return NextResponse.json({ error: 'Email already registered' }, { status: 400 })
@@ -29,9 +32,14 @@ export async function POST(request: NextRequest) {
       }
     })
 
+    console.log('User created:', user.id)
+
     return NextResponse.json({ success: true, userId: user.id })
   } catch (error: any) {
     console.error('Registration error:', error)
-    return NextResponse.json({ error: 'Registration failed' }, { status: 500 })
+    return NextResponse.json({ 
+      error: error.message || 'Registration failed',
+      details: error.code 
+    }, { status: 500 })
   }
 }
