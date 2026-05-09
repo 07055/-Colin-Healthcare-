@@ -1,27 +1,38 @@
 import { getPrisma } from '@/lib/prisma'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
 export default async function ProfilePage() {
-    const cookieStore = await cookies()
-    const userId = cookieStore.get('userId')?.value
+    let userId: string | undefined
+    try {
+        const cookieStore = await cookies()
+        userId = cookieStore.get('userId')?.value
+    } catch {
+        redirect('/login')
+    }
 
     if (!userId) {
         redirect('/login')
     }
 
-    const prisma = getPrisma()
-    const user = await prisma.user.findUnique({
-        where: { id: userId },
-        include: {
-            orders: {
-                orderBy: { createdAt: 'desc' },
-                include: { items: true }
+    let user = null
+    try {
+        const prisma = getPrisma()
+        user = await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
+                orders: {
+                    orderBy: { createdAt: 'desc' },
+                    include: { items: true }
+                }
             }
-        }
-    })
+        })
+    } catch (err) {
+        console.error('Profile page error:', err)
+    }
 
     if (!user) {
         redirect('/login')
