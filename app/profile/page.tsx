@@ -32,30 +32,32 @@ interface UserData {
 
 function OrderCard({ order }: { order: Order }) {
   return (
-    <div className={styles.orderCard}>
-      <div className={styles.orderHeader}>
+    <div className="section-card" style={{ padding: '1.5rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
         <div>
-          <p className={styles.orderId}>Order #{order.id.slice(-8).toUpperCase()}</p>
-          <p className={styles.orderDate}>{new Date(order.createdAt).toLocaleDateString('en-KE', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+          <p style={{ fontSize: '0.85rem', color: '#666' }}>Order #{order.id.slice(-8).toUpperCase()}</p>
+          <p style={{ fontSize: '0.8rem', color: '#999' }}>{new Date(order.createdAt).toLocaleDateString('en-KE', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
         </div>
-        <div className={styles.badges}>
-          <span className={order.paymentStatus === 'PAID' ? styles.paidBadge : styles.pendingBadge}>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <span style={{ padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: '700', background: order.paymentStatus === 'PAID' ? '#e8f5e9' : '#fff3e0', color: order.paymentStatus === 'PAID' ? '#2e7d32' : '#e65100' }}>
             {order.paymentStatus}
           </span>
-          <span className={styles.statusBadge}>{order.status}</span>
+          <span style={{ padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: '700', background: '#e3f2fd', color: '#1565c0' }}>
+            {order.status}
+          </span>
         </div>
       </div>
-      <div className={styles.orderItems}>
+      <div style={{ borderTop: '1px solid #eee', paddingTop: '1rem' }}>
         {order.items.map((item) => (
-          <div key={item.id} className={styles.orderItem}>
-            <span>{item.name} × {item.quantity}</span>
-            <span className={styles.itemPrice}>KSh {(item.price * item.quantity).toLocaleString()}</span>
+          <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
+            <span>{item.name} x {item.quantity}</span>
+            <span style={{ fontWeight: '600' }}>KSh {(item.price * item.quantity).toLocaleString()}</span>
           </div>
         ))}
       </div>
-      <div className={styles.orderFooter}>
-        <span className={styles.total}>Total: KSh {order.total.toLocaleString()}</span>
-        <span className={styles.phone}>📱 {order.customerPhone}</span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', paddingTop: '1rem', borderTop: '2px solid #eee' }}>
+        <span style={{ fontSize: '1.1rem', fontWeight: '700' }}>Total: KSh {order.total.toLocaleString()}</span>
+        <span style={{ fontSize: '0.85rem', color: '#666' }}>📱 {order.customerPhone}</span>
       </div>
     </div>
   )
@@ -99,30 +101,30 @@ function UpdateProfileForm({ user, onUpdate }: { user: UserData; onUpdate: (u: U
   }
 
   return (
-    <div className={styles.editCard}>
-      <h3 className={styles.sectionTitle}>UPDATE PROFILE</h3>
-      {success && <div className={styles.successMsg}>{success}</div>}
-      {error && <div className={styles.errorMsg}>{error}</div>}
-      <form onSubmit={handleSubmit} className={styles.editForm}>
-        <div className={styles.formGroup}>
-          <label>Full Name</label>
-          <input type="text" name="name" defaultValue={user.name || ''} required />
+    <div className="section-card" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
+      <h3 style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '1rem', color: '#007bff' }}>UPDATE PROFILE</h3>
+      {success && <div style={{ background: '#e8f5e9', color: '#2e7d32', padding: '0.75rem', borderRadius: '6px', marginBottom: '1rem', fontSize: '0.85rem' }}>{success}</div>}
+      {error && <div style={{ background: '#ffebee', color: '#c62828', padding: '0.75rem', borderRadius: '6px', marginBottom: '1rem', fontSize: '0.85rem' }}>{error}</div>}
+      <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '0.75rem' }}>
+        <div>
+          <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.25rem' }}>Full Name</label>
+          <input type="text" name="name" defaultValue={user.name || ''} required style={{ width: '100%', padding: '0.6rem', border: '1px solid #ddd', borderRadius: '6px', fontSize: '0.9rem' }} />
         </div>
-        <div className={styles.formGroup}>
-          <label>Phone</label>
-          <input type="tel" name="phone" defaultValue={user.phone || ''} />
+        <div>
+          <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.25rem' }}>Phone</label>
+          <input type="tel" name="phone" defaultValue={user.phone || ''} style={{ width: '100%', padding: '0.6rem', border: '1px solid #ddd', borderRadius: '6px', fontSize: '0.9rem' }} />
         </div>
-        <div className={styles.formRow}>
-          <div className={styles.formGroup}>
-            <label>City</label>
-            <input type="text" name="city" defaultValue={user.city || ''} />
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+          <div>
+            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.25rem' }}>City</label>
+            <input type="text" name="city" defaultValue={user.city || ''} style={{ width: '100%', padding: '0.6rem', border: '1px solid #ddd', borderRadius: '6px', fontSize: '0.9rem' }} />
           </div>
-          <div className={styles.formGroup}>
-            <label>Location</label>
-            <input type="text" name="location" defaultValue={user.location || ''} />
+          <div>
+            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.25rem' }}>Location</label>
+            <input type="text" name="location" defaultValue={user.location || ''} style={{ width: '100%', padding: '0.6rem', border: '1px solid #ddd', borderRadius: '6px', fontSize: '0.9rem' }} />
           </div>
         </div>
-        <button type="submit" disabled={loading} className={styles.saveBtn}>
+        <button type="submit" disabled={loading} style={{ background: '#007bff', color: 'white', border: 'none', padding: '0.7rem', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem', opacity: loading ? 0.7 : 1 }}>
           {loading ? 'SAVING...' : 'SAVE CHANGES'}
         </button>
       </form>
