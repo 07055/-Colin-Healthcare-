@@ -25,12 +25,22 @@ export default function RegisterPage() {
     const password = formData.get('password') as string
     const confirmPassword = formData.get('confirmPassword') as string
 
-    // Validate passwords match
-    if (password !== confirmPassword) {
-      setError('Passwords do not match')
-      setLoading(false)
-      return
-    }
+// Password strength validation
+      if (password.length < 8) {
+        setError('Password must be at least 8 characters')
+        setLoading(false)
+        return
+      }
+      
+      const hasUpperCase = /[A-Z]/.test(password)
+      const hasLowerCase = /[a-z]/.test(password)
+      const hasNumber = /[0-9]/.test(password)
+      
+      if (!hasUpperCase || !hasLowerCase || !hasNumber) {
+        setError('Password must contain uppercase, lowercase, and a number')
+        setLoading(false)
+        return
+      }
 
     try {
       const res = await fetch('/api/auth/register', {
