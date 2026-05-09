@@ -3,43 +3,8 @@ import { getPrisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { cookies } from 'next/headers'
 
-export default function LoginPage({ searchParams }: { searchParams: { error?: string } }) {
-  async function login(formData: FormData) {
-    'use server'
-
-    const email = formData.get('email') as string
-    const password = formData.get('password') as string
-
-    if (!email || !password) {
-      redirect('/login?error=Email+and+password+are+required')
-    }
-
-    try {
-      const prisma = getPrisma()
-      const user = await prisma.user.findUnique({ where: { email } })
-
-      if (!user) {
-        redirect('/login?error=Invalid+email+or+password')
-      }
-
-      const isValid = await bcrypt.compare(password, user.password)
-      if (!isValid) {
-        redirect('/login?error=Invalid+email+or+password')
-      }
-
-      const cookieStore = await cookies()
-      cookieStore.set('userId', user.id, { httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
-      cookieStore.set('userRole', user.role, { httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
-
-      if (user.role === 'ADMIN') {
-        redirect('/admin')
-      } else {
-        redirect('/profile')
-      }
-    } catch (error) {
-      redirect('/login?error=Login+failed')
-    }
-  }
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
+  const params = await searchParams
 
   return (
     <div className="container" style={{ padding: '4rem 1rem', maxWidth: '450px', margin: '0 auto' }}>
@@ -49,9 +14,9 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
         <p style={{ color: '#666' }}>Sign in to your account</p>
       </div>
 
-      {searchParams.error && (
+      {params.error && (
         <div style={{ background: '#ffebee', color: '#c62828', padding: '0.75rem', borderRadius: '6px', marginBottom: '1rem', fontSize: '0.9rem', textAlign: 'center' }}>
-          {decodeURIComponent(searchParams.error)}
+          {decodeURIComponent(params.error)}
         </div>
       )}
 
