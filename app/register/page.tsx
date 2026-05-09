@@ -46,10 +46,9 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
       const cookieStore = await cookies()
       cookieStore.set('userId', user.id, { httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
 
-      // This redirect should work - it throws a special NEXT_REDIRECT error
-      redirect('/dashboard')
+      // Redirect to shop - user can now browse and buy
+      redirect('/shop')
     } catch (error: any) {
-      // Re-throw NEXT_REDIRECT errors - Next.js handles these specially
       if (error?.digest?.includes('NEXT_REDIRECT')) {
         throw error
       }
@@ -80,18 +79,18 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
         </div>
 
         <div>
-          <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.3rem' }}>Phone Number</label>
-          <input type="tel" name="phone" placeholder="07XX XXX XXX" style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '4px' }} />
+          <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.3rem' }}>Phone Number *</label>
+          <input type="tel" name="phone" required placeholder="07XX XXX XXX" style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '4px' }} />
         </div>
 
         <div>
-          <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.3rem' }}>City</label>
-          <input type="text" name="city" placeholder="e.g. Nairobi" style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '4px' }} />
+          <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.3rem' }}>City *</label>
+          <input type="text" name="city" required placeholder="e.g. Nairobi" style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '4px' }} />
         </div>
 
         <div>
-          <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.3rem' }}>Location/Area</label>
-          <input type="text" name="location" placeholder="e.g. Westlands" style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '4px' }} />
+          <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.3rem' }}>Location/Area *</label>
+          <input type="text" name="location" required placeholder="e.g. Westlands" style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '4px' }} />
         </div>
 
         <div>
