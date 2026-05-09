@@ -12,16 +12,12 @@ export async function POST(request: NextRequest) {
 
     const prisma = getPrisma()
     
-    // Check if user exists
     const existing = await prisma.user.findUnique({ where: { email } })
     if (existing) {
       return NextResponse.json({ error: 'Email already registered' }, { status: 400 })
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10)
-    
-    // Create user
     const user = await prisma.user.create({
       data: {
         name,
@@ -33,7 +29,6 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // Return success with userId (client will set cookie)
     return NextResponse.json({ success: true, userId: user.id })
   } catch (error: any) {
     console.error('Registration error:', error)
