@@ -1,10 +1,48 @@
-import { redirect } from 'next/navigation'
-import { getPrisma } from '@/lib/prisma'
-import bcrypt from 'bcryptjs'
-import { cookies } from 'next/headers'
+'use client'
 
-export default async function LoginPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
-  const params = await searchParams
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
+
+export default function LoginPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(searchParams.get('error') || '')
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    const formData = new FormData(e.currentTarget)
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await res.json()
+
+      if (data.success) {
+        if (data.role === 'ADMIN') {
+          router.push('/admin')
+        } else {
+          router.push('/profile')
+        }
+      } else {
+        setError(data.error || 'Login failed')
+      }
+    } catch (err) {
+      setError('Login failed. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="container" style={{ padding: '4rem 1rem', maxWidth: '450px', margin: '0 auto' }}>
@@ -14,13 +52,13 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         <p style={{ color: '#666' }}>Sign in to your account</p>
       </div>
 
-      {params.error && (
+      {error && (
         <div style={{ background: '#ffebee', color: '#c62828', padding: '0.75rem', borderRadius: '6px', marginBottom: '1rem', fontSize: '0.9rem', textAlign: 'center' }}>
-          {decodeURIComponent(params.error)}
+          {decodeURIComponent(error)}
         </div>
       )}
 
-      <form action={login} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', background: 'white', padding: '2rem', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', background: 'white', padding: '2rem', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
         <div>
           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.4rem', color: '#333' }}>Email Address</label>
           <input type="email" name="email" required placeholder="admin@ssm.co.ke" style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '6px', fontSize: '1rem' }} />
@@ -31,8 +69,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           <input type="password" name="password" required placeholder="••••••••" style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '6px', fontSize: '1rem' }} />
         </div>
 
-        <button type="submit" className="btn-primary" style={{ width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: '700', marginTop: '0.5rem' }}>
-          SIGN IN
+        <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: '700', marginTop: '0.5rem', opacity: loading ? 0.7 : 1 }}>
+          {loading ? 'SIGNING IN...' : 'SIGN IN'}
         </button>
       </form>
 
