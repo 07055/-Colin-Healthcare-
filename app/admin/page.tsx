@@ -1,35 +1,45 @@
 import { getPrisma } from '@/lib/prisma'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
-export default async function AdminPage({ searchParams }: { searchParams: { password?: string } }) {
-  const adminPassword = process.env.ADMIN_PASSWORD || 'samsuma2024'
+async function getUserFromCookie() {
+  const cookieStore = await cookies()
+  const userId = cookieStore.get('userId')?.value
+  const userRole = cookieStore.get('userRole')?.value
+  if (!userId) return null
+  return { id: userId, role: userRole }
+}
 
-  if (searchParams.password !== adminPassword) {
+export default async function AdminPage() {
+  const user = await getUserFromCookie()
+
+  if (!user) {
     return (
       <div className="container" style={{ padding: '4rem 1rem', maxWidth: '500px', margin: '0 auto' }}>
-        <h1 style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '1rem' }}>Admin Access</h1>
-        <p style={{ color: '#666', marginBottom: '2rem' }}>Enter admin password to continue</p>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <img src="/logo.svg" alt="SSM" style={{ height: '60px', margin: '0 auto 1rem' }} />
+          <h1 style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '0.5rem' }}>Admin Access</h1>
+          <p style={{ color: '#666', marginBottom: '2rem' }}>Please sign in with admin credentials</p>
+        </div>
+        <div style={{ background: '#f0f4ff', padding: '1.5rem', borderRadius: '8px', textAlign: 'center' }}>
+          <p style={{ marginBottom: '1rem', color: '#333' }}>Go to login page to sign in as admin</p>
+          <a href="/login" className="btn-primary" style={{ display: 'inline-block', padding: '0.8rem 2rem' }}>
+            GO TO LOGIN
+          </a>
+        </div>
+      </div>
+    )
+  }
 
-        <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter password"
-            required
-            style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '4px' }}
-          />
-          <button
-            type="submit"
-            formAction={`/admin?password=${adminPassword}`}
-            className="btn-primary"
-            style={{ width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: '700' }}
-          >
-            ACCESS DASHBOARD
-          </button>
-        </form>
+  if (user.role !== 'ADMIN') {
+    return (
+      <div className="container" style={{ padding: '4rem 1rem', maxWidth: '500px', margin: '0 auto' }}>
+        <h1 style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '1rem' }}>Access Denied</h1>
+        <p style={{ color: '#666', marginBottom: '2rem' }}>You are not authorized to access the admin dashboard.</p>
+        <a href="/" className="btn-primary" style={{ display: 'inline-block', padding: '0.8rem 2rem' }}>GO HOME</a>
       </div>
     )
   }
@@ -37,15 +47,17 @@ export default async function AdminPage({ searchParams }: { searchParams: { pass
   const prisma = getPrisma()
   const orders = await prisma.order.findMany({
     orderBy: { createdAt: 'desc' },
-    include: { items: true, user: true }
+    include: { user: true }
+  })
+
+  const products = await prisma.product.findMany({
+    orderBy: { createdAt: 'desc' }
   })
 
   const totalRevenue = orders
     .filter((o: any) => o.paymentStatus === 'PAID')
     .reduce((sum: number, o: any) => sum + o.total, 0)
 
-  const totalOrders = orders.length
-  const paidOrders = orders.filter((o: any) => o.paymentStatus === 'PAID').length
   const pendingOrders = orders.filter((o: any) => o.paymentStatus === 'PENDING').length
 
   return (
@@ -54,19 +66,19 @@ export default async function AdminPage({ searchParams }: { searchParams: { pass
 
       {/* Stats Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+        <div style={{ background: '#007bff', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
+          <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Total Products</p>
+          <p style={{ fontSize: '2rem', fontWeight: '700' }}>{products.length}</p>
+        </div>
         <div style={{ background: '#f68b1e', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
           <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Total Orders</p>
-          <p style={{ fontSize: '2rem', fontWeight: '700' }}>{totalOrders}</p>
+          <p style={{ fontSize: '2rem', fontWeight: '700' }}>{orders.length}</p>
         </div>
-        <div style={{ background: '#4caf50', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
-          <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Paid Orders</p>
-          <p style={{ fontSize: '2rem', fontWeight: '700' }}>{paidOrders}</p>
-        </div>
-        <div style={{ background: '#2196F3', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
+        <div style={{ background: '#28a745', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
           <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Revenue (Paid)</p>
           <p style={{ fontSize: '1.8rem', fontWeight: '700' }}>KSh {totalRevenue.toLocaleString()}</p>
         </div>
-        <div style={{ background: '#ff9800', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
+        <div style={{ background: '#9c27b0', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
           <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Pending</p>
           <p style={{ fontSize: '2rem', fontWeight: '700' }}>{pendingOrders}</p>
         </div>
@@ -74,7 +86,7 @@ export default async function AdminPage({ searchParams }: { searchParams: { pass
 
       {/* Orders Table */}
       <div className="section-card">
-        <h2 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1rem' }}>All Orders ({totalOrders})</h2>
+        <h2 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1rem' }}>📦 All Orders ({orders.length})</h2>
 
         {orders.length === 0 ? (
           <div style={{ padding: '3rem', textAlign: 'center', color: '#666' }}>
@@ -89,7 +101,6 @@ export default async function AdminPage({ searchParams }: { searchParams: { pass
                   <th style={{ padding: '0.75rem' }}>Customer</th>
                   <th style={{ padding: '0.75rem' }}>Contact</th>
                   <th style={{ padding: '0.75rem' }}>Location</th>
-                  <th style={{ padding: '0.75rem' }}>Items</th>
                   <th style={{ padding: '0.75rem' }}>Total</th>
                   <th style={{ padding: '0.75rem' }}>Payment</th>
                   <th style={{ padding: '0.75rem' }}>Status</th>
@@ -110,13 +121,6 @@ export default async function AdminPage({ searchParams }: { searchParams: { pass
                     <td style={{ padding: '0.75rem' }}>
                       <div>{order.city}</div>
                       <div style={{ fontSize: '0.75rem', color: '#888' }}>{order.address}</div>
-                    </td>
-                    <td style={{ padding: '0.75rem' }}>
-                      {order.items.map((item: any) => (
-                        <div key={item.id} style={{ fontSize: '0.8rem', marginBottom: '0.2rem' }}>
-                          {item.name} x{item.quantity} (KSh {item.price})
-                        </div>
-                      ))}
                     </td>
                     <td style={{ padding: '0.75rem', fontWeight: '700' }}>KSh {order.total.toLocaleString()}</td>
                     <td style={{ padding: '0.75rem' }}>
