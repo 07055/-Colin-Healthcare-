@@ -34,7 +34,7 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
       if (user.role === 'ADMIN') {
         redirect('/admin')
       } else {
-        redirect('/dashboard')
+        redirect('/profile')
       }
     } catch (error) {
       redirect('/login?error=Login+failed')

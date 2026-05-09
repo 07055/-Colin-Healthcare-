@@ -1,8 +1,21 @@
 import Link from 'next/link';
+import { cookies } from 'next/headers';
+import { getPrisma } from '@/lib/prisma';
 import styles from './Header.module.css';
 import CartCount from './CartCount';
 
-export default function Header() {
+export default async function Header() {
+  const cookieStore = await cookies()
+  const userId = cookieStore.get('userId')?.value
+  const userRole = cookieStore.get('userRole')?.value
+
+  let userName = null
+  if (userId) {
+    const prisma = getPrisma()
+    const user = await prisma.user.findUnique({ where: { id: userId } })
+    userName = user?.name
+  }
+
   return (
     <header className={styles.header}>
       <div className={styles.topBar}>
@@ -33,10 +46,23 @@ export default function Header() {
         </form>
 
         <div className={styles.actions}>
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <a href="/login" className={styles.actionItem}>Sign In</a>
-            <a href="/register" className={styles.actionItem} style={{ background: '#f68b1e', color: 'white', padding: '0.4rem 0.8rem', borderRadius: '4px' }}>Register</a>
-          </div>
+          {userId ? (
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+              <Link href="/profile" style={{ fontSize: '0.9rem', color: '#007bff', fontWeight: '600' }}>
+                👤 {userName || 'Profile'}
+              </Link>
+              {userRole === 'ADMIN' && (
+                <Link href="/admin" style={{ fontSize: '0.9rem', color: '#28a745', fontWeight: '600' }}>
+                  🏥 Admin
+                </Link>
+              )}
+            </div>
+          ) : (
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <a href="/login" className={styles.actionItem}>Sign In</a>
+              <a href="/register" className={styles.actionItem} style={{ background: '#007bff', color: 'white', padding: '0.4rem 0.8rem', borderRadius: '4px' }}>Register</a>
+            </div>
+          )}
 
           <Link href="/cart" className={styles.actionItem}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
