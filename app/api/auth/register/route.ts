@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 
-function getPrisma() {
-  const { PrismaClient } = require('@prisma/client')
-  return new PrismaClient()
-}
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL
+    }
+  }
+})
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,8 +26,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Database not configured' }, { status: 500 })
     }
 
-    const prisma = getPrisma()
-    
     const existing = await prisma.user.findUnique({ where: { email } })
     if (existing) {
       return NextResponse.json({ error: 'Email already registered' }, { status: 400 })
