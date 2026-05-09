@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import styles from './profile.module.css'
 
 interface OrderItem {
   id: string
