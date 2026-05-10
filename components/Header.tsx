@@ -7,7 +7,6 @@ import CartCount from './CartCount';
 export default async function Header() {
   const cookieStore = await cookies()
   const userId = cookieStore.get('userId')?.value
-  const userRole = cookieStore.get('userRole')?.value
 
   let userName: string | null = null
   if (userId) {
@@ -51,11 +50,7 @@ export default async function Header() {
               <Link href="/profile" style={{ fontSize: '0.9rem', color: '#007bff', fontWeight: '600' }}>
                 👤 {userName || 'Profile'}
               </Link>
-              {userRole === 'ADMIN' && (
-                <Link href="/admin" style={{ fontSize: '0.9rem', color: '#28a745', fontWeight: '600' }}>
-                  🏥 Admin
-                </Link>
-              )}
+              <a href="/api/auth/logout" style={{ fontSize: '0.9rem', color: '#dc3545', fontWeight: '600' }}>Logout</a>
             </div>
           ) : (
             <div style={{ display: 'flex', gap: '1rem' }}>
