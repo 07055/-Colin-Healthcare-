@@ -100,6 +100,11 @@ export default async function AdminPage() {
                       <div>{order.city}</div>
                       <div style={{ fontSize: '0.75rem', color: '#666' }}>{order.address}</div>
                       {order.location && <div style={{ fontSize: '0.75rem', color: '#888' }}>{order.location}</div>}
+                      {order.lat && order.lng && (
+                        <a href={`https://www.google.com/maps?q=${order.lat},${order.lng}`} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.75rem', color: '#007bff' }}>
+                          📍 View on Map
+                        </a>
+                      )}
                     </td>
                     <td style={{ padding: '0.75rem' }}>
                       {order.items.map(item => (
