@@ -28,7 +28,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
     }
 
-    const cookieStore = await cookies()
     cookieStore.set('userId', user.id, { httpOnly: true, maxAge: 60 * 60 * 24 * 7, path: '/' })
     cookieStore.set('userRole', user.role, { httpOnly: true, maxAge: 60 * 60 * 24 * 7, path: '/' })
 
