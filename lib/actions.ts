@@ -11,8 +11,6 @@ export async function createOrder(formData: FormData) {
   const city = formData.get('city') as string
   const address = formData.get('address') as string
   const location = formData.get('location') as string
-  const latStr = formData.get('lat') as string
-  const lngStr = formData.get('lng') as string
   const paymentMethod = formData.get('paymentMethod') as string
   const total = parseFloat(formData.get('total') as string)
   const items = JSON.parse(formData.get('items') as string)
@@ -34,11 +32,9 @@ export async function createOrder(formData: FormData) {
         city,
         address,
         location: location || null,
-        lat: latStr ? parseFloat(latStr) : null,
-        lng: lngStr ? parseFloat(lngStr) : null,
         total,
         paymentMethod: paymentMethod as any,
-        paymentStatus: paymentMethod === 'CASH_ON_DELIVERY' ? 'PENDING' : 'PENDING',
+        paymentStatus: 'PENDING',
         userId: userId || null,
         items: {
           create: items.map((item: any) => ({
@@ -55,7 +51,7 @@ export async function createOrder(formData: FormData) {
     return { success: true, orderId: order.id }
   } catch (error) {
     console.error('Order creation failed:', error)
-    return { success: false, error: 'Failed to create order' }
+    return { success: false, error: 'Failed to create order. Please try again.' }
   }
 }
 
