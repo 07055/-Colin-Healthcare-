@@ -44,10 +44,12 @@ model Order {
   id              String        @id @default(cuid())
   customerName    String
   customerEmail   String?
-  customerPhone   String
+  customerPhone    String
   city            String
   address         String
   location        String?
+  lat             Float?
+  lng             Float?
   total           Float
   status          OrderStatus   @default(PENDING)
   paymentMethod   PaymentMethod @default(PAYSTACK)
