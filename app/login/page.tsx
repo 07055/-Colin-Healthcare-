@@ -29,11 +29,7 @@ function LoginForm() {
       const data = await res.json()
 
       if (data.success) {
-        if (data.role === 'ADMIN') {
-          router.push('/admin')
-        } else {
-          router.push('/profile')
-        }
+        router.push('/cart')
       } else {
         setError(data.error || 'Login failed')
       }
@@ -53,7 +49,7 @@ function LoginForm() {
       )}
       <div>
         <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.4rem', color: '#333' }}>Email Address</label>
-        <input type="email" name="email" required placeholder="admin@ssm.co.ke" style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '6px', fontSize: '1rem' }} />
+        <input type="email" name="email" required placeholder="your@email.com" style={{ width: '100%', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '6px', fontSize: '1rem' }} />
       </div>
       <div>
         <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.4rem', color: '#333' }}>Password</label>
@@ -78,11 +74,6 @@ export default function LoginPage() {
       <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.9rem', color: '#666' }}>
         Don&apos;t have an account? <a href="/register" style={{ color: '#007bff', fontWeight: '600' }}>Create Account</a>
       </p>
-      <div style={{ marginTop: '1.5rem', padding: '1rem', background: '#f0f4ff', borderRadius: '8px', textAlign: 'center', fontSize: '0.8rem', color: '#333' }}>
-        <strong>Admin Login:</strong><br/>
-        Email: <code style={{ background: '#e0e0e0', padding: '2px 6px', borderRadius: '4px' }}>admin@ssm.co.ke</code><br/>
-        Password: <code style={{ background: '#e0e0e0', padding: '2px 6px', borderRadius: '4px' }}>admin123</code>
-      </div>
     </div>
   )
 }

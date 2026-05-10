@@ -5,15 +5,18 @@ import { cookies } from 'next/headers'
 
 export async function POST(request: NextRequest) {
   try {
+    const cookieStore = await cookies()
+    cookieStore.delete('userId')
+    cookieStore.delete('userRole')
+
     const body = await request.json()
-    const { name, email, phone, city, location, password } = body
+    const { name, email, phone, city, password } = body
 
     if (!name || !email || !password) {
       return NextResponse.json({ error: 'Name, email and password are required' }, { status: 400 })
     }
 
     const prisma = getPrisma()
-
     const existing = await prisma.user.findUnique({ where: { email } })
     if (existing) {
       return NextResponse.json({ error: 'Email already registered' }, { status: 400 })
@@ -26,19 +29,16 @@ export async function POST(request: NextRequest) {
         email,
         phone: phone || '',
         city: city || '',
-        location: location || '',
         password: hashedPassword,
       }
     })
 
-    // Set session cookies immediately (auto-login)
-    const cookieStore = await cookies()
     cookieStore.set('userId', user.id, { httpOnly: true, maxAge: 60 * 60 * 24 * 7, path: '/' })
     cookieStore.set('userRole', user.role, { httpOnly: true, maxAge: 60 * 60 * 24 * 7, path: '/' })
 
-    return NextResponse.json({ success: true, userId: user.id })
+    return NextResponse.json({ success: true, userId: user.id, role: user.role })
   } catch (error: any) {
     console.error('Registration error:', error)
-    return NextResponse.json({ error: error.message || 'Registration failed' }, { status: 500 })
+    return NextResponse.json({ error: 'Registration failed' }, { status: 500 })
   }
 }
