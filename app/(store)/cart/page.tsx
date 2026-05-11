@@ -21,7 +21,7 @@ export default function CartPage() {
 
     return (
         <div className="container" style={{ padding: '1rem' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '1rem' }}>
+            <div className="cart-layout">
                 {/* Items List */}
                 <div className="section-card" style={{ padding: '0' }}>
                     <h2 style={{ fontSize: '1.2rem', padding: '1rem', borderBottom: '1px solid var(--border-light)' }}>
@@ -34,7 +34,7 @@ export default function CartPage() {
                             padding: '1rem',
                             borderBottom: '1px solid var(--border-light)'
                         }}>
-                            <div style={{ width: '80px', height: '80px', background: '#fff', borderRadius: '4px', overflow: 'hidden' }}>
+                            <div className="cart-item-image" style={{ background: '#fff', borderRadius: '4px', overflow: 'hidden' }}>
                                 <img
                                     src={item.images?.[0] || '/placeholder.jpg'}
                                     alt={item.name}
@@ -43,9 +43,9 @@ export default function CartPage() {
                             </div>
 
                             <div style={{ flex: 1 }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                                    <h3 style={{ fontSize: '0.9rem', fontWeight: '400' }}>{item.name}</h3>
-                                    <p style={{ fontSize: '1.1rem', fontWeight: '700' }}>KSh {(item.price * item.quantity).toLocaleString()}</p>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', gap: '0.25rem', flexWrap: 'wrap' }}>
+                                    <h3 style={{ fontSize: '0.9rem', fontWeight: '400', wordBreak: 'break-word' }}>{item.name}</h3>
+                                    <p style={{ fontSize: '1.1rem', fontWeight: '700', whiteSpace: 'nowrap' }}>KSh {(item.price * item.quantity).toLocaleString()}</p>
                                 </div>
 
                                 <p style={{ fontSize: '0.75rem', color: 'var(--jumia-orange)', marginBottom: '1rem' }}>Only 5 units left</p>
