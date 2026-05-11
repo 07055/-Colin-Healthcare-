@@ -202,6 +202,10 @@ export default function CheckoutPage() {
               <span style={{ fontSize: '1.1rem', fontWeight: '700' }}>Total</span>
               <span style={{ fontSize: '1.3rem', fontWeight: '700', color: '#007bff' }}>KSh {grandTotal.toLocaleString()}</span>
             </div>
+            <div style={{ marginTop: '1rem', padding: '0.75rem', background: '#fff8e1', borderRadius: '6px', fontSize: '0.8rem', color: '#333', textAlign: 'center' }}>
+              <strong>📱 Pay via M-Pesa</strong><br />
+              Paybill: <strong>303030</strong> &nbsp;|&nbsp; Account: <strong>2052132897</strong>
+            </div>
           </div>
         </div>
       </div>

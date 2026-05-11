@@ -8,6 +8,10 @@ export default function Footer() {
                 <div>
                     <h4 className={styles.heading}>SSM</h4>
                     <p className={styles.text}>Sam's Suma Mart - Your trusted partner for high-quality medical supplies and healthcare products.</p>
+                    <div style={{ marginTop: '0.75rem', fontSize: '0.85rem', color: '#bbb' }}>
+                        <div style={{ marginBottom: '0.3rem' }}>📱 Paybill: <strong style={{ color: '#fff' }}>303030</strong></div>
+                        <div>📋 Account: <strong style={{ color: '#fff' }}>2052132897</strong></div>
+                    </div>
                     <div className={styles.whatsapp}>
                         <a href="https://wa.me/254796388790" target="_blank" rel="noopener noreferrer">💬 WhatsApp: 0796 388 790</a>
                     </div>
