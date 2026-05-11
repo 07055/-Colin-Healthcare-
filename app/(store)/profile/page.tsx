@@ -177,8 +177,8 @@ export default function ProfilePage() {
 
   return (
     <div className="container" style={{ padding: '2rem 0' }}>
-      <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
-        <div style={{ width: '280px', flexShrink: 0 }}>
+      <div className="profile-layout">
+        <div className="profile-sidebar">
           <div className="section-card" style={{ padding: '2rem', textAlign: 'center' }}>
             <div style={{
               width: '80px', height: '80px', borderRadius: '50%',
@@ -206,7 +206,7 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <div style={{ flex: 1 }}>
+        <div className="profile-main">
           <h1 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '1.5rem' }}>My Profile</h1>
           <UpdateProfileForm user={user} onUpdate={setUser} />
 

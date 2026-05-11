@@ -150,6 +150,22 @@ img {
   min-width: 0;
 }
 
+.profile-layout {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.profile-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+}
+
+.profile-main {
+  flex: 1;
+  min-width: 0;
+}
+
 .cart-layout {
   display: grid;
   grid-template-columns: 1fr 300px;
@@ -183,6 +199,14 @@ img {
   }
 
   .shop-sidebar {
+    width: 100%;
+  }
+
+  .profile-layout {
+    flex-direction: column;
+  }
+
+  .profile-sidebar {
     width: 100%;
   }
 }
