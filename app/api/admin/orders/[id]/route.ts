@@ -11,10 +11,17 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     }
 
     const { id } = await params
+    const body = await request.json().catch(() => ({}))
     const prisma = getPrisma()
+
+    const data: Record<string, string> = {}
+    if (body.paymentStatus) data.paymentStatus = body.paymentStatus
+    if (body.status) data.status = body.status
+    if (Object.keys(data).length === 0) data.status = 'DELIVERED'
+
     const order = await prisma.order.update({
       where: { id },
-      data: { status: 'DELIVERED' }
+      data,
     })
 
     return NextResponse.json({ success: true, order })

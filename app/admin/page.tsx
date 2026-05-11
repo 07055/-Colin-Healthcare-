@@ -98,8 +98,13 @@ export default function AdminPage() {
   }, [router])
 
   async function markDelivered(orderId: string) {
-    await fetch(`/api/admin/orders/${orderId}`, { method: 'PATCH' })
+    await fetch(`/api/admin/orders/${orderId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'DELIVERED' }) })
     setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: 'DELIVERED' } : o))
+  }
+
+  async function markPaid(orderId: string) {
+    await fetch(`/api/admin/orders/${orderId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ paymentStatus: 'PAID' }) })
+    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, paymentStatus: 'PAID' } : o))
   }
 
   async function deleteProduct(productId: string) {
@@ -260,7 +265,12 @@ export default function AdminPage() {
                             {order.status}
                           </span>
                         </td>
-                        <td style={{ padding: '0.75rem' }}>
+                        <td style={{ padding: '0.75rem', whiteSpace: 'nowrap' }}>
+                          {order.paymentStatus !== 'PAID' && (
+                            <button onClick={() => markPaid(order.id)} style={{ background: '#1565c0', color: 'white', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', marginRight: '0.25rem' }}>
+                              Paid
+                            </button>
+                          )}
                           {order.status !== 'DELIVERED' && (
                             <button onClick={() => markDelivered(order.id)} style={{ background: '#2e7d32', color: 'white', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem' }}>
                               Deliver
