@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react'
 
 export interface CartItem {
     id: string
@@ -28,26 +28,59 @@ function getCartKey(userId?: string): string {
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
     const [cart, setCart] = useState<CartItem[]>([])
-    const [cartKey, setCartKey] = useState('samsuma-cart-anon')
+    const [userId, setUserId] = useState<string | null>(null)
+    const [ready, setReady] = useState(false)
+    const prevUserId = useRef<string | null>(null)
 
     useEffect(() => {
-        const key = getCartKey()
-        setCartKey(key)
-        const savedCart = localStorage.getItem(key)
-        if (savedCart) {
-            try {
-                setCart(JSON.parse(savedCart))
-            } catch (e) {
-                console.error('Failed to parse cart')
-            }
-        }
+        fetch('/api/auth/me')
+            .then(r => r.json())
+            .then(data => {
+                const uid = data.user?.id || null
+                setUserId(uid)
+                prevUserId.current = uid
+                const key = getCartKey(uid)
+                const saved = localStorage.getItem(key)
+                if (saved) {
+                    try { setCart(JSON.parse(saved)) } catch {}
+                }
+                setReady(true)
+            })
+            .catch(() => {
+                setReady(true)
+            })
     }, [])
 
     useEffect(() => {
-        if (cartKey) {
-            localStorage.setItem(cartKey, JSON.stringify(cart))
+        if (!ready) return
+        const currentUid = userId
+        const prevUid = prevUserId.current
+
+        if (prevUid !== currentUid) {
+            const oldKey = getCartKey(prevUid || undefined)
+            const newKey = getCartKey(currentUid || undefined)
+
+            const prevCart = localStorage.getItem(oldKey)
+            const newCart = localStorage.getItem(newKey)
+
+            if (prevCart && !newCart && prevUid !== null) {
+                localStorage.setItem(newKey, prevCart)
+                localStorage.removeItem(oldKey)
+                try { setCart(JSON.parse(prevCart)) } catch {}
+            } else if (newCart) {
+                try { setCart(JSON.parse(newCart)) } catch {}
+            } else {
+                setCart([])
+            }
+            prevUserId.current = currentUid
         }
-    }, [cart, cartKey])
+    }, [userId, ready])
+
+    useEffect(() => {
+        if (!ready) return
+        const key = getCartKey(userId || undefined)
+        localStorage.setItem(key, JSON.stringify(cart))
+    }, [cart, userId, ready])
 
     const addToCart = (product: any) => {
         setCart((prev) => {

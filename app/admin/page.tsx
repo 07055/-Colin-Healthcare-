@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import CloudinaryUpload from '@/components/CloudinaryUpload'
 
 interface OrderItem {
   id: string
@@ -422,7 +423,13 @@ function ProductManager({ products, setProducts, onDeleteProduct }: { products: 
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.25rem' }}>Image URL</label>
-              <input value={form.images} onChange={e => setForm({ ...form, images: e.target.value })} style={{ width: '100%', padding: '0.6rem', border: '1px solid #ddd', borderRadius: '6px' }} />
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <input value={form.images} onChange={e => setForm({ ...form, images: e.target.value })} placeholder="https://..." style={{ flex: 1, padding: '0.6rem', border: '1px solid #ddd', borderRadius: '6px' }} />
+                <CloudinaryUpload onUpload={(url) => setForm({ ...form, images: url })} />
+              </div>
+              {form.images && (
+                <img src={form.images} alt="preview" style={{ marginTop: '0.5rem', height: '60px', borderRadius: '4px', objectFit: 'cover' }} />
+              )}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <input type="checkbox" id="featured" checked={form.featured} onChange={e => setForm({ ...form, featured: e.target.checked })} />

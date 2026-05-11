@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { CartProvider } from "@/lib/CartContext";
-import WhatsAppHelp from "@/components/WhatsAppHelp";
+import StoreShell from "@/components/StoreShell";
 
 export const metadata: Metadata = {
   title: "Sam's Suma Mart (SSM) | Medical Supplies & Healthcare Products",
@@ -18,12 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <CartProvider>
-          <Header />
-          <main style={{ minHeight: '80vh' }}>{children}</main>
-          <Footer />
-          <WhatsAppHelp />
-        </CartProvider>
+        <StoreShell>
+          {children}
+        </StoreShell>
       </body>
     </html>
   );
