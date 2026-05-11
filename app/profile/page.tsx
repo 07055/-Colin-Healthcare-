@@ -154,6 +154,12 @@ export default function ProfilePage() {
       })
   }, [])
 
+  useEffect(() => {
+    if (!loading && (notLoggedIn || !user)) {
+      router.push('/login')
+    }
+  }, [loading, notLoggedIn, user, router])
+
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' })
     router.push('/login')
@@ -166,12 +172,6 @@ export default function ProfilePage() {
       </div>
     )
   }
-
-  useEffect(() => {
-    if (notLoggedIn || !user) {
-      router.push('/login')
-    }
-  }, [notLoggedIn, user, router])
 
   if (notLoggedIn || !user) return null
 
