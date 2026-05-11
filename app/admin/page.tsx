@@ -206,6 +206,7 @@ export default function AdminPage() {
                   <thead>
                     <tr style={{ borderBottom: '2px solid #eee', textAlign: 'left' }}>
                       <th style={{ padding: '0.75rem' }}>#</th>
+                      <th style={{ padding: '0.75rem' }}>Date</th>
                       <th style={{ padding: '0.75rem' }}>Customer</th>
                       <th style={{ padding: '0.75rem' }}>Contact</th>
                       <th style={{ padding: '0.75rem' }}>Delivery</th>
@@ -221,6 +222,10 @@ export default function AdminPage() {
                     {orders.map((order, i) => (
                       <tr key={order.id} style={{ borderBottom: '1px solid #eee' }}>
                         <td style={{ padding: '0.75rem' }}>{i + 1}</td>
+                        <td style={{ padding: '0.75rem', whiteSpace: 'nowrap', fontSize: '0.8rem', color: '#555' }}>
+                          <div>{new Date(order.createdAt).toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+                          <div style={{ fontSize: '0.7rem', color: '#999' }}>{new Date(order.createdAt).toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' })}</div>
+                        </td>
                         <td style={{ padding: '0.75rem' }}>
                           <div style={{ fontWeight: '600' }}>{order.customerName}</div>
                           {order.user && <div style={{ fontSize: '0.75rem', color: '#888' }}>{order.user.email}</div>}

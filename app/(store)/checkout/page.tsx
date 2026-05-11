@@ -173,9 +173,7 @@ export default function CheckoutPage() {
             <button type="button" onClick={(e) => handleSubmit(e, 'CASH_ON_DELIVERY')} disabled={loading} className="btn-primary" style={{ width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: '700', opacity: loading ? 0.7 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}>
               {loading ? 'Processing...' : `ORDER - CASH ON DELIVERY KSh ${grandTotal.toLocaleString()}`}
             </button>
-            <button type="button" onClick={(e) => handleSubmit(e, 'PAYSTACK')} disabled={loading} style={{ width: '100%', padding: '0.9rem', fontSize: '0.95rem', fontWeight: '700', background: '#282828', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', opacity: loading ? 0.7 : 1 }}>
-              {loading ? 'Processing...' : `PAY NOW - KSh ${grandTotal.toLocaleString()}`}
-            </button>
+
           </form>
         </div>
 
