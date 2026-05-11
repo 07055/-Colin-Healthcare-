@@ -9,14 +9,20 @@ export default function CartCount() {
 
     return (
         <span style={{
-            background: 'var(--jumia-orange)',
+            position: 'absolute',
+            top: '-6px',
+            right: '-8px',
+            background: '#ffa100',
             color: 'white',
-            fontSize: '0.65rem',
-            padding: '0.1rem 0.4rem',
+            fontSize: '0.6rem',
+            fontWeight: '700',
+            padding: '0.1rem 0.35rem',
             borderRadius: '10px',
-            marginLeft: '4px'
+            lineHeight: 1.2,
+            minWidth: '16px',
+            textAlign: 'center',
         }}>
-            {cartCount}
+            {cartCount > 99 ? '99+' : cartCount}
         </span>
     );
 }
