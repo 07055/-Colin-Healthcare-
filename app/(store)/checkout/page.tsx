@@ -138,7 +138,7 @@ export default function CheckoutPage() {
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '1.5rem', alignItems: 'start' }}>
+      <div className="checkout-grid">
         <div className="section-card" style={{ padding: '1.5rem' }}>
           <h2 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '1rem' }}>Delivery Information</h2>
 

@@ -50,7 +50,7 @@ export default function HeroSlider() {
     <div style={{
       position: 'relative',
       color: 'white',
-      minHeight: '420px',
+      minHeight: 'clamp(300px, 50vw, 420px)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -71,14 +71,14 @@ export default function HeroSlider() {
       <div style={{
         position: 'relative',
         zIndex: 1,
-        padding: '4rem 2rem',
+        padding: '3rem 1rem',
         opacity: transitioning ? 0 : 1,
         transform: transitioning ? 'translateY(10px)' : 'translateY(0)',
         transition: 'opacity 0.3s ease, transform 0.3s ease',
       }}>
         <div style={{ fontSize: '4rem', marginBottom: '0.5rem' }}>{slide.emoji}</div>
-        <h1 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '1rem' }}>{slide.title}</h1>
-        <p style={{ fontSize: '1.2rem', marginBottom: '2rem', opacity: 0.9 }}>{slide.subtitle}</p>
+        <h1 style={{ fontSize: 'clamp(1.3rem, 5vw, 2.5rem)', fontWeight: '800', marginBottom: '1rem' }}>{slide.title}</h1>
+        <p style={{ fontSize: 'clamp(0.85rem, 3vw, 1.2rem)', marginBottom: '2rem', opacity: 0.9 }}>{slide.subtitle}</p>
         <a href={slide.href} className="btn-primary" style={{ background: 'white', color: '#0056b3', padding: '1rem 2rem', fontSize: '1rem', display: 'inline-block', textDecoration: 'none', fontWeight: '700', borderRadius: '4px' }}>
           {slide.cta} →
         </a>

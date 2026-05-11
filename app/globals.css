@@ -126,3 +126,40 @@ img {
   height: auto;
   display: block;
 }
+
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.shop-layout {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.shop-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+}
+
+.shop-main {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .checkout-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .shop-layout {
+    flex-direction: column;
+  }
+
+  .shop-sidebar {
+    width: 100%;
+  }
+}

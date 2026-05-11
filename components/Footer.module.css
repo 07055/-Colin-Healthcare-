@@ -11,6 +11,13 @@
     gap: 1.5rem;
 }
 
+@media (max-width: 480px) {
+    .grid {
+        gap: 1rem;
+        padding: 1.5rem 0.75rem;
+    }
+}
+
 @media (min-width: 768px) {
     .grid {
         padding: 3rem 0;
@@ -28,6 +35,7 @@
 .text {
     color: #ccc;
     line-height: 1.6;
+    word-break: break-word;
 }
 
 .whatsapp {
@@ -37,6 +45,7 @@
 .whatsapp a {
     color: #25D366;
     font-weight: 600;
+    word-break: break-word;
 }
 
 .list {

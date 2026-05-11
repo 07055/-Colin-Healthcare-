@@ -36,9 +36,9 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
 
     return (
         <div className="container" style={{ padding: '2rem 0' }}>
-            <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
+            <div className="shop-layout">
                 {/* Sidebar - Categories */}
-                <div style={{ width: '220px', flexShrink: 0 }}>
+                <div className="shop-sidebar">
                     <div className="section-card" style={{ padding: '1rem' }}>
                         <h3 style={{ fontSize: '0.95rem', fontWeight: '700', marginBottom: '1rem', color: '#007bff' }}>CATEGORIES</h3>
                         <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -81,7 +81,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
                 </div>
 
                 {/* Products */}
-                <div style={{ flex: 1 }}>
+                <div className="shop-main">
                     <div style={{ marginBottom: '1.5rem' }}>
                         <h1 style={{ fontSize: '1.5rem', fontWeight: '700' }}>
                             {query ? `Search: "${query}"` : category ? category : 'Shop All Products'}
