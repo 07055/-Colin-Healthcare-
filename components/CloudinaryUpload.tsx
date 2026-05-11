@@ -2,27 +2,33 @@
 
 import { useRef, useState } from 'react'
 
-const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
-
 export default function CloudinaryUpload({ onUpload }: { onUpload: (url: string) => void }) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
-    if (!file || !CLOUD_NAME || !UPLOAD_PRESET) {
-      alert(!CLOUD_NAME ? 'Cloudinary not configured. Set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME and NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET.' : '')
-      return
-    }
+    if (!file) return
 
     setUploading(true)
-    const formData = new FormData()
-    formData.append('file', file)
-    formData.append('upload_preset', UPLOAD_PRESET)
 
     try {
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+      const signRes = await fetch('/api/cloudinary/sign', { method: 'POST' })
+      const signData = await signRes.json()
+      if (!signData.cloud_name) {
+        alert('Cloudinary not configured on server')
+        setUploading(false)
+        return
+      }
+
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('api_key', signData.api_key)
+      formData.append('timestamp', String(signData.timestamp))
+      formData.append('signature', signData.signature)
+      formData.append('upload_preset', signData.upload_preset)
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${signData.cloud_name}/image/upload`, {
         method: 'POST',
         body: formData,
       })
