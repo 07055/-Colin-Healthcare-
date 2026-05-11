@@ -13,9 +13,9 @@
 
 .card:hover {
     box-shadow: 0 8px 25px rgba(246,139,30,0.25);
-    border-color: #f68b1e;
+    border-color: #43a047;
     transform: translateY(-5px);
-    background: #fffbf5;
+    background: #f1f8e9;
 }
 
 .imageContainer {
@@ -84,14 +84,14 @@
 
 .atcBtn {
     width: 100%;
-    background: var(--jumia-orange);
+    background: linear-gradient(135deg, #2e7d32, #43a047);
     color: white;
     border: none;
     padding: 0.6rem;
     border-radius: var(--radius);
     font-weight: 700;
     font-size: 0.75rem;
-    transition: background 0.2s;
+    transition: opacity 0.2s;
     margin-top: auto;
     white-space: nowrap;
     overflow: hidden;
@@ -99,7 +99,7 @@
 }
 
 .atcBtn:hover {
-    background: #f68b1e;
+    opacity: 0.9;
 }
 
 @media (max-width: 480px) {

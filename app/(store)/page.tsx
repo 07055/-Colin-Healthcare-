@@ -28,7 +28,7 @@ export default async function Home() {
           <div style={{ marginBottom: '2rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h2 style={{ fontSize: '1.3rem', fontWeight: '700' }}>⭐ Featured Products</h2>
-              <a href="/shop" style={{ color: '#007bff', fontSize: '0.9rem', fontWeight: '600' }}>See All →</a>
+              <a href="/shop" style={{ color: '#2e7d32', fontSize: '0.9rem', fontWeight: '600' }}>See All →</a>
             </div>
             <ProductGrid products={featuredProducts} />
           </div>
@@ -38,7 +38,7 @@ export default async function Home() {
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h2 style={{ fontSize: '1.3rem', fontWeight: '700' }}>🔥 Latest Products</h2>
-              <a href="/shop" style={{ color: '#007bff', fontSize: '0.9rem', fontWeight: '600' }}>See All →</a>
+              <a href="/shop" style={{ color: '#2e7d32', fontSize: '0.9rem', fontWeight: '600' }}>See All →</a>
             </div>
             <ProductGrid products={products} />
           </div>

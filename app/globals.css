@@ -1,16 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --medical-blue: #007bff;
-  --medical-blue-dark: #0056b3;
-  --bg-light: #f4f6f9;
+  --medical-blue: #2e7d32;
+  --medical-blue-dark: #1b5e20;
+  --bg-light: #f1f8e9;
   --white: #ffffff;
   --primary-text: #2c3e50;
   --secondary-text: #6c757d;
   --border-light: #dee2e6;
-  --success: #28a745;
+  --success: #2e7d32;
   --error: #dc3545;
-  --link: #007bff;
+  --link: #2e7d32;
 
   --font-main: 'Roboto', 'Inter', sans-serif;
 
@@ -72,18 +72,18 @@ button {
 }
 
 .btn-primary {
-  background: var(--medical-blue);
+  background: linear-gradient(135deg, #2e7d32, #43a047);
   color: var(--white);
   border: none;
   padding: 0.8rem 1.5rem;
   border-radius: var(--radius);
   font-weight: 600;
-  transition: background 0.2s, transform 0.1s;
+  transition: opacity 0.2s, transform 0.1s;
   font-size: 0.9rem;
 }
 
 .btn-primary:hover {
-  background: var(--medical-blue-dark);
+  opacity: 0.9;
 }
 
 .btn-primary:active {

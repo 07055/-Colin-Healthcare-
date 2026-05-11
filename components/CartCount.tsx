@@ -12,7 +12,7 @@ export default function CartCount() {
             position: 'absolute',
             top: '-6px',
             right: '-8px',
-            background: '#ffa100',
+            background: '#2e7d32',
             color: 'white',
             fontSize: '0.6rem',
             fontWeight: '700',

@@ -28,7 +28,7 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
 
   return (
     <div className="container" style={{ padding: '2rem 0' }}>
-      <Link href="/shop" style={{ color: '#007bff', fontSize: '0.9rem', marginBottom: '1rem', display: 'inline-block' }}>
+      <Link href="/shop" style={{ color: '#2e7d32', fontSize: '0.9rem', marginBottom: '1rem', display: 'inline-block' }}>
         ← Back to Shop
       </Link>
 
@@ -44,11 +44,11 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
 
         {/* Product Details */}
         <div>
-          <span style={{ fontSize: '0.8rem', color: '#007bff', fontWeight: '600' }}>{product.category}</span>
+          <span style={{ fontSize: '0.8rem', color: '#2e7d32', fontWeight: '600' }}>{product.category}</span>
           <h1 style={{ fontSize: '2rem', fontWeight: '800', margin: '0.5rem 0' }}>{product.name}</h1>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-            <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#007bff' }}>KSh {product.price.toLocaleString()}</span>
+            <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#2e7d32' }}>KSh {product.price.toLocaleString()}</span>
             <span style={{ fontSize: '1.2rem', color: '#999', textDecoration: 'line-through' }}>KSh {(product.price * 1.25).toLocaleString()}</span>
             <span style={{ background: '#28a745', color: 'white', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>-25%</span>
           </div>

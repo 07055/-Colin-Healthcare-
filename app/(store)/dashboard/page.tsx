@@ -51,7 +51,7 @@ export default async function DashboardPage() {
 
           {user.orders.length === 0 ? (
             <p style={{ color: '#666', textAlign: 'center', padding: '2rem' }}>
-              No orders yet. <Link href="/shop" style={{ color: '#f68b1e' }}>Start shopping</Link>
+              No orders yet. <Link href="/shop" style={{ color: '#2e7d32' }}>Start shopping</Link>
             </p>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>

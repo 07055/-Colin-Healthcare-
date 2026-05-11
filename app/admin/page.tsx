@@ -129,7 +129,7 @@ export default function AdminPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
           <h1 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Admin Dashboard</h1>
           <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-            <a href="/" style={{ fontSize: '0.85rem', color: '#007bff' }}>View Site</a>
+            <a href="/" style={{ fontSize: '0.85rem', color: '#2e7d32' }}>View Site</a>
             <span style={{ color: '#ccc' }}>|</span>
             <button onClick={() => router.push('/')} style={{ fontSize: '0.85rem', color: '#dc3545', background: 'none', border: 'none', cursor: 'pointer' }}>Exit Admin</button>
           </div>
@@ -140,7 +140,7 @@ export default function AdminPage() {
           {(['dashboard', 'orders', 'customers', 'products'] as PageView[]).map(tab => (
             <button key={tab} onClick={() => setView(tab)} style={{
               padding: '0.5rem 1.2rem', border: 'none', borderRadius: '6px 6px 0 0',
-              background: view === tab ? '#007bff' : 'transparent',
+              background: view === tab ? '#2e7d32' : 'transparent',
               color: view === tab ? 'white' : '#666',
               fontWeight: view === tab ? '700' : '400',
               cursor: 'pointer', fontSize: '0.9rem', textTransform: 'capitalize'
@@ -154,20 +154,20 @@ export default function AdminPage() {
         {view === 'dashboard' && (
           <>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
-              <div style={{ background: '#007bff', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
+              <div style={{ background: 'linear-gradient(135deg, #2e7d32, #43a047)', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
                 <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Products</p>
                 <p style={{ fontSize: '2rem', fontWeight: '700' }}>{products.length}</p>
               </div>
-              <div style={{ background: '#f68b1e', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
+              <div style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
                 <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Orders</p>
                 <p style={{ fontSize: '2rem', fontWeight: '700' }}>{orders.length}</p>
               </div>
-              <div style={{ background: '#28a745', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
+              <div style={{ background: 'linear-gradient(135deg, #2e7d32, #66bb6a)', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
                 <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Paid</p>
                 <p style={{ fontSize: '1.4rem', fontWeight: '700' }}>KSh {totalRevenue.toLocaleString()}</p>
                 <p style={{ fontSize: '0.75rem', opacity: 0.8 }}>{paidOrders.length} orders</p>
               </div>
-              <div style={{ background: '#e65100', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
+              <div style={{ background: 'linear-gradient(135deg, #e65100, #ff8f00)', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
                 <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Pending Payment</p>
                 <p style={{ fontSize: '1.4rem', fontWeight: '700' }}>KSh {pendingPayments.toLocaleString()}</p>
                 <p style={{ fontSize: '0.75rem', opacity: 0.8 }}>{unpaidOrders.length} orders</p>
@@ -253,7 +253,7 @@ export default function AdminPage() {
                           <div style={{ fontSize: '0.75rem', color: '#666' }}>{order.address}</div>
                           {order.location && <div style={{ fontSize: '0.75rem', color: '#888' }}>{order.location}</div>}
                           {order.lat && order.lng && (
-                            <a href={`https://www.google.com/maps?q=${order.lat},${order.lng}`} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.75rem', color: '#007bff' }}>📍 Map</a>
+                            <a href={`https://www.google.com/maps?q=${order.lat},${order.lng}`} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.75rem', color: '#2e7d32' }}>📍 Map</a>
                           )}
                         </td>
                         <td style={{ padding: '0.75rem' }}>
@@ -417,7 +417,7 @@ function ProductManager({ products, setProducts, onDeleteProduct }: { products: 
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <h2 style={{ fontSize: '1.2rem', fontWeight: '700' }}>Products ({products.length})</h2>
-        <button onClick={() => { resetForm(); setShowForm(!showForm) }} style={{ background: showForm ? '#666' : '#007bff', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}>
+        <button onClick={() => { resetForm(); setShowForm(!showForm) }} style={{ background: showForm ? '#666' : '#2e7d32', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}>
           {showForm ? 'Cancel' : '+ Add Product'}
         </button>
       </div>
@@ -469,7 +469,7 @@ function ProductManager({ products, setProducts, onDeleteProduct }: { products: 
               <label htmlFor="featured" style={{ fontSize: '0.9rem' }}>Featured Product</label>
             </div>
           </div>
-          <button type="submit" disabled={saving} style={{ marginTop: '1rem', background: '#007bff', color: 'white', border: 'none', padding: '0.7rem 1.5rem', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', opacity: saving ? 0.7 : 1 }}>
+          <button type="submit" disabled={saving} style={{ marginTop: '1rem', background: '#2e7d32', color: 'white', border: 'none', padding: '0.7rem 1.5rem', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', opacity: saving ? 0.7 : 1 }}>
             {saving ? 'SAVING...' : editing ? 'UPDATE PRODUCT' : 'CREATE PRODUCT'}
           </button>
         </form>
@@ -497,7 +497,7 @@ function ProductManager({ products, setProducts, onDeleteProduct }: { products: 
                   <td style={{ padding: '0.75rem' }}>{p.stock}</td>
                   <td style={{ padding: '0.75rem' }}>{p.featured ? '⭐' : '-'}</td>
                   <td style={{ padding: '0.75rem' }}>
-                    <button onClick={() => editProduct(p)} style={{ background: '#007bff', color: 'white', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', marginRight: '0.5rem', fontSize: '0.75rem' }}>
+                    <button onClick={() => editProduct(p)} style={{ background: '#2e7d32', color: 'white', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', marginRight: '0.5rem', fontSize: '0.75rem' }}>
                       Edit
                     </button>
                     <button onClick={() => onDeleteProduct(p.id)} style={{ background: '#dc3545', color: 'white', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem' }}>

@@ -26,7 +26,7 @@ export default function CategoryAccordion({
           cursor: 'pointer',
           fontSize: '0.95rem',
           fontWeight: '700',
-          color: '#007bff',
+          color: '#2e7d32',
         }}
       >
         CATEGORIES ({categories.length + 1})
@@ -42,7 +42,7 @@ export default function CategoryAccordion({
                 padding: '0.5rem',
                 borderRadius: '4px',
                 fontSize: '0.85rem',
-                background: !currentCategory ? '#007bff' : 'transparent',
+                background: !currentCategory ? '#2e7d32' : 'transparent',
                 color: !currentCategory ? '#fff' : '#333',
                 fontWeight: !currentCategory ? '600' : '400',
                 textDecoration: 'none',
@@ -60,7 +60,7 @@ export default function CategoryAccordion({
                   padding: '0.5rem',
                   borderRadius: '4px',
                   fontSize: '0.85rem',
-                  background: currentCategory === cat ? '#007bff' : 'transparent',
+                  background: currentCategory === cat ? '#2e7d32' : 'transparent',
                   color: currentCategory === cat ? '#fff' : '#333',
                   fontWeight: currentCategory === cat ? '600' : '400',
                   textDecoration: 'none',

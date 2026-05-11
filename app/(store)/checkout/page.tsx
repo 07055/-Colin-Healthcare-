@@ -200,7 +200,7 @@ export default function CheckoutPage() {
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', paddingTop: '1rem', borderTop: '2px solid #333' }}>
               <span style={{ fontSize: '1.1rem', fontWeight: '700' }}>Total</span>
-              <span style={{ fontSize: '1.3rem', fontWeight: '700', color: '#007bff' }}>KSh {grandTotal.toLocaleString()}</span>
+              <span style={{ fontSize: '1.3rem', fontWeight: '700', color: '#2e7d32' }}>KSh {grandTotal.toLocaleString()}</span>
             </div>
             <div style={{ marginTop: '1rem', padding: '0.75rem', background: '#fff8e1', borderRadius: '6px', fontSize: '0.8rem', color: '#333', textAlign: 'center' }}>
               <strong>📱 Pay via M-Pesa</strong><br />

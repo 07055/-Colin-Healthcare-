@@ -58,7 +58,7 @@
 
 .cta {
   display: inline-block;
-  background: #f68b1e;
+  background: linear-gradient(135deg, #2e7d32, #43a047);
   color: white;
   padding: 1rem 2rem;
   border-radius: 8px;

@@ -102,7 +102,7 @@ function UpdateProfileForm({ user, onUpdate }: { user: UserData; onUpdate: (u: U
 
   return (
     <div className="section-card" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
-      <h3 style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '1rem', color: '#007bff' }}>UPDATE PROFILE</h3>
+      <h3 style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '1rem', color: '#2e7d32' }}>UPDATE PROFILE</h3>
       {success && <div style={{ background: '#e8f5e9', color: '#2e7d32', padding: '0.75rem', borderRadius: '6px', marginBottom: '1rem', fontSize: '0.85rem' }}>{success}</div>}
       {error && <div style={{ background: '#ffebee', color: '#c62828', padding: '0.75rem', borderRadius: '6px', marginBottom: '1rem', fontSize: '0.85rem' }}>{error}</div>}
       <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '0.75rem' }}>
@@ -124,7 +124,7 @@ function UpdateProfileForm({ user, onUpdate }: { user: UserData; onUpdate: (u: U
             <input type="text" name="location" defaultValue={user.location || ''} style={{ width: '100%', padding: '0.6rem', border: '1px solid #ddd', borderRadius: '6px', fontSize: '0.9rem' }} />
           </div>
         </div>
-        <button type="submit" disabled={loading} style={{ background: '#007bff', color: 'white', border: 'none', padding: '0.7rem', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem', opacity: loading ? 0.7 : 1 }}>
+        <button type="submit" disabled={loading} style={{ background: '#2e7d32', color: 'white', border: 'none', padding: '0.7rem', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem', opacity: loading ? 0.7 : 1 }}>
           {loading ? 'SAVING...' : 'SAVE CHANGES'}
         </button>
       </form>
@@ -182,7 +182,7 @@ export default function ProfilePage() {
           <div className="section-card" style={{ padding: '2rem', textAlign: 'center' }}>
             <div style={{
               width: '80px', height: '80px', borderRadius: '50%',
-              background: '#007bff', color: 'white',
+              background: '#2e7d32', color: 'white',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               margin: '0 auto 1rem', fontSize: '2rem', fontWeight: '700'
             }}>
@@ -192,7 +192,7 @@ export default function ProfilePage() {
             <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '0.5rem' }}>{user.email}</p>
             {user.phone && <p style={{ fontSize: '0.85rem', color: '#666' }}>📱 {user.phone}</p>}
             {user.city && <p style={{ fontSize: '0.85rem', color: '#666' }}>📍 {user.city}</p>}
-            <a href="/orders" style={{ display: 'block', marginTop: '1rem', color: '#007bff', fontSize: '0.9rem', fontWeight: '600' }}>📦 My Orders</a>
+            <a href="/orders" style={{ display: 'block', marginTop: '1rem', color: '#2e7d32', fontSize: '0.9rem', fontWeight: '600' }}>📦 My Orders</a>
             <button
               onClick={handleLogout}
               style={{

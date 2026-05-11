@@ -7,7 +7,7 @@
 }
 
 .topBar {
-  background: #181818;
+  background: linear-gradient(135deg, #1b5e20, #2e7d32);
   color: #ccc;
   font-size: 0.75rem;
   padding: 0.35rem 0;
@@ -63,7 +63,7 @@
 .searchInput {
   flex: 1;
   padding: 0.6rem 0.8rem;
-  border: 2px solid #ffa100;
+  border: 2px solid #43a047;
   border-right: none;
   border-radius: 4px 0 0 4px;
   font-size: 0.9rem;
@@ -72,12 +72,12 @@
 }
 
 .searchInput:focus {
-  border-color: #e89500;
+  border-color: #2e7d32;
 }
 
 .searchBtn {
   padding: 0 1rem;
-  background: #ffa100;
+  background: linear-gradient(135deg, #2e7d32, #43a047);
   color: #fff;
   border: none;
   border-radius: 0 4px 4px 0;
@@ -89,7 +89,7 @@
 }
 
 .searchBtn:hover {
-  background: #e89500;
+  background: linear-gradient(135deg, #1b5e20, #2e7d32);
 }
 
 .actions {
@@ -110,7 +110,7 @@
 }
 
 .actionItem:hover {
-  color: #ffa100;
+  color: #43a047;
 }
 
 .actionLabel {
