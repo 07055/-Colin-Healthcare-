@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 
 const slides = [
   {
-    gradient: 'linear-gradient(135deg, #0056b3, #007bff)',
+    image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=1200&h=500&fit=crop&fm=jpg',
     emoji: '🩺',
     title: 'Doctor-Recommended Skincare',
     subtitle: 'Professional medical-grade products for healthy, radiant skin',
@@ -12,7 +12,7 @@ const slides = [
     href: '/shop?q=skincare',
   },
   {
-    gradient: 'linear-gradient(135deg, #1a237e, #283593)',
+    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&h=500&fit=crop&fm=jpg',
     emoji: '🦵',
     title: 'Knee & Joint Pain Relief',
     subtitle: 'Effective solutions for arthritis, inflammation & daily discomfort',
@@ -20,7 +20,7 @@ const slides = [
     href: '/shop?q=joint',
   },
   {
-    gradient: 'linear-gradient(135deg, #4a148c, #7b1fa2)',
+    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=1200&h=500&fit=crop&fm=jpg',
     emoji: '✨',
     title: 'Before & After Skincare',
     subtitle: 'See the transformation — acne treatment, brightening & anti-aging',
@@ -48,21 +48,30 @@ export default function HeroSlider() {
 
   return (
     <div style={{
-      background: slide.gradient,
-      color: 'white',
-      padding: '4rem 2rem',
-      textAlign: 'center',
       position: 'relative',
+      color: 'white',
+      minHeight: '420px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textAlign: 'center',
       overflow: 'hidden',
-      transition: 'background 0.4s ease',
+      backgroundImage: `url(${slide.image})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      transition: 'background-image 0.5s ease',
     }}>
-      {/* Decorative circles */}
-      <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: '300px', height: '300px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
-      <div style={{ position: 'absolute', bottom: '-100px', left: '-60px', width: '250px', height: '250px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+      {/* Dark overlay */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'rgba(0,0,0,0.55)',
+        zIndex: 0,
+      }} />
 
       <div style={{
         position: 'relative',
         zIndex: 1,
+        padding: '4rem 2rem',
         opacity: transitioning ? 0 : 1,
         transform: transitioning ? 'translateY(10px)' : 'translateY(0)',
         transition: 'opacity 0.3s ease, transform 0.3s ease',
@@ -70,7 +79,7 @@ export default function HeroSlider() {
         <div style={{ fontSize: '4rem', marginBottom: '0.5rem' }}>{slide.emoji}</div>
         <h1 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '1rem' }}>{slide.title}</h1>
         <p style={{ fontSize: '1.2rem', marginBottom: '2rem', opacity: 0.9 }}>{slide.subtitle}</p>
-        <a href={slide.href} className="btn-primary" style={{ background: 'white', color: slide.gradient.includes('0056b3') ? '#0056b3' : slide.gradient.includes('1a237e') ? '#1a237e' : '#4a148c', padding: '1rem 2rem', fontSize: '1rem', display: 'inline-block', textDecoration: 'none', fontWeight: '700', borderRadius: '4px' }}>
+        <a href={slide.href} className="btn-primary" style={{ background: 'white', color: '#0056b3', padding: '1rem 2rem', fontSize: '1rem', display: 'inline-block', textDecoration: 'none', fontWeight: '700', borderRadius: '4px' }}>
           {slide.cta} →
         </a>
       </div>
@@ -82,7 +91,7 @@ export default function HeroSlider() {
             key={i}
             onClick={() => { setTransitioning(true); setTimeout(() => { setCurrent(i); setTransitioning(false) }, 300) }}
             style={{
-              width: '10px', height: '10px', borderRadius: '50%', border: 'none',
+              width: '12px', height: '12px', borderRadius: '50%', border: 'none',
               background: i === current ? 'white' : 'rgba(255,255,255,0.4)',
               cursor: 'pointer', padding: 0, transition: 'background 0.3s',
             }}
