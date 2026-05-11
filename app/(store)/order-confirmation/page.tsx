@@ -18,8 +18,16 @@ export default async function OrderConfirmationPage({ searchParams }: { searchPa
       <p style={{ color: '#666', marginBottom: '2rem' }}>
         Order ID: <strong>{order.id.slice(-8).toUpperCase()}</strong>
       </p>
-      <p style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '2rem' }}>
+      <p style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1rem' }}>
         Total: KSh {order.total.toLocaleString()}
+      </p>
+      <p style={{ marginBottom: '0.5rem' }}>
+        <span style={{ padding: '0.3rem 0.8rem', borderRadius: '4px', fontSize: '0.85rem', background: order.paymentMethod === 'CASH_ON_DELIVERY' ? '#fff3e0' : '#e3f2fd', color: order.paymentMethod === 'CASH_ON_DELIVERY' ? '#e65100' : '#1565c0' }}>
+          {order.paymentMethod === 'CASH_ON_DELIVERY' ? '💵 Cash on Delivery' : '💳 Paystack'}
+        </span>
+        <span style={{ marginLeft: '0.5rem', padding: '0.3rem 0.8rem', borderRadius: '4px', fontSize: '0.85rem', background: order.paymentStatus === 'PAID' ? '#e8f5e9' : '#fff3e0', color: order.paymentStatus === 'PAID' ? '#2e7d32' : '#e65100' }}>
+          {order.paymentStatus === 'PAID' ? '✅ Paid' : '⏳ Payment Pending'}
+        </span>
       </p>
       <p style={{ color: '#666', marginBottom: '2rem' }}>
         You will receive a confirmation call shortly. Delivery within 24-48 hours.

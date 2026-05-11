@@ -115,6 +115,9 @@ export default function AdminPage() {
 
   const totalRevenue = orders.filter(o => o.paymentStatus === 'PAID').reduce((sum, o) => sum + Number(o.total), 0)
   const pendingOrders = orders.filter(o => o.status === 'PENDING')
+  const paidOrders = orders.filter(o => o.paymentStatus === 'PAID')
+  const unpaidOrders = orders.filter(o => o.paymentStatus !== 'PAID')
+  const pendingPayments = unpaidOrders.reduce((sum, o) => sum + Number(o.total), 0)
 
   if (loading) {
     return <div className="container" style={{ padding: '4rem', textAlign: 'center', color: '#666' }}>Loading dashboard...</div>
@@ -160,12 +163,14 @@ export default function AdminPage() {
                 <p style={{ fontSize: '2rem', fontWeight: '700' }}>{orders.length}</p>
               </div>
               <div style={{ background: '#28a745', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
-                <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Revenue</p>
-                <p style={{ fontSize: '1.8rem', fontWeight: '700' }}>KSh {totalRevenue.toLocaleString()}</p>
+                <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Paid</p>
+                <p style={{ fontSize: '1.4rem', fontWeight: '700' }}>KSh {totalRevenue.toLocaleString()}</p>
+                <p style={{ fontSize: '0.75rem', opacity: 0.8 }}>{paidOrders.length} orders</p>
               </div>
-              <div style={{ background: '#9c27b0', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
-                <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Customers</p>
-                <p style={{ fontSize: '2rem', fontWeight: '700' }}>{customers.length}</p>
+              <div style={{ background: '#e65100', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
+                <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Pending Payment</p>
+                <p style={{ fontSize: '1.4rem', fontWeight: '700' }}>KSh {pendingPayments.toLocaleString()}</p>
+                <p style={{ fontSize: '0.75rem', opacity: 0.8 }}>{unpaidOrders.length} orders</p>
               </div>
             </div>
 
@@ -184,11 +189,18 @@ export default function AdminPage() {
                         <span style={{ color: '#666', marginLeft: '0.5rem', fontSize: '0.85rem' }}>
                           KSh {Number(order.total).toLocaleString()}
                         </span>
+                        <span style={{ marginLeft: '0.5rem', fontSize: '0.7rem', padding: '0.15rem 0.4rem', borderRadius: '3px', background: order.paymentStatus === 'PAID' ? '#e8f5e9' : '#fff3e0', color: order.paymentStatus === 'PAID' ? '#2e7d32' : '#e65100' }}>
+                          {order.paymentStatus === 'PAID' ? '✅ Paid' : '⏳ Unpaid'}
+                        </span>
                       </div>
                       <div style={{ display: 'flex', gap: '0.5rem' }}>
-                        <span style={{ fontSize: '0.75rem', color: '#e65100' }}>{order.paymentMethod}</span>
+                        {order.paymentStatus !== 'PAID' && (
+                          <button onClick={() => markPaid(order.id)} style={{ fontSize: '0.75rem', color: '#1565c0', background: '#e3f2fd', border: 'none', padding: '0.25rem 0.5rem', borderRadius: '4px', cursor: 'pointer' }}>
+                            Paid
+                          </button>
+                        )}
                         <button onClick={() => markDelivered(order.id)} style={{ fontSize: '0.75rem', color: '#2e7d32', background: '#e8f5e9', border: 'none', padding: '0.25rem 0.5rem', borderRadius: '4px', cursor: 'pointer' }}>
-                          Mark Delivered
+                          Deliver
                         </button>
                       </div>
                     </div>

@@ -1,4 +1,5 @@
 import ProductGrid from "@/components/ProductGrid";
+import HeroSlider from "@/components/HeroSlider";
 import { getPrisma } from "@/lib/prisma";
 
 export const dynamic = 'force-dynamic'
@@ -20,11 +21,7 @@ export default async function Home() {
 
   return (
     <div>
-      <div style={{ background: 'linear-gradient(135deg, #0056b3, #007bff)', color: 'white', padding: '4rem 2rem', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '1rem' }}>🏥 Sam's Suma Mart</h1>
-        <p style={{ fontSize: '1.2rem', marginBottom: '2rem', opacity: 0.9 }}>Quality Medical Supplies & Healthcare Products</p>
-        <a href="/shop" className="btn-primary" style={{ background: 'white', color: '#007bff', padding: '1rem 2rem', fontSize: '1rem' }}>SHOP NOW →</a>
-      </div>
+      <HeroSlider />
 
       <div className="container" style={{ padding: '2rem 0' }}>
         {featuredProducts.length > 0 && (
