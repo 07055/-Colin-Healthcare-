@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { getPrisma } from '@/lib/prisma';
 import styles from './Header.module.css';
 import CartCount from './CartCount';
+import LogoutButton from './LogoutButton';
 
 export default async function Header() {
   const cookieStore = await cookies()
@@ -50,7 +51,7 @@ export default async function Header() {
               <Link href="/profile" style={{ fontSize: '0.9rem', color: '#007bff', fontWeight: '600' }}>
                 👤 {userName || 'Profile'}
               </Link>
-              <a href="/api/auth/logout" style={{ fontSize: '0.9rem', color: '#dc3545', fontWeight: '600' }}>Logout</a>
+              <LogoutButton />
             </div>
           ) : (
             <div style={{ display: 'flex', gap: '1rem' }}>

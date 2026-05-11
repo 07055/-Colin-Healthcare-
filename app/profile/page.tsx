@@ -167,10 +167,13 @@ export default function ProfilePage() {
     )
   }
 
-  if (notLoggedIn || !user) {
-    router.push('/login')
-    return null
-  }
+  useEffect(() => {
+    if (notLoggedIn || !user) {
+      router.push('/login')
+    }
+  }, [notLoggedIn, user, router])
+
+  if (notLoggedIn || !user) return null
 
   return (
     <div className="container" style={{ padding: '2rem 0' }}>
@@ -189,6 +192,7 @@ export default function ProfilePage() {
             <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '0.5rem' }}>{user.email}</p>
             {user.phone && <p style={{ fontSize: '0.85rem', color: '#666' }}>📱 {user.phone}</p>}
             {user.city && <p style={{ fontSize: '0.85rem', color: '#666' }}>📍 {user.city}</p>}
+            <a href="/orders" style={{ display: 'block', marginTop: '1rem', color: '#007bff', fontSize: '0.9rem', fontWeight: '600' }}>📦 My Orders</a>
             <button
               onClick={handleLogout}
               style={{

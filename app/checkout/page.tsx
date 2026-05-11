@@ -1,7 +1,7 @@
 'use client';
 
 import { useCart } from '@/lib/CartContext';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createOrder } from '@/lib/actions';
 
@@ -10,6 +10,16 @@ export default function CheckoutPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const trxref = params.get('trxref')
+    const reference = params.get('reference')
+    if (trxref || reference) {
+      setSuccess(`Payment successful! Reference: ${trxref || reference}. Your order is being processed.`)
+    }
+  }, [])
 
   function getFirstImage(images: any): string {
     if (typeof images === 'string') return images || '/placeholder.jpg';
@@ -17,7 +27,7 @@ export default function CheckoutPage() {
     return '/placeholder.jpg';
   }
 
-  if (cart.length === 0) {
+  if (cart.length === 0 && !success) {
     return (
       <div className="container" style={{ padding: '6rem 1rem', textAlign: 'center' }}>
         <h1>Your cart is empty</h1>
@@ -31,12 +41,11 @@ export default function CheckoutPage() {
   const deliveryFee = 200;
   const grandTotal = cartTotal + deliveryFee;
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>, method: string) {
-    e.preventDefault();
+  async function handleSubmit(e: React.MouseEvent<HTMLButtonElement>, method: string) {
+    const form = (e.currentTarget as HTMLButtonElement).form!
     setLoading(true);
     setError('');
 
-    const form = e.currentTarget;
     const fullName = (form.elements.namedItem('fullName') as HTMLInputElement).value;
     const phone = (form.elements.namedItem('phone') as HTMLInputElement).value;
     const email = (form.elements.namedItem('email') as HTMLInputElement).value;
@@ -66,21 +75,36 @@ export default function CheckoutPage() {
     if (orderResult.success) {
       clearCart();
       if (method === 'PAYSTACK') {
-        const payResponse = await fetch('/api/paystack/initialize', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({
-            email: email || 'customer@example.com',
-            amount: grandTotal * 100,
-            metadata: { orderId: orderResult.orderId }
+        try {
+          const controller = new AbortController()
+          const timeout = setTimeout(() => controller.abort(), 15000)
+
+          const payResponse = await fetch('/api/paystack/initialize', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+              email: email || 'customer@example.com',
+              amount: grandTotal,
+              metadata: { orderId: orderResult.orderId }
+            })
           })
-        });
-        const payData = await payResponse.json();
-        if (payData.authorization_url) {
-          window.location.href = payData.authorization_url;
-        } else {
-          setError(payData.error || 'Payment failed');
+
+          clearTimeout(timeout)
+
+          const payData = await payResponse.json();
+          if (payData.authorization_url) {
+            window.location.href = payData.authorization_url;
+          } else {
+            setError(payData.error || 'Payment initialization failed. Please try again.');
+            setLoading(false);
+          }
+        } catch (err: any) {
+          if (err.name === 'AbortError') {
+            setError('Payment timed out. Please try again.');
+          } else {
+            setError('Payment failed. Please try again.');
+          }
           setLoading(false);
         }
       } else {
@@ -90,6 +114,18 @@ export default function CheckoutPage() {
       setError(orderResult.error || 'Order creation failed');
       setLoading(false);
     }
+  }
+
+  if (success) {
+    return (
+      <div className="container" style={{ padding: '6rem 1rem', textAlign: 'center' }}>
+        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>✅</div>
+        <h1 style={{ fontSize: '1.8rem', fontWeight: '700', marginBottom: '1rem' }}>Payment Successful!</h1>
+        <p style={{ color: '#666', marginBottom: '1rem' }}>{success}</p>
+        <p style={{ color: '#666', marginBottom: '2rem' }}>You will receive a confirmation call shortly.</p>
+        <button className="btn-primary" onClick={() => router.push('/shop')}>Continue Shopping</button>
+      </div>
+    )
   }
 
   return (
@@ -106,7 +142,7 @@ export default function CheckoutPage() {
         <div className="section-card" style={{ padding: '1.5rem' }}>
           <h2 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '1rem' }}>Delivery Information</h2>
 
-          <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <form id="checkout-form" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div>
               <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Full Name *</label>
               <input type="text" name="fullName" required placeholder="Your full name" style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
@@ -134,10 +170,10 @@ export default function CheckoutPage() {
               <textarea name="address" required rows={3} placeholder="Building name, house number, street, landmark..." style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
             </div>
 
-            <button type="button" onClick={(e) => handleSubmit(e as any, 'CASH_ON_DELIVERY')} disabled={loading} className="btn-primary" style={{ width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: '700', opacity: loading ? 0.7 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}>
+            <button type="button" onClick={(e) => handleSubmit(e, 'CASH_ON_DELIVERY')} disabled={loading} className="btn-primary" style={{ width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: '700', opacity: loading ? 0.7 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}>
               {loading ? 'Processing...' : `ORDER - CASH ON DELIVERY KSh ${grandTotal.toLocaleString()}`}
             </button>
-            <button type="button" onClick={(e) => handleSubmit(e as any, 'PAYSTACK')} disabled={loading} style={{ width: '100%', padding: '0.9rem', fontSize: '0.95rem', fontWeight: '700', background: '#282828', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', opacity: loading ? 0.7 : 1 }}>
+            <button type="button" onClick={(e) => handleSubmit(e, 'PAYSTACK')} disabled={loading} style={{ width: '100%', padding: '0.9rem', fontSize: '0.95rem', fontWeight: '700', background: '#282828', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', opacity: loading ? 0.7 : 1 }}>
               {loading ? 'Processing...' : `PAY NOW - KSh ${grandTotal.toLocaleString()}`}
             </button>
           </form>

@@ -90,7 +90,7 @@ export default function CartPage() {
                         </div>
                         <p style={{ fontSize: '0.7rem', color: 'var(--secondary-text)', marginBottom: '1.5rem' }}>Delivery fees not included yet.</p>
                         <Link href="/checkout" className="btn-primary" style={{ width: '100%', padding: '1rem', display: 'block', textAlign: 'center', textDecoration: 'none' }}>
-                            CHECKOUT (${cartTotal.toLocaleString()})
+                            CHECKOUT (KSh {cartTotal.toLocaleString()})
                         </Link>
                     </div>
 
