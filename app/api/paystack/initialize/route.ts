@@ -4,6 +4,10 @@ const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY || ''
 
 export async function POST(request: NextRequest) {
   try {
+    if (!PAYSTACK_SECRET) {
+      return NextResponse.json({ error: 'Payment not configured. Please use Cash on Delivery.' }, { status: 500 })
+    }
+
     const { email, amount, metadata } = await request.json()
 
     const response = await fetch('https://api.paystack.co/transaction/initialize', {

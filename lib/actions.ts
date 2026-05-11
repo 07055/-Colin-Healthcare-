@@ -49,8 +49,14 @@ export async function createOrder(formData: FormData) {
     revalidatePath('/admin')
     revalidatePath('/profile')
     return { success: true, orderId: order.id }
-  } catch (error) {
-    console.error('Order creation failed:', error)
+  } catch (error: any) {
+    console.error('Order creation failed:', error?.message || error)
+    if (error?.message?.includes('connect')) {
+      return { success: false, error: 'Database connection error. Please try again.' }
+    }
+    if (error?.message?.includes('undefined_column') || error?.message?.includes('does not exist')) {
+      return { success: false, error: 'System error. Please contact support.' }
+    }
     return { success: false, error: 'Failed to create order. Please try again.' }
   }
 }

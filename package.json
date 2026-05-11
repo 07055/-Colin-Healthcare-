@@ -7,7 +7,7 @@
     "build": "npx prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "vercel-build": "npx prisma generate && next build",
+    "vercel-build": "npx prisma generate && npx prisma db push --accept-data-loss && next build",
     "migrate": "prisma migrate deploy",
     "seed": "npx prisma db seed"
   },
