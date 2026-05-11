@@ -1,4 +1,5 @@
 import ProductGrid from "@/components/ProductGrid";
+import CategoryAccordion from "@/components/CategoryAccordion";
 import { getPrisma } from "@/lib/prisma";
 
 export const dynamic = 'force-dynamic'
@@ -39,45 +40,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
             <div className="shop-layout">
                 {/* Sidebar - Categories */}
                 <div className="shop-sidebar">
-                    <div className="section-card" style={{ padding: '1rem' }}>
-                        <h3 style={{ fontSize: '0.95rem', fontWeight: '700', marginBottom: '1rem', color: '#007bff' }}>CATEGORIES</h3>
-                        <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <li>
-                                <a
-                                    href="/shop"
-                                    style={{
-                                        display: 'block',
-                                        padding: '0.5rem',
-                                        borderRadius: '4px',
-                                        fontSize: '0.85rem',
-                                        background: !category ? '#007bff' : 'transparent',
-                                        color: !category ? '#fff' : '#333',
-                                        fontWeight: !category ? '600' : '400',
-                                    }}
-                                >
-                                    All Products
-                                </a>
-                            </li>
-                            {categories.map((cat: string) => (
-                                <li key={cat}>
-                                    <a
-                                        href={`/shop?category=${encodeURIComponent(cat)}`}
-                                        style={{
-                                            display: 'block',
-                                            padding: '0.5rem',
-                                            borderRadius: '4px',
-                                            fontSize: '0.85rem',
-                                            background: category === cat ? '#007bff' : 'transparent',
-                                            color: category === cat ? '#fff' : '#333',
-                                            fontWeight: category === cat ? '600' : '400',
-                                        }}
-                                    >
-                                        {cat}
-                                    </a>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                    <CategoryAccordion categories={categories} currentCategory={category} />
                 </div>
 
                 {/* Products */}
