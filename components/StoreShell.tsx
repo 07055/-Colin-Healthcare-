@@ -1,12 +1,18 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import Header from './Header'
-import Footer from './Footer'
-import { CartProvider } from '@/lib/CartContext'
-import WhatsAppHelp from './WhatsAppHelp'
 
-export default function StoreShell({ children }: { children: React.ReactNode }) {
+export default function StoreShell({
+  children,
+  header,
+  footer,
+  whatsapp,
+}: {
+  children: React.ReactNode
+  header: React.ReactNode
+  footer: React.ReactNode
+  whatsapp: React.ReactNode
+}) {
   const pathname = usePathname()
   const isAdmin = pathname?.startsWith('/admin')
 
@@ -15,11 +21,11 @@ export default function StoreShell({ children }: { children: React.ReactNode }) 
   }
 
   return (
-    <CartProvider>
-      <Header />
+    <>
+      {header}
       <main style={{ minHeight: '80vh' }}>{children}</main>
-      <Footer />
-      <WhatsAppHelp />
-    </CartProvider>
+      {footer}
+      {whatsapp}
+    </>
   )
 }
