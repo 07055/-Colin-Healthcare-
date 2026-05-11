@@ -60,18 +60,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             const oldKey = getCartKey(prevUid || undefined)
             const newKey = getCartKey(currentUid || undefined)
 
-            const prevCart = localStorage.getItem(oldKey)
-            const newCart = localStorage.getItem(newKey)
+            const newCartData = localStorage.getItem(newKey)
 
-            if (prevCart && !newCart && prevUid !== null) {
-                localStorage.setItem(newKey, prevCart)
-                localStorage.removeItem(oldKey)
-                try { setCart(JSON.parse(prevCart)) } catch {}
-            } else if (newCart) {
-                try { setCart(JSON.parse(newCart)) } catch {}
+            if (newCartData) {
+                try { setCart(JSON.parse(newCartData)) } catch {}
+            } else if (prevUid === null) {
+                const oldCartData = localStorage.getItem(oldKey)
+                if (oldCartData) {
+                    localStorage.setItem(newKey, oldCartData)
+                    localStorage.removeItem(oldKey)
+                    try { setCart(JSON.parse(oldCartData)) } catch {}
+                } else {
+                    setCart([])
+                }
             } else {
                 setCart([])
             }
+
             prevUserId.current = currentUid
         }
     }, [userId, ready])
