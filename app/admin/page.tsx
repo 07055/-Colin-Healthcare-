@@ -211,6 +211,7 @@ export default function AdminPage() {
                       <th style={{ padding: '0.75rem' }}>Delivery</th>
                       <th style={{ padding: '0.75rem' }}>Items</th>
                       <th style={{ padding: '0.75rem' }}>Total</th>
+                      <th style={{ padding: '0.75rem' }}>Method</th>
                       <th style={{ padding: '0.75rem' }}>Payment</th>
                       <th style={{ padding: '0.75rem' }}>Status</th>
                       <th style={{ padding: '0.75rem' }}>Action</th>
@@ -240,8 +241,13 @@ export default function AdminPage() {
                         </td>
                         <td style={{ padding: '0.75rem', fontWeight: '700' }}>KSh {Number(order.total).toLocaleString()}</td>
                         <td style={{ padding: '0.75rem' }}>
+                          <span style={{ padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', background: order.paymentMethod === 'PAYSTACK' ? '#e3f2fd' : '#fff3e0', color: order.paymentMethod === 'PAYSTACK' ? '#1565c0' : '#e65100' }}>
+                            {order.paymentMethod === 'PAYSTACK' ? '💳 Paystack' : '💵 Cash on Delivery'}
+                          </span>
+                        </td>
+                        <td style={{ padding: '0.75rem' }}>
                           <span style={{ padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', background: order.paymentStatus === 'PAID' ? '#e8f5e9' : '#fff3e0', color: order.paymentStatus === 'PAID' ? '#2e7d32' : '#e65100' }}>
-                            {order.paymentStatus}
+                            {order.paymentStatus === 'PAID' ? '✅ PAID' : order.paymentStatus}
                           </span>
                         </td>
                         <td style={{ padding: '0.75rem' }}>
