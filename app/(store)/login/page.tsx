@@ -29,7 +29,11 @@ function LoginForm() {
       const data = await res.json()
 
       if (data.success) {
-        router.push('/cart')
+        if (data.role === 'ADMIN') {
+          window.location.href = '/admin'
+        } else {
+          window.location.href = '/'
+        }
       } else {
         setError(data.error || 'Login failed')
       }

@@ -45,7 +45,7 @@ export default function RegisterPage() {
       const data = await res.json()
 
       if (data.success) {
-        router.push('/cart')
+        window.location.href = '/'
       } else {
         setError(data.error || 'Registration failed')
       }

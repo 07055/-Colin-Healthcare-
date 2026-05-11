@@ -3,6 +3,8 @@ import Footer from "@/components/Footer";
 import { CartProvider } from "@/lib/CartContext";
 import WhatsAppHelp from "@/components/WhatsAppHelp";
 
+export const dynamic = 'force-dynamic'
+
 export default function StoreLayout({
   children,
 }: {
