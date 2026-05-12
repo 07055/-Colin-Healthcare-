@@ -55,26 +55,10 @@ interface Customer {
 
 type PageView = 'dashboard' | 'orders' | 'customers' | 'products'
 
-function AdminGuard({ children }: { children: React.ReactNode }) {
-  const router = useRouter()
-  const [authorized, setAuthorized] = useState(false)
-
-  useEffect(() => {
-    fetch('/api/auth/me')
-      .then(r => r.json())
-      .then(data => {
-        if (data.user && data.user.role === 'ADMIN') setAuthorized(true)
-        else router.push('/admin/login')
-      })
-      .catch(() => router.push('/admin/login'))
-  }, [router])
-
-  if (!authorized) return null
-  return <>{children}</>
-}
-
 export default function AdminPage() {
   const router = useRouter()
+  const [authorized, setAuthorized] = useState(false)
+  const [checking, setChecking] = useState(true)
   const [view, setView] = useState<PageView>('dashboard')
   const [orders, setOrders] = useState<Order[]>([])
   const [products, setProducts] = useState<Product[]>([])
@@ -82,9 +66,21 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/auth/me').then(r => r.json()).then(data => {
-      if (!data.user) router.push('/admin/login')
-    })
+    fetch('/api/auth/me')
+      .then(r => r.json())
+      .then(data => {
+        if (data.user && data.user.role === 'ADMIN') {
+          setAuthorized(true)
+          setChecking(false)
+        } else {
+          router.push('/admin/login')
+        }
+      })
+      .catch(() => router.push('/admin/login'))
+  }, [router])
+
+  useEffect(() => {
+    if (!authorized) return
     Promise.all([
       fetch('/api/admin/orders').then(r => r.json()),
       fetch('/api/admin/products').then(r => r.json()),
@@ -95,7 +91,7 @@ export default function AdminPage() {
       setCustomers(customersData.customers || [])
       setLoading(false)
     }).catch(() => setLoading(false))
-  }, [router])
+  }, [authorized])
 
   async function markDelivered(orderId: string) {
     await fetch(`/api/admin/orders/${orderId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'DELIVERED' }) })
@@ -119,12 +115,17 @@ export default function AdminPage() {
   const unpaidOrders = orders.filter(o => o.paymentStatus !== 'PAID')
   const pendingPayments = unpaidOrders.reduce((sum, o) => sum + Number(o.total), 0)
 
+  if (checking) {
+    return <div className="container" style={{ padding: '4rem', textAlign: 'center', color: '#666' }}>Verifying access...</div>
+  }
+
+  if (!authorized) return null
+
   if (loading) {
     return <div className="container" style={{ padding: '4rem', textAlign: 'center', color: '#666' }}>Loading dashboard...</div>
   }
 
   return (
-    <AdminGuard>
       <div className="container" style={{ padding: '2rem 0' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
           <h1 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Admin Dashboard</h1>
@@ -346,7 +347,6 @@ export default function AdminPage() {
           </div>
         )}
       </div>
-    </AdminGuard>
   )
 }
 
