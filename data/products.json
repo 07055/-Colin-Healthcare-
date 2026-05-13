@@ -1,0 +1,432 @@
+[
+  {
+    "name": "Suma Grand 1 (Cleanser, Lotion, Toner)",
+    "slug": "suma-grand-1-cleanser-lotion-toner",
+    "description": "Complete anti-aging skincare set with cleanser, lotion, and toner. Premium quality BF Suma product from the Beauty & Anti-Aging Technology line.",
+    "price": 11500,
+    "stock": 50,
+    "category": "Better Life",
+    "images": "/uploads/bf%20suma%20photos/better%20life/beauty%20and%20anti%20aging%20technology/suma%20grand%201%20;Cleanser%20,lotion,toner%20-ksh%2011,500.jpg",
+    "featured": false
+  },
+  {
+    "name": "Suma Grand 2 (Cleanser, Lotion, Toner, Facemask Cream)",
+    "slug": "suma-grand-2-cleanser-lotion-toner-facemask-cream",
+    "description": "Complete anti-aging skincare set with cleanser, lotion, toner, and facemask cream. Premium quality BF Suma product.",
+    "price": 19550,
+    "stock": 50,
+    "category": "Better Life",
+    "images": "/uploads/bf%20suma%20photos/better%20life/beauty%20and%20anti%20aging%20technology/suma%20grand%202%20;Cleanser%20,lotion,toner,facemask%20cream-ksh%2019,550.jpg",
+    "featured": false
+  },
+  {
+    "name": "Youth Essence Lotion BF Suma",
+    "slug": "youth-essence-lotion-bf-suma",
+    "description": "Anti-aging youth essence lotion. Nourishes and rejuvenates the skin. Premium quality BF Suma product.",
+    "price": 3885,
+    "stock": 50,
+    "category": "Better Life",
+    "images": "/uploads/bf%20suma%20photos/better%20life/beauty%20and%20anti%20aging%20technology/youth%20essence%20lotion%20bf%20suma-ksh%203,885.jpg",
+    "featured": false
+  },
+  {
+    "name": "Youth Essence Toner",
+    "slug": "youth-essence-toner",
+    "description": "Refreshing anti-aging facial toner. Helps tighten pores and restore skin balance. Premium quality BF Suma product.",
+    "price": 4250,
+    "stock": 50,
+    "category": "Better Life",
+    "images": "/uploads/bf%20suma%20photos/better%20life/beauty%20and%20anti%20aging%20technology/youth%20essence%20toner-%20ksh%204,250.jpg",
+    "featured": false
+  },
+  {
+    "name": "Youth Refreshing Facial Cleanser",
+    "slug": "youth-refreshing-facial-cleanser",
+    "description": "Gentle anti-aging facial cleanser. Removes impurities while nourishing the skin. Premium quality BF Suma product.",
+    "price": 3450,
+    "stock": 50,
+    "category": "Better Life",
+    "images": "/uploads/bf%20suma%20photos/better%20life/beauty%20and%20anti%20aging%20technology/youth%20refreshing%20facial%20cleanser-ksh%203,450.jpg",
+    "featured": false
+  },
+  {
+    "name": "BF Suma Feminergy 60 Capsules",
+    "slug": "bf-suma-feminergy-60-capsules",
+    "description": "Women's health and wellness supplement. Supports hormonal balance and vitality. 60 capsules. Premium quality BF Suma product.",
+    "price": 4650,
+    "stock": 50,
+    "category": "Better Life",
+    "images": "/uploads/bf%20suma%20photos/better%20life/women's%20Beauty/Bf%20Suma%20Feminergy%2060%20Capsules%20-%20ksh%204,650.webp",
+    "featured": false
+  },
+  {
+    "name": "BF Suma Prostatrelax Capsules 60's",
+    "slug": "bf-suma-prostatrelax-capsules-60-s",
+    "description": "Prostate health support supplement. Promotes healthy urinary function. 60 capsules. Premium quality BF Suma product.",
+    "price": 3750,
+    "stock": 50,
+    "category": "Better Life",
+    "images": "/uploads/bf%20suma%20photos/better%20life/women's%20Beauty/Bf%20suma%20prostatrelax%20capsules%2060's-%20ksh%203,750.jpg",
+    "featured": false
+  },
+  {
+    "name": "BF Suma X Power Man Capsules 30 Capsules",
+    "slug": "bf-suma-x-power-man-capsules-30-capsules",
+    "description": "Men's vitality and energy booster. Supports stamina and overall performance. 30 capsules. Premium quality BF Suma product.",
+    "price": 6530,
+    "stock": 50,
+    "category": "Better Life",
+    "images": "/uploads/bf%20suma%20photos/better%20life/women's%20Beauty/BF%20SUMA%20X%20Power%20Man%20Capsules%2030%20capsules%20-ksh%206530.jpg",
+    "featured": false
+  },
+  {
+    "name": "Xpower Coffee for Men 8 Sachets",
+    "slug": "xpower-coffee-for-men-8-sachets",
+    "description": "Energizing coffee blend for men. Boosts vitality and stamina. 8 sachets. Premium quality BF Suma product.",
+    "price": 2350,
+    "stock": 50,
+    "category": "Better Life",
+    "images": "/uploads/bf%20suma%20photos/better%20life/women's%20Beauty/xpower%20coffee%20for%20men%208%20sachets-ksh%202,350.jpg",
+    "featured": false
+  },
+  {
+    "name": "Youth Essence Facial Cream",
+    "slug": "youth-essence-facial-cream",
+    "description": "Nourishing anti-aging facial cream. Hydrates and rejuvenates for a youthful glow. Premium quality BF Suma product.",
+    "price": 0,
+    "stock": 50,
+    "category": "Facial",
+    "images": "/uploads/bf%20suma%20photos/Facial/youth%20essence%20facial%20cream.jpg",
+    "featured": false
+  },
+  {
+    "name": "Youth Essence Face Mask",
+    "slug": "youth-essence-face-mask",
+    "description": "Rejuvenating anti-aging face mask. Deeply nourishes and revitalizes the skin. Premium quality BF Suma product.",
+    "price": 0,
+    "stock": 50,
+    "category": "Facial",
+    "images": "/uploads/bf%20suma%20photos/Facial/youth%20essence%20mask.jpg",
+    "featured": false
+  },
+  {
+    "name": "4-in-1 Ginseng Coffee 20 Sachets",
+    "slug": "4-in-1-ginseng-coffee-20-sachets",
+    "description": "Premium ginseng-infused coffee for energy and wellness. 20 sachets. Premium quality BF Suma product.",
+    "price": 2150,
+    "stock": 50,
+    "category": "Immunity Builders",
+    "images": "/uploads/bf%20suma%20photos/immunity%20builders/4%20in%201%20ginseng%20Coffee%20,20%20sachetes%20,-ksh%202,150,ksh%20110@sachete%20.webp",
+    "featured": false
+  },
+  {
+    "name": "4-in-1 Reishi Coffee 20 Sachets",
+    "slug": "4-in-1-reishi-coffee-20-sachets",
+    "description": "Premium reishi mushroom-infused coffee for immunity support. 20 sachets. Premium quality BF Suma product.",
+    "price": 2050,
+    "stock": 50,
+    "category": "Immunity Builders",
+    "images": "/uploads/bf%20suma%20photos/immunity%20builders/4%20in%201%20Reishi%20Coffee%20,20%20sachetes%20,-ksh%202,050,ksh%20105@sachete%20.webp",
+    "featured": false
+  },
+  {
+    "name": "4-in-1 Cordyceps Coffee 20 Sachets",
+    "slug": "4-in-1-cordyceps-coffee-20-sachets",
+    "description": "Premium cordyceps-infused coffee for energy and stamina. 20 sachets. Premium quality BF Suma product.",
+    "price": 2250,
+    "stock": 50,
+    "category": "Immunity Builders",
+    "images": "/uploads/bf%20suma%20photos/immunity%20builders/4-in-1%20Cordyceps%20Coffee-20%20satchetes-ksh%202250,115%20@%20sachete.jpg",
+    "featured": false
+  },
+  {
+    "name": "Pure & Broken Ganoderma Oil 60 Capsules Deluxe",
+    "slug": "pure-broken-ganoderma-oil-60-capsules-deluxe",
+    "description": "Premium ganoderma oil supplement for immune support. 60 capsules deluxe edition. Premium quality BF Suma product.",
+    "price": 19865,
+    "stock": 50,
+    "category": "Immunity Builders",
+    "images": "/uploads/bf%20suma%20photos/immunity%20builders/Pure%20&%20Broken%20Ganoderma%20oil%2060%20capsule%20Deluxe%20-ksh%2019,865.jpg",
+    "featured": false
+  },
+  {
+    "name": "Pure & Broken Ganoderma Spore Capsules",
+    "slug": "pure-broken-ganoderma-spore-capsules",
+    "description": "High-potency ganoderma spore supplement for immune system support. Premium quality BF Suma product.",
+    "price": 17100,
+    "stock": 50,
+    "category": "Immunity Builders",
+    "images": "/uploads/bf%20suma%20photos/immunity%20builders/Pure%20&%20Broken%20Ganoderma%20spore%20Goapsvies%20-ksh%2017,100.jpg",
+    "featured": false
+  },
+  {
+    "name": "Quad Reishi Capsules 60 Capsules",
+    "slug": "quad-reishi-capsules-60-capsules",
+    "description": "Premium reishi mushroom supplement for immunity and wellness. 60 capsules. Premium quality BF Suma product.",
+    "price": 5000,
+    "stock": 50,
+    "category": "Immunity Builders",
+    "images": "/uploads/bf%20suma%20photos/immunity%20builders/Quad%20Reishi%20Capsules%20-%2060%20capsules%20-%20ksh%205,000.jpg",
+    "featured": false
+  },
+  {
+    "name": "Refined Yunzhi Essence 60 Capsules",
+    "slug": "refined-yunzhi-essence-60-capsules",
+    "description": "Premium Yunzhi (turkey tail mushroom) essence supplement. Supports immune health. 60 capsules. Premium quality BF Suma product.",
+    "price": 74500,
+    "stock": 50,
+    "category": "Immunity Builders",
+    "images": "/uploads/bf%20suma%20photos/immunity%20builders/Refined%20Yunzhi%20Essence%20-%2060%20capsules%20-ksh%2074,500.jpg",
+    "featured": true
+  },
+  {
+    "name": "NMN Coffee 20 Sachets",
+    "slug": "nmn-coffee-20-sachets",
+    "description": "Premium NMN-infused coffee for anti-aging and cellular energy. 20 sachets. Premium quality BF Suma product.",
+    "price": 3885,
+    "stock": 50,
+    "category": "Premium Selected",
+    "images": "/uploads/bf%20suma%20photos/Premium%20Selected/NMN%20Coffee%20-%2020%20sachets%20-ksh%203,885.jpg",
+    "featured": false
+  },
+  {
+    "name": "NMN Duo Release 30 Tablets",
+    "slug": "nmn-duo-release-30-tablets",
+    "description": "Advanced NMN supplement with dual-release technology for sustained anti-aging benefits. 30 tablets. Premium quality BF Suma product.",
+    "price": 23130,
+    "stock": 50,
+    "category": "Premium Selected",
+    "images": "/uploads/bf%20suma%20photos/Premium%20Selected/NMN%20Duo%20release%20-30%20tablets-ksh%2023,%20130.jpg",
+    "featured": false
+  },
+  {
+    "name": "NMN Share Mind 60 Capsules",
+    "slug": "nmn-share-mind-60-capsules",
+    "description": "NMN brain health supplement for cognitive function and mental clarity. 60 capsules. Premium quality BF Suma product.",
+    "price": 24830,
+    "stock": 50,
+    "category": "Premium Selected",
+    "images": "/uploads/bf%20suma%20photos/Premium%20Selected/nmn%20share%20mind%20mind%20-%2060%20capsules%20-ksh%2024,830.jpg",
+    "featured": false
+  },
+  {
+    "name": "Youth Ever Anti-Aging Supplement",
+    "slug": "youth-ever-anti-aging-supplement",
+    "description": "Premium anti-aging supplement for youthful vitality and longevity. Premium quality BF Suma product.",
+    "price": 15370,
+    "stock": 50,
+    "category": "Premium Selected",
+    "images": "/uploads/bf%20suma%20photos/Premium%20Selected/Youth%20Ever-ksh%2015,370.jpg",
+    "featured": true
+  },
+  {
+    "name": "Arthroxtra BF Suma 60 Tablets",
+    "slug": "arthroxtra-bf-suma-60-tablets",
+    "description": "Joint health and mobility supplement. Supports cartilage and reduces joint discomfort. 60 tablets. Premium quality BF Suma product.",
+    "price": 6250,
+    "stock": 50,
+    "category": "Sport Fit",
+    "images": "/uploads/bf%20suma%20photos/sport%20fit/bone%20&%20Joint%20Care/arthroxtra%20bf%20suma%2060%20tablets-ksh%206,250.jpg",
+    "featured": false
+  },
+  {
+    "name": "Gluzojoint Ultra Pro 4-in-1 60 Tablets",
+    "slug": "gluzojoint-ultra-pro-4-in-1-60-tablets",
+    "description": "Advanced joint care formula with 4-in-1 action. Supports bone and joint health. 60 tablets. Premium quality BF Suma product.",
+    "price": 6350,
+    "stock": 50,
+    "category": "Sport Fit",
+    "images": "/uploads/bf%20suma%20photos/sport%20fit/bone%20&%20Joint%20Care/gluzojoint%20ultra%20pro%204%20in%201%20-60%20tablets%20-%20kshs%206,350.jpg",
+    "featured": false
+  },
+  {
+    "name": "Gluzojoint-F 60 Capsules",
+    "slug": "gluzojoint-f-60-capsules",
+    "description": "Joint care supplement for flexibility and mobility. 60 capsules. Premium quality BF Suma product.",
+    "price": 4350,
+    "stock": 50,
+    "category": "Sport Fit",
+    "images": "/uploads/bf%20suma%20photos/sport%20fit/bone%20&%20Joint%20Care/gluzojoint-f-60%20capsules%20-%20lsh%204,350.jpg",
+    "featured": false
+  },
+  {
+    "name": "ZaminoCal Plus Capsules 60 Capsules",
+    "slug": "zaminocal-plus-capsules-60-capsules",
+    "description": "Calcium and mineral supplement for bone health. 60 capsules. Premium quality BF Suma product.",
+    "price": 3570,
+    "stock": 50,
+    "category": "Sport Fit",
+    "images": "/uploads/bf%20suma%20photos/sport%20fit/bone%20&%20Joint%20Care/ZaminoCal™%20Plus%20Capsules%2060%20capsules%20-%20ksh%203,570.jpg",
+    "featured": false
+  },
+  {
+    "name": "BF Suma Relivin Tea 20 Sachets",
+    "slug": "bf-suma-relivin-tea-20-sachets",
+    "description": "Revitalizing herbal tea for cardiovascular health and energy. 20 sachets. Premium quality BF Suma product.",
+    "price": 2800,
+    "stock": 50,
+    "category": "Sport Fit",
+    "images": "/uploads/bf%20suma%20photos/sport%20fit/cardio%20vascular%20health/Heart%20&%20Blood%20Fit/BF%20SUMA%20RELIVIN%20TEA%2020%20SACHETS-%20ksh%202,800.jpg",
+    "featured": false
+  },
+  {
+    "name": "Cerebrain Tablets 60 Tablets",
+    "slug": "cerebrain-tablets-60-tablets",
+    "description": "Brain health supplement for cognitive function, memory, and mental clarity. 60 tablets. Premium quality BF Suma product.",
+    "price": 3885,
+    "stock": 50,
+    "category": "Sport Fit",
+    "images": "/uploads/bf%20suma%20photos/sport%20fit/cardio%20vascular%20health/Heart%20&%20Blood%20Fit/Cerebrain%20Tablets-60%20Tablets-%20ksh%203,885.jpg",
+    "featured": false
+  },
+  {
+    "name": "Micro2 Cycle Tablets 100 Tablets",
+    "slug": "micro2-cycle-tablets-100-tablets",
+    "description": "Circulation and cardiovascular health supplement. Supports heart and blood vessel function. 100 tablets. Premium quality BF Suma product.",
+    "price": 3450,
+    "stock": 50,
+    "category": "Sport Fit",
+    "images": "/uploads/bf%20suma%20photos/sport%20fit/cardio%20vascular%20health/Heart%20&%20Blood%20Fit/Micro2TM%20Cycle%20Tablets%20100%20Tablets%20-%20ksh%203,450.jpg",
+    "featured": false
+  },
+  {
+    "name": "BF GymEffect Capsules 60 Capsules",
+    "slug": "bf-gymeffect-capsules-60-capsules",
+    "description": "Pre-workout and fitness supplement for energy, focus, and performance. 60 capsules. Premium quality BF Suma product.",
+    "price": 3200,
+    "stock": 50,
+    "category": "Sport Fit",
+    "images": "/uploads/bf%20suma%20photos/sport%20fit/cardio%20vascular%20health/Power%20Your%20Brain/BF%20GymEffect%20Capsules-60%20capsules%20-ksh%203,200%201%20capsule-ksh%2050.jpg",
+    "featured": false
+  },
+  {
+    "name": "Detoxilive Capsules 60 Capsules",
+    "slug": "detoxilive-capsules-60-capsules",
+    "description": "Liver detox and cleansing supplement. Supports natural detoxification processes. 60 capsules. Premium quality BF Suma product.",
+    "price": 2350,
+    "stock": 50,
+    "category": "Sport Fit",
+    "images": "/uploads/bf%20suma%20photos/sport%20fit/cardio%20vascular%20health/Power%20Your%20Brain/Detoxilive%20Capsules-60%20capsules-ksh%202,350.jpg",
+    "featured": false
+  },
+  {
+    "name": "BF Suma Calcium & Vitamin D3 Strawberry Flavour",
+    "slug": "bf-suma-calcium-vitamin-d3-strawberry",
+    "description": "Children's calcium and vitamin D3 supplement in delicious strawberry flavour. Supports strong bones and teeth. Premium quality BF Suma product.",
+    "price": 3750,
+    "stock": 50,
+    "category": "Suma Baby",
+    "images": "/uploads/bf%20suma%20photos/Suma%20Baby/bf%20suma%20calcium%20and%20vitamin%20d3%20strawberry%20flavour%20-ksh%203,750.jpg",
+    "featured": false
+  },
+  {
+    "name": "BF Suma Vitamin C 100mg Chewable Tablet",
+    "slug": "bf-suma-vitamin-c-100mg-chewable-tablet",
+    "description": "Children's vitamin C supplement in chewable tablet form. Supports immune health. 100mg. Premium quality BF Suma product.",
+    "price": 3150,
+    "stock": 50,
+    "category": "Suma Baby",
+    "images": "/uploads/bf%20suma%20photos/Suma%20Baby/bf%20suma%20essence%20vitamin%20c%20100mg%20chewable%20tablet%20ksh%203,150.jpg",
+    "featured": false
+  },
+  {
+    "name": "Sharp Vision Eye Health Chewable Tablets 90 Tablets",
+    "slug": "sharp-vision-eye-health-chewable-tablets-90",
+    "description": "Eye health supplement for children. Supports healthy vision and reduces digital eye strain. 90 chewable tablets. Premium quality BF Suma product.",
+    "price": 3750,
+    "stock": 50,
+    "category": "Suma Baby",
+    "images": "/uploads/bf%20suma%20photos/Suma%20Baby/sharp%20vision-eye%20health%20chewable%20Tablet(90%20tablets)%20-%20ksh%203,750.jpg",
+    "featured": false
+  },
+  {
+    "name": "BF Suma ConstiRelax Oral Solution",
+    "slug": "bf-suma-constirelax-oral-solution",
+    "description": "Digestive health oral solution for relief from constipation. Promotes regular bowel movement. Premium quality BF Suma product.",
+    "price": 4500,
+    "stock": 50,
+    "category": "Suma Digsetive Health",
+    "images": "/uploads/bf%20suma%20photos/Suma%20Digsetive%20health/BF%20SUMA%20ConstiRelax%20Oral%20Solution%20-ksh%204,500.png",
+    "featured": false
+  },
+  {
+    "name": "BF Suma Ez Xlim Tablets 90 Tablets",
+    "slug": "bf-suma-ez-xlim-tablets-90-tablets",
+    "description": "Weight management supplement. Supports healthy metabolism and appetite control. 90 tablets. Premium quality BF Suma product.",
+    "price": 8075,
+    "stock": 50,
+    "category": "Suma Digsetive Health",
+    "images": "/uploads/bf%20suma%20photos/Suma%20Digsetive%20health/bf%20suma%20ez%20xlim%20tablets%2090%20tablets%20-%20ksh%208,075.jpg",
+    "featured": false
+  },
+  {
+    "name": "Novel Depile Capsules BF Suma 60 Tablets",
+    "slug": "novel-depile-capsules-bf-suma-60-tablets",
+    "description": "Digestive health supplement for gut wellness and regularity. 60 tablets. Premium quality BF Suma product.",
+    "price": 3450,
+    "stock": 50,
+    "category": "Suma Digsetive Health",
+    "images": "/uploads/bf%20suma%20photos/Suma%20Digsetive%20health/novel%20depile%20capsules%20bf%20suma%2060%20tablets-%20ksh%203,450.jpg",
+    "featured": false
+  },
+  {
+    "name": "Probio3 BF Suma",
+    "slug": "probio3-bf-suma",
+    "description": "Probiotic supplement for digestive health and gut flora balance. Supports healthy digestion. Premium quality BF Suma product.",
+    "price": 3000,
+    "stock": 50,
+    "category": "Suma Digsetive Health",
+    "images": "/uploads/bf%20suma%20photos/Suma%20Digsetive%20health/probio3%20bf%20suma%20-ksh%203,000ksh.jpg",
+    "featured": false
+  },
+  {
+    "name": "Veggie Veggie BF Suma 15 Sachets",
+    "slug": "veggie-veggie-bf-suma-15-sachets",
+    "description": "Fruit and vegetable extract supplement for daily nutrition. 15 sachets. Premium quality BF Suma product.",
+    "price": 4650,
+    "stock": 50,
+    "category": "Suma Digsetive Health",
+    "images": "/uploads/bf%20suma%20photos/Suma%20Digsetive%20health/veggie%20veggie%20bf%20suma%2015%20sachets%20-%20ksh%204,650.jpg",
+    "featured": false
+  },
+  {
+    "name": "BF Suma Anatic Herbal Essence Soap",
+    "slug": "bf-suma-anatic-herbal-essence-soap",
+    "description": "Natural herbal soap for gentle cleansing and skin care. Made with premium botanical ingredients. Premium quality BF Suma product.",
+    "price": 345,
+    "stock": 50,
+    "category": "Suma Self Care",
+    "images": "/uploads/bf%20suma%20photos/Suma%20Self%20Care/BF%20SUMA%20Anatic%20Herbal%20Essence%20Soap%20ksh%20345.jpg",
+    "featured": false
+  },
+  {
+    "name": "BF Suma CoolRoll Oil",
+    "slug": "bf-suma-coolroll-oil",
+    "description": "Cooling massage oil for muscle and joint relief. Easy roll-on application. Premium quality BF Suma product.",
+    "price": 1870,
+    "stock": 50,
+    "category": "Suma Self Care",
+    "images": "/uploads/bf%20suma%20photos/Suma%20Self%20Care/BF%20Suma%20CoolRoll%20Oil%20ksh%201870.jpg",
+    "featured": false
+  },
+  {
+    "name": "BF Suma Femicare Feminine Cleanser",
+    "slug": "bf-suma-femicare-feminine-cleanser",
+    "description": "Gentle feminine hygiene cleanser. Maintains intimate health and freshness. Premium quality BF Suma product.",
+    "price": 1750,
+    "stock": 50,
+    "category": "Suma Self Care",
+    "images": "/uploads/bf%20suma%20photos/Suma%20Self%20Care/Bf%20suma%20femicare%20feminine%20cleanser%20ksh%201,750.jpg",
+    "featured": false
+  },
+  {
+    "name": "Dr. Ts Toothpaste",
+    "slug": "dr-ts-toothpaste",
+    "description": "Natural herbal toothpaste for oral care. Fights plaque and promotes healthy gums. Premium quality BF Suma product.",
+    "price": 855,
+    "stock": 50,
+    "category": "Suma Self Care",
+    "images": "/uploads/bf%20suma%20photos/Suma%20Self%20Care/Dr%20Ts%20Toothpaste%20-%20Ksh%20855.jpg",
+    "featured": false
+  }
+]
