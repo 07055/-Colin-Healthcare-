@@ -11,17 +11,17 @@ async function main() {
     // Create Admin User
     const hashedPassword = await bcrypt.hash('admin123', 10)
     await prisma.user.upsert({
-        where: { email: 'admin@ssm.co.ke' },
+        where: { email: 'kyalo457@gmail.com' },
         update: {},
         create: {
             name: 'SSM Admin',
-            email: 'admin@ssm.co.ke',
+            email: 'kyalo457@gmail.com',
             phone: '0796388790',
             password: hashedPassword,
             role: 'ADMIN',
         }
     })
-    console.log('Created Admin: admin@ssm.co.ke / admin123')
+    console.log('Created Admin: kyalo457@gmail.com / admin123')
 
     // Load real products from data/products.json
     const productsPath = path.join(__dirname, '..', 'data', 'products.json')
