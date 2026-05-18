@@ -12,11 +12,21 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
     const { id } = await params
     const body = await request.json()
+    const { name, slug, description, price, stock, images, category, featured } = body
     const prisma = getPrisma()
 
     const product = await prisma.product.update({
       where: { id },
-      data: body,
+      data: {
+        name,
+        slug,
+        description,
+        price: parseFloat(price),
+        stock: parseInt(stock || '0'),
+        images: images || '',
+        category,
+        featured: featured === true,
+      },
     })
 
     return NextResponse.json({ success: true, product })
