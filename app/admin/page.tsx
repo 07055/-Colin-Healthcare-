@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import CloudinaryUpload from '@/components/CloudinaryUpload'
 
@@ -357,7 +357,7 @@ function ProductManager({ products, setProducts, onDeleteProduct }: { products: 
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
-  const categories = ['Brain Health', 'Energy', 'Supplements', 'Eye Health', 'Teas', 'Honey', 'Heart Health', 'Wellness', 'Diagnostics', 'PPE', 'Consumables', 'Hygiene', 'Equipment']
+  const categories = useMemo(() => [...new Set(products.map(p => p.category))].sort(), [products])
 
   function resetForm() {
     setForm({ name: '', slug: '', description: '', price: '', stock: '0', category: '', images: '', featured: false })
