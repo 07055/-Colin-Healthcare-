@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   description: "Quality medical supplies, healthcare products, and BF Suma products delivered to your doorstep in Kenya.",
   metadataBase: new URL('https://samsumamart.co.ke'),
   robots: { index: true, follow: true },
+  verification: {
+    google: 'DHfA53dOVgEFxVwf5pSswOyJBRADoaTXHif3eIVX59g',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_KE',
