@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     template: "%s | Sam's Suma Mart",
   },
   description: "Quality medical supplies, healthcare products, and BF Suma products delivered to your doorstep in Kenya.",
-  metadataBase: new URL('https://samassumamart.co.ke'),
+  metadataBase: new URL('https://samsumamart.co.ke'),
   robots: { index: true, follow: true },
   openGraph: {
     type: 'website',

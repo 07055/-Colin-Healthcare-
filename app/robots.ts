@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin/', '/api/', '/cart', '/checkout', '/login', '/register', '/profile', '/orders', '/dashboard', '/order-confirmation'],
     },
-    sitemap: 'https://samassumamart.co.ke/sitemap.xml',
+    sitemap: 'https://samsumamart.co.ke/sitemap.xml',
   }
 }
