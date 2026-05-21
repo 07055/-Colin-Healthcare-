@@ -1,8 +1,18 @@
 import ProductGrid from "@/components/ProductGrid";
 import HeroSlider from "@/components/HeroSlider";
 import { getPrisma } from "@/lib/prisma";
+import type { Metadata } from "next";
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: "Sam's Suma Mart (SSM) | Medical Supplies & Healthcare Products",
+  description: "Shop quality medical supplies, healthcare products, and BF Suma products in Kenya. Fast delivery across Nairobi and all counties.",
+  openGraph: {
+    title: "Sam's Suma Mart (SSM) | Medical Supplies & Healthcare Products",
+    description: "Shop quality medical supplies, healthcare products, and BF Suma products in Kenya. Fast delivery across Nairobi and all counties.",
+  },
+}
 
 export default async function Home() {
   const prisma = getPrisma()

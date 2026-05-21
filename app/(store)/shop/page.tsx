@@ -1,8 +1,18 @@
 import ProductGrid from "@/components/ProductGrid";
 import CategoryAccordion from "@/components/CategoryAccordion";
 import { getPrisma } from "@/lib/prisma";
+import type { Metadata } from "next";
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: "Shop All Products",
+  description: "Browse our full catalog of medical supplies, healthcare products, and BF Suma products. Find surgical supplies, first aid kits, and more.",
+  openGraph: {
+    title: "Shop All Products | Sam's Suma Mart",
+    description: "Browse our full catalog of medical supplies, healthcare products, and BF Suma products.",
+  },
+}
 
 export default async function ShopPage({ searchParams }: { searchParams: Promise<{ q?: string; category?: string }> }) {
     const params = await searchParams;

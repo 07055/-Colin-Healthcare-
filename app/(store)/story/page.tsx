@@ -1,3 +1,14 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description: "Learn about Sam's Suma Mart — your trusted source for quality medical supplies and healthcare products in Kenya. Our story, our promise.",
+  openGraph: {
+    title: "About Sam's Suma Mart",
+    description: "Learn about Sam's Suma Mart — your trusted source for quality medical supplies and healthcare products in Kenya.",
+  },
+}
+
 export default function StoryPage() {
     return (
         <div className="container" style={{ padding: '8rem 0', maxWidth: '800px' }}>
