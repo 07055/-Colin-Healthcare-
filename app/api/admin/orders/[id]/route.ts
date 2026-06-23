@@ -18,6 +18,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     if (body.paymentStatus) data.paymentStatus = body.paymentStatus
     if (body.status) data.status = body.status
     if (Object.keys(data).length === 0) data.status = 'DELIVERED'
+    // Supports all OrderStatus values: PENDING, PRESCRIPTION_REVIEW, PROCESSING, SHIPPED, DELIVERED, CANCELLED
 
     const order = await prisma.order.update({
       where: { id },

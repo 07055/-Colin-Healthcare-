@@ -48,7 +48,14 @@ export default function CartPage() {
                                     <p style={{ fontSize: '1.1rem', fontWeight: '700', whiteSpace: 'nowrap' }}>KSh {(item.price * item.quantity).toLocaleString()}</p>
                                 </div>
 
-                                <p style={{ fontSize: '0.75rem', color: 'var(--jumia-orange)', marginBottom: '1rem' }}>Only 5 units left</p>
+                                {item.prescriptionRequired && (
+                                    <span style={{ display: 'inline-block', padding: '0.15rem 0.5rem', borderRadius: '4px', fontSize: '0.7rem', fontWeight: '700', background: '#fff3e0', color: '#e65100', marginBottom: '0.5rem' }}>
+                                        ⚕️ Prescription Required
+                                    </span>
+                                )}
+                                {!item.prescriptionRequired && (
+                                    <p style={{ fontSize: '0.75rem', color: 'var(--jumia-orange)', marginBottom: '1rem' }}>Only 5 units left</p>
+                                )}
 
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <button
@@ -93,6 +100,12 @@ export default function CartPage() {
                             CHECKOUT (KSh {cartTotal.toLocaleString()})
                         </Link>
                     </div>
+
+                    {cart.some(item => item.prescriptionRequired) && (
+                        <Link href="/prescriptions/upload" className="btn-primary" style={{ width: '100%', padding: '0.8rem', display: 'block', textAlign: 'center', textDecoration: 'none', fontSize: '0.85rem', background: '#e65100' }}>
+                            ⚕️ UPLOAD PRESCRIPTION
+                        </Link>
+                    )}
 
                     <div className="section-card" style={{ fontSize: '0.8rem' }}>
                         <p style={{ fontWeight: '700', marginBottom: '0.5rem' }}>Returns are easy</p>

@@ -11,6 +11,13 @@ interface OrderItem {
   quantity: number
 }
 
+interface PrescriptionInfo {
+  id: string
+  status: string
+  fileUrl: string
+  notes: string | null
+}
+
 interface Order {
   id: string
   createdAt: string
@@ -19,6 +26,29 @@ interface Order {
   paymentMethod: string
   total: number
   items: OrderItem[]
+  prescription?: PrescriptionInfo | null
+}
+
+const STATUS_LABELS: Record<string, string> = {
+  PENDING: 'Pending',
+  PRESCRIPTION_REVIEW: 'Prescription Review',
+  PROCESSING: 'Processing',
+  SHIPPED: 'Shipped',
+  DELIVERED: 'Delivered',
+  CANCELLED: 'Cancelled',
+}
+
+const RX_STATUS_LABELS: Record<string, string> = {
+  PENDING: 'Rx Pending',
+  APPROVED: 'Rx Approved',
+  REJECTED: 'Rx Rejected',
+  NEEDS_INFO: 'Rx Needs Info',
+}
+
+const PAYMENT_LABELS: Record<string, string> = {
+  CASH_ON_DELIVERY: 'COD',
+  PAYSTACK: 'Paystack',
+  MPESA: 'M-Pesa',
 }
 
 export default function OrdersPage() {
@@ -81,14 +111,19 @@ export default function OrdersPage() {
                   <p style={{ fontSize: '0.85rem', color: '#666' }}>Order #{order.id.slice(-8).toUpperCase()}</p>
                   <p style={{ fontSize: '0.8rem', color: '#999' }}>{new Date(order.createdAt).toLocaleDateString('en-KE', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
                 </div>
-                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
                   <span style={{ padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: '700', background: order.paymentStatus === 'PAID' ? '#e8f5e9' : '#fff3e0', color: order.paymentStatus === 'PAID' ? '#2e7d32' : '#e65100' }}>
-                    {order.paymentStatus}
+                    {order.paymentStatus === 'PAID' ? '✅ Paid' : '⏳ ' + order.paymentStatus}
                   </span>
-                  <span style={{ padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: '700', background: order.status === 'DELIVERED' ? '#e8f5e9' : '#e3f2fd', color: order.status === 'DELIVERED' ? '#2e7d32' : '#1565c0' }}>
-                    {order.status}
+                  <span style={{ padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: '700', background: order.status === 'DELIVERED' ? '#e8f5e9' : order.status === 'CANCELLED' ? '#ffebee' : order.status === 'PRESCRIPTION_REVIEW' ? '#fff3e0' : '#e3f2fd', color: order.status === 'DELIVERED' ? '#2e7d32' : order.status === 'CANCELLED' ? '#c62828' : order.status === 'PRESCRIPTION_REVIEW' ? '#e65100' : '#1565c0' }}>
+                    {STATUS_LABELS[order.status] || order.status}
                   </span>
-                  <span style={{ fontSize: '0.75rem', color: '#888' }}>{order.paymentMethod === 'CASH_ON_DELIVERY' ? 'COD' : 'Paystack'}</span>
+                  <span style={{ fontSize: '0.75rem', color: '#888' }}>{PAYMENT_LABELS[order.paymentMethod] || order.paymentMethod}</span>
+                  {order.prescription && (
+                    <span style={{ padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: '700', background: order.prescription.status === 'APPROVED' ? '#e8f5e9' : order.prescription.status === 'REJECTED' ? '#ffebee' : '#fff3e0', color: order.prescription.status === 'APPROVED' ? '#2e7d32' : order.prescription.status === 'REJECTED' ? '#c62828' : '#e65100' }}>
+                      {RX_STATUS_LABELS[order.prescription.status] || order.prescription.status}
+                    </span>
+                  )}
                 </div>
               </div>
               <div style={{ borderTop: '1px solid #eee', paddingTop: '1rem' }}>
@@ -99,8 +134,11 @@ export default function OrdersPage() {
                   </div>
                 ))}
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', paddingTop: '1rem', borderTop: '2px solid #eee' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem', paddingTop: '1rem', borderTop: '2px solid #eee' }}>
                 <span style={{ fontSize: '1.1rem', fontWeight: '700' }}>Total: KSh {order.total.toLocaleString()}</span>
+                <Link href={`/track-order?id=${order.id.slice(-8)}`} style={{ padding: '0.4rem 1rem', borderRadius: '4px', background: '#2e7d32', color: 'white', fontSize: '0.8rem', fontWeight: '700', textDecoration: 'none' }}>
+                  📍 Track
+                </Link>
               </div>
             </div>
           ))}

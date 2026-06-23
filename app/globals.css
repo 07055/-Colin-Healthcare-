@@ -121,6 +121,14 @@ h2.section-title {
   border-top-right-radius: var(--radius);
 }
 
+.cat-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.cat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(46,125,50,0.3);
+}
+
 img {
   max-width: 100%;
   height: auto;

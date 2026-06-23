@@ -28,6 +28,14 @@ interface Order {
   createdAt: string
   items: OrderItem[]
   user: { email: string } | null
+  prescription: {
+    id: string
+    status: string
+    fileUrl: string
+    fileType: string
+    notes: string | null
+    createdAt: string
+  } | null
 }
 
 interface Product {
@@ -53,7 +61,25 @@ interface Customer {
   _count: { orders: number }
 }
 
-type PageView = 'dashboard' | 'orders' | 'customers' | 'products'
+interface AdminPrescription {
+  id: string
+  orderId: string
+  fileUrl: string
+  fileType: string
+  notes: string | null
+  status: string
+  reviewedAt: string | null
+  createdAt: string
+  order: {
+    id: string
+    customerName: string
+    total: number
+    status: string
+    createdAt: string
+  }
+}
+
+type PageView = 'dashboard' | 'orders' | 'customers' | 'products' | 'prescriptions'
 
 export default function AdminPage() {
   const router = useRouter()
@@ -63,6 +89,7 @@ export default function AdminPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [customers, setCustomers] = useState<Customer[]>([])
+  const [prescriptions, setPrescriptions] = useState<AdminPrescription[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -85,10 +112,12 @@ export default function AdminPage() {
       fetch('/api/admin/orders').then(r => r.json()),
       fetch('/api/admin/products').then(r => r.json()),
       fetch('/api/admin/customers').then(r => r.json()),
-    ]).then(([ordersData, productsData, customersData]) => {
+      fetch('/api/admin/prescriptions').then(r => r.json()),
+    ]).then(([ordersData, productsData, customersData, prescriptionsData]) => {
       setOrders(ordersData.orders || [])
       setProducts(productsData.products || [])
       setCustomers(customersData.customers || [])
+      setPrescriptions(prescriptionsData.prescriptions || [])
       setLoading(false)
     }).catch(() => setLoading(false))
   }, [authorized])
@@ -114,6 +143,19 @@ export default function AdminPage() {
   const paidOrders = orders.filter(o => o.paymentStatus === 'PAID')
   const unpaidOrders = orders.filter(o => o.paymentStatus !== 'PAID')
   const pendingPayments = unpaidOrders.reduce((sum, o) => sum + Number(o.total), 0)
+  const pendingPrescriptions = prescriptions.filter(p => p.status === 'PENDING')
+
+  async function approvePrescription(prescriptionId: string) {
+    await fetch(`/api/admin/prescriptions/${prescriptionId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'APPROVED' }) })
+    setPrescriptions(prev => prev.map(p => p.id === prescriptionId ? { ...p, status: 'APPROVED', order: { ...p.order, status: 'PROCESSING' } } : p))
+  }
+
+  async function rejectPrescription(prescriptionId: string) {
+    const notes = prompt('Reason for rejection:')
+    if (notes === null) return
+    await fetch(`/api/admin/prescriptions/${prescriptionId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'REJECTED', notes }) })
+    setPrescriptions(prev => prev.map(p => p.id === prescriptionId ? { ...p, status: 'REJECTED', notes, order: { ...p.order, status: 'PENDING' } } : p))
+  }
 
   if (checking) {
     return <div className="container" style={{ padding: '4rem', textAlign: 'center', color: '#666' }}>Verifying access...</div>
@@ -138,7 +180,7 @@ export default function AdminPage() {
 
         {/* Navigation Tabs */}
         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', borderBottom: '2px solid #eee', paddingBottom: '0.5rem' }}>
-          {(['dashboard', 'orders', 'customers', 'products'] as PageView[]).map(tab => (
+          {(['dashboard', 'orders', 'customers', 'products', 'prescriptions'] as PageView[]).map(tab => (
             <button key={tab} onClick={() => setView(tab)} style={{
               padding: '0.5rem 1.2rem', border: 'none', borderRadius: '6px 6px 0 0',
               background: view === tab ? '#2e7d32' : 'transparent',
@@ -154,7 +196,7 @@ export default function AdminPage() {
         {/* Overview */}
         {view === 'dashboard' && (
           <>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
               <div style={{ background: 'linear-gradient(135deg, #2e7d32, #43a047)', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
                 <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Products</p>
                 <p style={{ fontSize: '2rem', fontWeight: '700' }}>{products.length}</p>
@@ -172,6 +214,10 @@ export default function AdminPage() {
                 <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Pending Payment</p>
                 <p style={{ fontSize: '1.4rem', fontWeight: '700' }}>KSh {pendingPayments.toLocaleString()}</p>
                 <p style={{ fontSize: '0.75rem', opacity: 0.8 }}>{unpaidOrders.length} orders</p>
+              </div>
+              <div style={{ background: 'linear-gradient(135deg, #6a1b9a, #ab47bc)', color: 'white', padding: '1.5rem', borderRadius: '8px' }}>
+                <p style={{ fontSize: '0.8rem', marginBottom: '0.3rem' }}>Pending Prescriptions</p>
+                <p style={{ fontSize: '2rem', fontWeight: '700' }}>{pendingPrescriptions.length}</p>
               </div>
             </div>
 
@@ -209,6 +255,36 @@ export default function AdminPage() {
                 </div>
               )}
             </div>
+
+            <div className="section-card" style={{ padding: '1.5rem', marginTop: '1.5rem' }}>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1rem' }}>
+                Pending Prescriptions ({pendingPrescriptions.length})
+              </h2>
+              {pendingPrescriptions.length === 0 ? (
+                <p style={{ color: '#666', textAlign: 'center', padding: '2rem' }}>No pending prescriptions.</p>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  {pendingPrescriptions.slice(0, 5).map(p => (
+                    <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem', background: '#f3e5f5', borderRadius: '6px' }}>
+                      <div>
+                        <span style={{ fontWeight: '600' }}>{p.order.customerName}</span>
+                        <span style={{ color: '#666', marginLeft: '0.5rem', fontSize: '0.85rem' }}>
+                          {p.fileType.toUpperCase()} - {new Date(p.createdAt).toLocaleDateString('en-KE')}
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <button onClick={() => approvePrescription(p.id)} style={{ fontSize: '0.75rem', color: '#2e7d32', background: '#e8f5e9', border: 'none', padding: '0.25rem 0.5rem', borderRadius: '4px', cursor: 'pointer' }}>
+                          Approve
+                        </button>
+                        <button onClick={() => rejectPrescription(p.id)} style={{ fontSize: '0.75rem', color: '#c62828', background: '#ffebee', border: 'none', padding: '0.25rem 0.5rem', borderRadius: '4px', cursor: 'pointer' }}>
+                          Reject
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </>
         )}
 
@@ -233,6 +309,7 @@ export default function AdminPage() {
                       <th style={{ padding: '0.75rem' }}>Method</th>
                       <th style={{ padding: '0.75rem' }}>Payment</th>
                       <th style={{ padding: '0.75rem' }}>Status</th>
+                      <th style={{ padding: '0.75rem' }}>Prescription</th>
                       <th style={{ padding: '0.75rem' }}>Action</th>
                     </tr>
                   </thead>
@@ -278,6 +355,15 @@ export default function AdminPage() {
                             {order.status}
                           </span>
                         </td>
+                        <td style={{ padding: '0.75rem' }}>
+                          {order.prescription ? (
+                            <span style={{ padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', background: order.prescription.status === 'APPROVED' ? '#e8f5e9' : order.prescription.status === 'REJECTED' ? '#ffebee' : '#fff3e0', color: order.prescription.status === 'APPROVED' ? '#2e7d32' : order.prescription.status === 'REJECTED' ? '#c62828' : '#e65100' }}>
+                              {order.prescription.status}
+                            </span>
+                          ) : (
+                            <span style={{ color: '#999', fontSize: '0.75rem' }}>None</span>
+                          )}
+                        </td>
                         <td style={{ padding: '0.75rem', whiteSpace: 'nowrap' }}>
                           {order.paymentStatus !== 'PAID' && (
                             <button onClick={() => markPaid(order.id)} style={{ background: '#1565c0', color: 'white', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', marginRight: '0.25rem' }}>
@@ -287,6 +373,11 @@ export default function AdminPage() {
                           {order.status !== 'DELIVERED' && (
                             <button onClick={() => markDelivered(order.id)} style={{ background: '#2e7d32', color: 'white', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem' }}>
                               Deliver
+                            </button>
+                          )}
+                          {order.prescription && order.prescription.status === 'PENDING' && (
+                            <button onClick={() => setView('prescriptions')} style={{ background: '#6a1b9a', color: 'white', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', marginLeft: '0.25rem' }}>
+                              Review Rx
                             </button>
                           )}
                         </td>
@@ -344,6 +435,73 @@ export default function AdminPage() {
         {view === 'products' && (
           <div>
             <ProductManager products={products} setProducts={setProducts} onDeleteProduct={deleteProduct} />
+          </div>
+        )}
+
+        {/* Prescriptions */}
+        {view === 'prescriptions' && (
+          <div className="section-card" style={{ padding: '1.5rem' }}>
+            <h2 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1rem' }}>Prescriptions ({prescriptions.length})</h2>
+            {prescriptions.length === 0 ? (
+              <div style={{ padding: '3rem', textAlign: 'center', color: '#666' }}><p>No prescriptions yet.</p></div>
+            ) : (
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '2px solid #eee', textAlign: 'left' }}>
+                      <th style={{ padding: '0.75rem' }}>#</th>
+                      <th style={{ padding: '0.75rem' }}>Date</th>
+                      <th style={{ padding: '0.75rem' }}>Customer</th>
+                      <th style={{ padding: '0.75rem' }}>Order ID</th>
+                      <th style={{ padding: '0.75rem' }}>File Type</th>
+                      <th style={{ padding: '0.75rem' }}>Status</th>
+                      <th style={{ padding: '0.75rem' }}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {prescriptions.map((p, i) => (
+                      <tr key={p.id} style={{ borderBottom: '1px solid #eee' }}>
+                        <td style={{ padding: '0.75rem' }}>{i + 1}</td>
+                        <td style={{ padding: '0.75rem', whiteSpace: 'nowrap', fontSize: '0.8rem', color: '#555' }}>
+                          <div>{new Date(p.createdAt).toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+                          <div style={{ fontSize: '0.7rem', color: '#999' }}>{new Date(p.createdAt).toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' })}</div>
+                        </td>
+                        <td style={{ padding: '0.75rem', fontWeight: '600' }}>{p.order.customerName}</td>
+                        <td style={{ padding: '0.75rem', fontSize: '0.8rem', fontFamily: 'monospace' }}>{p.orderId.slice(0, 8)}...</td>
+                        <td style={{ padding: '0.75rem' }}>
+                          <span style={{ padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', background: '#e3f2fd', color: '#1565c0' }}>
+                            {p.fileType.toUpperCase()}
+                          </span>
+                        </td>
+                        <td style={{ padding: '0.75rem' }}>
+                          <span style={{ padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', background: p.status === 'APPROVED' ? '#e8f5e9' : p.status === 'REJECTED' ? '#ffebee' : '#fff3e0', color: p.status === 'APPROVED' ? '#2e7d32' : p.status === 'REJECTED' ? '#c62828' : '#e65100' }}>
+                            {p.status}
+                          </span>
+                        </td>
+                        <td style={{ padding: '0.75rem', whiteSpace: 'nowrap' }}>
+                          <a href={p.fileUrl} target="_blank" rel="noopener noreferrer" style={{ background: '#1565c0', color: 'white', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', textDecoration: 'none', display: 'inline-block', marginRight: '0.25rem' }}>
+                            View
+                          </a>
+                          {p.status === 'PENDING' && (
+                            <>
+                              <button onClick={() => approvePrescription(p.id)} style={{ background: '#2e7d32', color: 'white', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', marginRight: '0.25rem' }}>
+                                Approve
+                              </button>
+                              <button onClick={() => rejectPrescription(p.id)} style={{ background: '#c62828', color: 'white', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem' }}>
+                                Reject
+                              </button>
+                            </>
+                          )}
+                          {p.status !== 'PENDING' && p.notes && (
+                            <span style={{ fontSize: '0.75rem', color: '#666', fontStyle: 'italic' }}>{p.notes}</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
       </div>

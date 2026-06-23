@@ -3,11 +3,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Sam's Suma Mart (SSM) | Medical Supplies & Healthcare Products",
-    template: "%s | Sam's Suma Mart",
+    default: "Colin Healthcare (CH) | Medicines & Health Products",
+    template: "%s | Colin Healthcare",
   },
-  description: "Quality medical supplies, healthcare products, and BF Suma products delivered to your doorstep in Kenya.",
-  metadataBase: new URL('https://samsumamart.co.ke'),
+  description: "Quality medicines, health products, and pharmaceutical supplies delivered to your doorstep in Kenya.",
+  metadataBase: new URL('https://colinhealthcare.co.ke'),
   robots: { index: true, follow: true },
   verification: {
     google: 'DHfA53dOVgEFxVwf5pSswOyJBRADoaTXHif3eIVX59g',
@@ -15,9 +15,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_KE',
-    siteName: "Sam's Suma Mart",
-    title: "Sam's Suma Mart (SSM) | Medical Supplies & Healthcare Products",
-    description: "Quality medical supplies, healthcare products, and BF Suma products delivered to your doorstep in Kenya.",
+    siteName: "Colin Healthcare",
+    title: "Colin Healthcare (CH) | Medicines & Health Products",
+    description: "Quality medicines, health products, and pharmaceutical supplies delivered to your doorstep in Kenya.",
   },
 };
 

@@ -24,6 +24,17 @@ export async function createOrder(formData: FormData) {
 
   try {
     const prisma = getPrisma()
+
+    const productIds = items.map((item: any) => item.id).filter(Boolean)
+    let needsPrescription = false
+    if (productIds.length > 0) {
+      const products = await prisma.product.findMany({
+        where: { id: { in: productIds } },
+        select: { id: true, prescriptionRequired: true }
+      })
+      needsPrescription = products.some((p: any) => p.prescriptionRequired)
+    }
+
     const order = await prisma.order.create({
       data: {
         customerName: fullName,
@@ -33,14 +44,17 @@ export async function createOrder(formData: FormData) {
         address,
         location: location || null,
         total,
+        deliveryFee: 200,
         paymentMethod: paymentMethod as any,
         paymentStatus: 'PENDING',
+        status: needsPrescription ? 'PRESCRIPTION_REVIEW' : 'PENDING',
         userId: userId || null,
         items: {
           create: items.map((item: any) => ({
             name: item.name,
             price: item.price,
             quantity: item.quantity,
+            productId: item.id || null,
           }))
         }
       }
@@ -65,6 +79,18 @@ export async function getOrders() {
   const prisma = getPrisma()
   return prisma.order.findMany({
     orderBy: { createdAt: 'desc' },
-    include: { items: true, user: true }
+    include: { items: true, user: true, prescription: true }
+  })
+}
+
+export async function getOrderById(id: string) {
+  const prisma = getPrisma()
+  return prisma.order.findUnique({
+    where: { id },
+    include: {
+      items: true,
+      user: true,
+      prescription: true,
+    }
   })
 }

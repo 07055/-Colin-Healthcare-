@@ -17,7 +17,7 @@ export default async function DashboardPage() {
     where: { id: userId },
     include: {
       orders: {
-        include: { items: true },
+        include: { items: true, prescription: true },
         orderBy: { createdAt: 'desc' }
       }
     }
@@ -57,24 +57,51 @@ export default async function DashboardPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {user.orders.map((order: any) => (
                 <div key={order.id} style={{ border: '1px solid #eee', borderRadius: '8px', padding: '1rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', flexWrap: 'wrap', gap: '0.25rem' }}>
                     <span style={{ fontFamily: 'monospace', fontWeight: '600' }}>#{order.id.slice(-8).toUpperCase()}</span>
-                    <span style={{
-                      padding: '0.2rem 0.5rem',
-                      borderRadius: '4px',
-                      fontSize: '0.75rem',
-                      background: order.paymentStatus === 'PAID' ? '#e8f5e9' : '#ffebee',
-                      color: order.paymentStatus === 'PAID' ? '#2e7d32' : '#c62828',
-                    }}>
-                      {order.paymentStatus}
-                    </span>
+                    <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap' }}>
+                      <span style={{
+                        padding: '0.2rem 0.5rem',
+                        borderRadius: '4px',
+                        fontSize: '0.75rem',
+                        background: order.paymentStatus === 'PAID' ? '#e8f5e9' : '#ffebee',
+                        color: order.paymentStatus === 'PAID' ? '#2e7d32' : '#c62828',
+                      }}>
+                        {order.paymentStatus === 'PAID' ? '✅ Paid' : '⏳ ' + order.paymentStatus}
+                      </span>
+                      <span style={{
+                        padding: '0.2rem 0.5rem',
+                        borderRadius: '4px',
+                        fontSize: '0.75rem',
+                        background: order.status === 'DELIVERED' ? '#e8f5e9' : order.status === 'CANCELLED' ? '#ffebee' : order.status === 'PRESCRIPTION_REVIEW' ? '#fff3e0' : '#e3f2fd',
+                        color: order.status === 'DELIVERED' ? '#2e7d32' : order.status === 'CANCELLED' ? '#c62828' : order.status === 'PRESCRIPTION_REVIEW' ? '#e65100' : '#1565c0',
+                      }}>
+                        {order.status === 'PRESCRIPTION_REVIEW' ? 'Prescription Review' : order.status}
+                      </span>
+                      {order.prescription && (
+                        <span style={{
+                          padding: '0.2rem 0.5rem',
+                          borderRadius: '4px',
+                          fontSize: '0.75rem',
+                          background: order.prescription.status === 'APPROVED' ? '#e8f5e9' : order.prescription.status === 'REJECTED' ? '#ffebee' : '#fff3e0',
+                          color: order.prescription.status === 'APPROVED' ? '#2e7d32' : order.prescription.status === 'REJECTED' ? '#c62828' : '#e65100',
+                        }}>
+                          Rx {order.prescription.status}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '0.5rem' }}>
                     {order.items.length} item(s) • KSh {order.total.toLocaleString()}
                   </p>
-                  <p style={{ fontSize: '0.8rem', color: '#999' }}>
+                  <p style={{ fontSize: '0.8rem', color: '#999', marginBottom: '0.5rem' }}>
                     {new Date(order.createdAt).toLocaleDateString()}
                   </p>
+                  <div style={{ textAlign: 'right' }}>
+                    <Link href={`/track-order?id=${order.id.slice(-8)}`} style={{ fontSize: '0.8rem', color: '#2e7d32', fontWeight: '600', textDecoration: 'none' }}>
+                      📍 Track Order →
+                    </Link>
+                  </div>
                 </div>
               ))}
             </div>

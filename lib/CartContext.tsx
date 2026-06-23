@@ -8,6 +8,7 @@ export interface CartItem {
     price: number
     images: string | string[]
     quantity: number
+    prescriptionRequired?: boolean
 }
 
 interface CartContextType {
@@ -23,7 +24,7 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined)
 
 function getCartKey(userId?: string): string {
-    return userId ? `samsuma-cart-${userId}` : 'samsuma-cart-anon'
+    return userId ? `ch-cart-${userId}` : 'ch-cart-anon'
 }
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
@@ -95,7 +96,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                     item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
                 )
             }
-            return [...prev, { id: product.id, name: product.name, price: product.price, images: product.images || '', quantity: 1 }]
+            return [...prev, { id: product.id, name: product.name, price: product.price, images: product.images || '', quantity: 1, prescriptionRequired: product.prescriptionRequired || false }]
         })
     }
 

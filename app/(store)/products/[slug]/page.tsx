@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { getPrisma } from '@/lib/prisma'
+import { getProductBySlug, getProductsByCategory } from '@/lib/data'
 import ProductDetail from '@/components/ProductDetail'
 import type { Metadata } from 'next'
 
@@ -15,8 +15,7 @@ function getFirstImage(images: any): string {
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params
-  const prisma = getPrisma()
-  const product = await prisma.product.findUnique({ where: { slug } })
+  const product = getProductBySlug(slug)
   if (!product) return {}
   return {
     title: product.name,
@@ -31,23 +30,15 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params
-  const prisma = getPrisma()
-
-  const product = await prisma.product.findUnique({
-    where: { slug }
-  })
+  const product = getProductBySlug(slug)
 
   if (!product) {
     notFound()
   }
 
-  const relatedProducts = await prisma.product.findMany({
-    where: {
-      category: product.category,
-      id: { not: product.id }
-    },
-    take: 4
-  })
+  const relatedProducts = getProductsByCategory(product.category)
+    .filter(p => p.id !== product.id)
+    .slice(0, 4)
 
   return <ProductDetail product={product} relatedProducts={relatedProducts} />
 }

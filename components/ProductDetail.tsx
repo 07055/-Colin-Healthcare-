@@ -49,11 +49,18 @@ export default function ProductDetail({ product, relatedProducts }: ProductDetai
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
             <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#2e7d32' }}>KSh {product.price.toLocaleString()}</span>
-            <span style={{ fontSize: '1.2rem', color: '#999', textDecoration: 'line-through' }}>KSh {(product.price * 1.25).toLocaleString()}</span>
-            <span style={{ background: '#28a745', color: 'white', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem' }}>-25%</span>
+            {product.prescriptionRequired && (
+              <span style={{ background: '#e53935', color: 'white', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: '600' }}>Rx</span>
+            )}
           </div>
 
           <p style={{ color: '#666', lineHeight: '1.6', marginBottom: '2rem' }}>{product.description}</p>
+
+          {product.prescriptionRequired && (
+            <div style={{ background: '#fff3e0', border: '1px solid #ffb74d', borderRadius: '8px', padding: '0.75rem 1rem', marginBottom: '1.5rem', fontSize: '0.85rem', color: '#e65100' }}>
+              ⚕️ Requires Prescription — Upload at checkout
+            </div>
+          )}
 
           <button
             onClick={handleAddToCart}

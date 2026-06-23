@@ -1,49 +1,30 @@
 import ProductGrid from "@/components/ProductGrid";
 import CategoryAccordion from "@/components/CategoryAccordion";
-import { getPrisma } from "@/lib/prisma";
+import { getProductsByCategory, getCategories, searchProducts } from "@/lib/data";
 import type { Metadata } from "next";
 
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: "Shop All Products",
-  description: "Browse our full catalog of medical supplies, healthcare products, and BF Suma products. Find surgical supplies, first aid kits, and more.",
+  description: "Browse our full catalog of medicines, health products, and pharmaceutical supplies. Find prescription medicines, OTC drugs, and more.",
   openGraph: {
-    title: "Shop All Products | Sam's Suma Mart",
-    description: "Browse our full catalog of medical supplies, healthcare products, and BF Suma products.",
+    title: "Shop All Products | Colin Healthcare",
+    description: "Browse our full catalog of medicines, health products, and pharmaceutical supplies.",
   },
 }
 
-export default async function ShopPage({ searchParams }: { searchParams: Promise<{ q?: string; category?: string }> }) {
+import Link from 'next/link'
+
+const CATEGORY_TYPES = ['OTC', 'Wellness', 'Devices', 'Prescription', 'Maternity', 'Personal Care'] as const
+
+export default async function ShopPage({ searchParams }: { searchParams: Promise<{ q?: string; category?: string; categoryType?: string }> }) {
     const params = await searchParams;
     const query = params.q;
     const category = params.category;
 
-    const prisma = getPrisma()
-
-    const allCategories = await prisma.product.findMany({
-        select: { category: true },
-        distinct: ['category'],
-    })
-    const categories = allCategories.map(c => c.category)
-
-    let products: any[] = []
-    const where: any = {}
-    if (query) {
-        where.OR = [
-            { name: { contains: query, mode: 'insensitive' } },
-            { description: { contains: query, mode: 'insensitive' } },
-            { category: { contains: query, mode: 'insensitive' } },
-        ]
-    }
-    if (category) {
-        where.category = category
-    }
-
-    products = await prisma.product.findMany({
-        where,
-        orderBy: { createdAt: 'desc' },
-    })
+    const categories = getCategories()
+    let products = query ? searchProducts(query) : getProductsByCategory(category)
 
     return (
         <div className="container" style={{ padding: '2rem 0' }}>
@@ -57,9 +38,35 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
                 <div className="shop-main">
                     <div style={{ marginBottom: '1.5rem' }}>
                         <h1 style={{ fontSize: '1.5rem', fontWeight: '700' }}>
-                            {query ? `Search: "${query}"` : category ? category : 'Shop All Products'}
+                            {query ? `Search: "${query}"` : categoryType ? categoryType : category ? category : 'Shop All Products'}
                         </h1>
                         <p style={{ fontSize: '0.85rem', color: '#666' }}>{products.length} product{products.length !== 1 ? 's' : ''} found</p>
+                    </div>
+
+                    {/* Category Type Filters */}
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+                        {CATEGORY_TYPES.map((type) => {
+                            const isActive = categoryType?.toLowerCase() === type.toLowerCase()
+                            return (
+                                <Link
+                                    key={type}
+                                    href={isActive ? '/shop' : `/shop?categoryType=${type.toLowerCase()}`}
+                                    style={{
+                                        padding: '0.4rem 0.75rem',
+                                        borderRadius: '20px',
+                                        fontSize: '0.8rem',
+                                        fontWeight: isActive ? '700' : '500',
+                                        background: isActive ? '#2e7d32' : '#f5f5f5',
+                                        color: isActive ? 'white' : '#333',
+                                        textDecoration: 'none',
+                                        border: isActive ? 'none' : '1px solid #ddd',
+                                        transition: 'all 0.2s',
+                                    }}
+                                >
+                                    {type}
+                                </Link>
+                            )
+                        })}
                     </div>
 
                     {products.length > 0 ? (

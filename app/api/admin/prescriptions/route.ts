@@ -11,13 +11,17 @@ export async function GET() {
     }
 
     const prisma = getPrisma()
-    const orders = await prisma.order.findMany({
+    const prescriptions = await prisma.prescription.findMany({
       orderBy: { createdAt: 'desc' },
-      include: { user: true, items: true, prescription: true }
+      include: {
+        order: {
+          select: { id: true, customerName: true, total: true, status: true, createdAt: true }
+        }
+      }
     })
 
-    return NextResponse.json({ orders })
+    return NextResponse.json({ prescriptions })
   } catch {
-    return NextResponse.json({ error: 'Failed to fetch orders' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to fetch prescriptions' }, { status: 500 })
   }
 }

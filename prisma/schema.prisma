@@ -44,7 +44,7 @@ model Order {
   id              String        @id @default(cuid())
   customerName    String
   customerEmail   String?
-  customerPhone    String
+  customerPhone   String
   city            String
   address         String
   location        String?

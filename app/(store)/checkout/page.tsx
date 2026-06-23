@@ -1,7 +1,7 @@
 'use client';
 
 import { useCart } from '@/lib/CartContext';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { createOrder } from '@/lib/actions';
 
@@ -11,6 +11,10 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [prescriptionNotes, setPrescriptionNotes] = useState('');
+
+  const hasPrescriptionItems = cart.some(item => item.prescriptionRequired === true);
+  const prescriptionItems = cart.filter(item => item.prescriptionRequired === true);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -70,9 +74,28 @@ export default function CheckoutPage() {
     formData.append('total', String(grandTotal));
     formData.append('items', JSON.stringify(cart));
 
+    const fileInput = document.getElementById('prescription-file') as HTMLInputElement;
+    const file = fileInput?.files?.[0];
+    if (hasPrescriptionItems) {
+      if (file) formData.append('prescription', file);
+      formData.append('prescriptionNotes', prescriptionNotes || '');
+    }
+
     const orderResult = await createOrder(formData);
 
     if (orderResult.success) {
+      if (hasPrescriptionItems && file) {
+        try {
+          const presFormData = new FormData();
+          presFormData.append('file', file);
+          presFormData.append('orderId', orderResult.orderId);
+          presFormData.append('notes', prescriptionNotes || '');
+          await fetch('/api/prescriptions/upload', { method: 'POST', body: presFormData });
+        } catch (err: any) {
+          console.error('Prescription upload failed:', err);
+        }
+      }
+
       clearCart();
       if (method === 'PAYSTACK') {
         try {
@@ -139,42 +162,80 @@ export default function CheckoutPage() {
       )}
 
       <div className="checkout-grid">
-        <div className="section-card" style={{ padding: '1.5rem' }}>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '1rem' }}>Delivery Information</h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div className="section-card" style={{ padding: '1.5rem' }}>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '1rem' }}>Delivery Information</h2>
 
-          <form id="checkout-form" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Full Name *</label>
-              <input type="text" name="fullName" required placeholder="Your full name" style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <form id="checkout-form" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Phone *</label>
-                <input type="tel" name="phone" required placeholder="0712 345 678" style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Full Name *</label>
+                <input type="text" name="fullName" required placeholder="Your full name" style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Phone *</label>
+                  <input type="tel" name="phone" required placeholder="0712 345 678" style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Email</label>
+                  <input type="email" name="email" placeholder="your@email.com" style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
+                </div>
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Email</label>
-                <input type="email" name="email" placeholder="your@email.com" style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>City *</label>
+                <input type="text" name="city" required placeholder="e.g. Nairobi" style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Area / Building</label>
+                <input type="text" name="location" placeholder="e.g. Westlands, Kilimani, Ridgeways" style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Street Address *</label>
+                <textarea name="address" required rows={3} placeholder="Building name, house number, street, landmark..." style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
+              </div>
+
+              <button type="button" onClick={(e) => handleSubmit(e, 'CASH_ON_DELIVERY')} disabled={loading} className="btn-primary" style={{ width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: '700', opacity: loading ? 0.7 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}>
+                {loading ? 'Processing...' : `ORDER - CASH ON DELIVERY KSh ${grandTotal.toLocaleString()}`}
+              </button>
+
+            </form>
+          </div>
+
+          {hasPrescriptionItems && (
+            <div className="section-card" style={{ padding: '1.5rem' }}>
+              <h2 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '1rem' }}>Prescription Upload</h2>
+
+              <div style={{ background: '#fff3e0', border: '1px solid #ffb74d', borderRadius: '8px', padding: '0.75rem 1rem', marginBottom: '1rem', fontSize: '0.85rem', color: '#e65100' }}>
+                <strong>⚠️ Some items in your order require a prescription</strong>
+                <ul style={{ margin: '0.5rem 0 0 0', paddingLeft: '1.25rem', fontSize: '0.8rem' }}>
+                  {prescriptionItems.map(item => (
+                    <li key={item.id}>{item.name} × {item.quantity}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Upload Prescription *</label>
+                <input
+                  id="prescription-file"
+                  type="file"
+                  accept="image/*,application/pdf"
+                  style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px', background: '#fff', fontSize: '0.85rem' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Additional Notes</label>
+                <textarea
+                  value={prescriptionNotes}
+                  onChange={(e) => setPrescriptionNotes(e.target.value)}
+                  rows={3}
+                  placeholder="Any additional information for the pharmacist..."
+                  style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }}
+                />
               </div>
             </div>
-            <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>City *</label>
-              <input type="text" name="city" required placeholder="e.g. Nairobi" style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
-            </div>
-            <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Area / Building</label>
-              <input type="text" name="location" placeholder="e.g. Westlands, Kilimani, Ridgeways" style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
-            </div>
-            <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.3rem' }}>Street Address *</label>
-              <textarea name="address" required rows={3} placeholder="Building name, house number, street, landmark..." style={{ width: '100%', padding: '0.7rem', border: '1px solid #ddd', borderRadius: '4px' }} />
-            </div>
-
-            <button type="button" onClick={(e) => handleSubmit(e, 'CASH_ON_DELIVERY')} disabled={loading} className="btn-primary" style={{ width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: '700', opacity: loading ? 0.7 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}>
-              {loading ? 'Processing...' : `ORDER - CASH ON DELIVERY KSh ${grandTotal.toLocaleString()}`}
-            </button>
-
-          </form>
+          )}
         </div>
 
         <div className="section-card" style={{ padding: '1.5rem', position: 'sticky', top: '2rem' }}>
@@ -187,6 +248,9 @@ export default function CheckoutPage() {
               <div style={{ flex: 1 }}>
                 <p style={{ fontSize: '0.85rem', fontWeight: '500' }}>{item.name}</p>
                 <p style={{ fontSize: '0.75rem', color: '#666' }}>Qty: {item.quantity}</p>
+                {item.prescriptionRequired === true && (
+                  <span style={{ display: 'inline-block', marginTop: '0.25rem', background: '#e53935', color: 'white', padding: '0.1rem 0.4rem', borderRadius: '4px', fontSize: '0.65rem', fontWeight: '600' }}>📋 Prescription Required</span>
+                )}
               </div>
               <p style={{ fontSize: '0.9rem', fontWeight: '700' }}>KSh {(item.price * item.quantity).toLocaleString()}</p>
             </div>

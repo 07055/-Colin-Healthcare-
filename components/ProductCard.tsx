@@ -11,6 +11,7 @@ interface Product {
     price: number;
     category: string;
     images: string | string[];
+    prescriptionRequired?: boolean;
 }
 
 function getFirstImage(images: string | string[]): string {
@@ -25,7 +26,6 @@ function getFirstImage(images: string | string[]): string {
 
 export default function ProductCard({ product }: { product: Product }) {
     const { addToCart } = useCart();
-    const oldPrice = product.price * 1.25;
     const firstImage = getFirstImage(product.images || '');
 
     return (
@@ -36,17 +36,13 @@ export default function ProductCard({ product }: { product: Product }) {
                     alt={product.name}
                     className={styles.image}
                 />
-                <div className={styles.discountBadge}>-25%</div>
+                {product.prescriptionRequired && <div className={styles.rxBadge}>Rx</div>}
             </Link>
 
             <div className={styles.details}>
                 <div className={styles.name}>{product.name}</div>
                 <div className={styles.priceContainer}>
                     <span className={styles.priceNew}>KSh {product.price.toLocaleString()}</span>
-                    <span className={styles.priceOld}>KSh {oldPrice.toLocaleString()}</span>
-                </div>
-                <div className={styles.rating}>
-                    ★★★★★ <span style={{ fontSize: '0.7rem', color: '#757575' }}>(12)</span>
                 </div>
             </div>
 
