@@ -17,7 +17,7 @@ export default async function DashboardPage() {
     where: { id: userId },
     include: {
       orders: {
-        include: { items: true, prescription: true },
+        include: { items: true },
         orderBy: { createdAt: 'desc' }
       }
     }
@@ -78,17 +78,7 @@ export default async function DashboardPage() {
                       }}>
                         {order.status === 'PRESCRIPTION_REVIEW' ? 'Prescription Review' : order.status}
                       </span>
-                      {order.prescription && (
-                        <span style={{
-                          padding: '0.2rem 0.5rem',
-                          borderRadius: '4px',
-                          fontSize: '0.75rem',
-                          background: order.prescription.status === 'APPROVED' ? '#e8f5e9' : order.prescription.status === 'REJECTED' ? '#ffebee' : '#fff3e0',
-                          color: order.prescription.status === 'APPROVED' ? '#2e7d32' : order.prescription.status === 'REJECTED' ? '#c62828' : '#e65100',
-                        }}>
-                          Rx {order.prescription.status}
-                        </span>
-                      )}
+
                     </div>
                   </div>
                   <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '0.5rem' }}>
