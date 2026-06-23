@@ -22,6 +22,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
     const params = await searchParams;
     const query = params.q;
     const category = params.category;
+    const categoryType = params.categoryType;
 
     const categories = getCategories()
     let products = query ? searchProducts(query) : getProductsByCategory(category)
