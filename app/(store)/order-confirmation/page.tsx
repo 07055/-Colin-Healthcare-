@@ -71,7 +71,7 @@ export default async function OrderConfirmationPage({ searchParams }: { searchPa
 
   if (!order) notFound()
 
-  const needsRx = order.status === 'PRESCRIPTION_REVIEW' || order.prescription
+  const needsRx = order.status === 'PRESCRIPTION_REVIEW'
 
   return (
     <div className="container" style={{ padding: '4rem 1rem', textAlign: 'center' }}>
