@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CH | Colin Healthcare</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #f5f7fa; color: #1a1a2e; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* Header */
+    .header { background: #1b5e20; color: #fff; padding: 1rem 0; position: sticky; top: 0; z-index: 10; }
+    .header .container { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .logo { font-size: 1.6rem; font-weight: 800; letter-spacing: -1px; color: #fff; text-decoration: none; }
+    .search-bar { flex: 1; max-width: 500px; display: flex; }
+    .search-bar input { flex: 1; padding: 0.6rem 1rem; border: none; border-radius: 8px 0 0 8px; font-size: 0.9rem; outline: none; }
+    .search-bar button { padding: 0.6rem 1rem; background: #2e7d32; border: none; border-radius: 0 8px 8px 0; color: #fff; cursor: pointer; font-size: 0.9rem; }
+    .header-actions { display: flex; gap: 1rem; align-items: center; }
+    .header-actions a { color: #fff; text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.3rem; }
+    .cart-badge { background: #ff6f00; color: #fff; border-radius: 50%; padding: 0.1rem 0.4rem; font-size: 0.7rem; font-weight: 700; }
+
+    /* Hero */
+    .hero { background: linear-gradient(135deg, #1b5e20, #2e7d32); color: #fff; text-align: center; padding: 4rem 1rem; }
+    .hero h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.75rem; }
+    .hero p { font-size: 1.05rem; max-width: 500px; margin: 0 auto 2rem; opacity: 0.9; line-height: 1.6; }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn { padding: 0.75rem 2rem; border-radius: 8px; font-weight: 700; font-size: 1rem; text-decoration: none; display: inline-block; }
+    .btn-white { background: #fff; color: #1b5e20; }
+    .btn-outline { border: 2px solid #fff; color: #fff; }
+
+    /* Categories */
+    .categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 2rem 0; }
+    .cat-card { background: #2e7d32; color: #fff; border-radius: 12px; padding: 1.5rem 1rem; text-align: center; text-decoration: none; transition: transform 0.2s; }
+    .cat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(46,125,50,0.3); }
+    .cat-card .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .cat-card .label { font-weight: 700; font-size: 0.9rem; }
+
+    /* Section */
+    .section { margin-bottom: 2.5rem; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .section-header h2 { font-size: 1.3rem; font-weight: 700; }
+    .section-header a { color: #2e7d32; font-size: 0.9rem; font-weight: 600; text-decoration: none; }
+
+    /* Product Grid */
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+    .product-card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: transform 0.2s; }
+    .product-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+    .product-card img { width: 100%; height: 200px; object-fit: cover; display: block; }
+    .product-info { padding: 0.75rem; }
+    .product-info .name { font-weight: 600; font-size: 0.85rem; margin-bottom: 0.4rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .product-info .price { font-weight: 700; font-size: 1.1rem; color: #1b5e20; }
+    .product-info .category { font-size: 0.75rem; color: #888; margin-bottom: 0.3rem; }
+
+    /* How it works */
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+    .step { text-align: center; padding: 1.5rem 1rem; background: #fff; border-radius: 12px; }
+    .step .icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .step .title { font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem; }
+    .step .subtitle { font-size: 0.85rem; color: #666; line-height: 1.4; }
+
+    /* Footer */
+    .footer { background: #1a1a2e; color: #ccc; padding: 3rem 0 1.5rem; margin-top: 3rem; }
+    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+    .footer h4 { color: #fff; font-size: 0.9rem; margin-bottom: 1rem; }
+    .footer ul { list-style: none; }
+    .footer ul li { margin-bottom: 0.5rem; }
+    .footer ul li a { color: #ccc; text-decoration: none; font-size: 0.85rem; }
+    .footer ul li a:hover { color: #fff; }
+    .footer .copyright { text-align: center; padding-top: 1.5rem; border-top: 1px solid #333; font-size: 0.8rem; }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.5rem; }
+      .search-bar { display: none; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 2rem; right: 2rem; background: #1b5e20; color: #fff; padding: 0.75rem 1.5rem; border-radius: 8px; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s; z-index: 100; }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <a href="/" class="logo">CH</a>
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search products..." onkeyup="filterProducts()">
+        <button onclick="filterProducts()">Search</button>
+      </div>
+      <div class="header-actions">
+        <a href="#" onclick="alert('Account page coming soon')">Account</a>
+        <a href="#" onclick="alert('Cart coming soon')">Cart <span class="cart-badge" id="cartCount">0</span></a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Your Trusted Online Pharmacy</h1>
+      <p>Quality medicines, wellness products & medical devices delivered to your doorstep.</p>
+      <div class="hero-btns">
+        <a href="#products" class="btn btn-white">Browse Products</a>
+        <a href="#" class="btn btn-outline" onclick="alert('Prescription upload coming soon')">Upload Prescription</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="categories">
+      <a class="cat-card" href="#"><div class="icon">💊</div><div class="label">OTC Medicines</div></a>
+      <a class="cat-card" href="#"><div class="icon">🌿</div><div class="label">Wellness</div></a>
+      <a class="cat-card" href="#"><div class="icon">🩺</div><div class="label">Medical Devices</div></a>
+      <a class="cat-card" href="#"><div class="icon">📋</div><div class="label">Prescription</div></a>
+    </div>
+
+    <div id="products">
+      <div class="section">
+        <div class="section-header">
+          <h2>⭐ Featured Products</h2>
+        </div>
+        <div class="product-grid" id="featuredGrid"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h2>🔥 All Products</h2>
+          <div>
+            <select id="categoryFilter" onchange="filterProducts()" style="padding:0.4rem 0.75rem;border-radius:8px;border:1px solid #ddd;font-size:0.85rem;">
+              <option value="">All Categories</option>
+            </select>
+          </div>
+        </div>
+        <div class="product-grid" id="productGrid"></div>
+      </div>
+    </div>
+
+    <h2 style="font-size:1.3rem;font-weight:700;text-align:center;margin-bottom:2rem;">How It Works</h2>
+    <div class="steps">
+      <div class="step"><div class="icon">📱</div><div class="title">Step 1: Browse & Order</div><div class="subtitle">Search medicines or upload your prescription</div></div>
+      <div class="step"><div class="icon">👨‍⚕️</div><div class="title">Step 2: Pharmacist Review</div><div class="subtitle">Our pharmacists verify your order</div></div>
+      <div class="step"><div class="icon">🚚</div><div class="title">Step 3: Fast Delivery</div><div class="subtitle">Delivered to your doorstep within 24-48hrs</div></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4>CH</h4>
+          <p style="font-size:0.85rem;line-height:1.5;">Colin Healthcare - Your trusted partner for quality medicines and health products.</p>
+          <p style="margin-top:0.75rem;font-size:0.85rem;">📱 Paybill: <strong style="color:#fff;">303030</strong><br>📋 Account: <strong style="color:#fff;">2052132897</strong></p>
+          <p style="margin-top:0.5rem;"><a href="https://wa.me/254700000000" style="color:#25D366;text-decoration:none;font-size:0.85rem;">💬 WhatsApp: 0700 000 000</a></p>
+        </div>
+        <div>
+          <h4>NEED HELP?</h4>
+          <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="https://wa.me/254700000000">Contact Us</a></li>
+            <li><a href="#">Delivery options</a></li>
+            <li><a href="#">Return Policy</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>MY ACCOUNT</h4>
+          <ul>
+            <li><a href="#">Sign In</a></li>
+            <li><a href="#">Create Account</a></li>
+            <li><a href="#">My Orders</a></li>
+            <li><a href="#">Track Order</a></li>
+            <li><a href="#">My Cart</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="copyright">© 2026 Colin Healthcare (CH). All Rights Reserved.</div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const products = [
+      {
+        "name": "Suma Grand 1 (Cleanser, Lotion, Toner)",
+        "slug": "suma-grand-1-cleanser-lotion-toner",
+        "description": "Complete anti-aging skincare set with cleanser, lotion, and toner.",
+        "price": 11500,
+        "category": "Better Life",
+        "images": "/uploads/bf%20suma%20photos/better%20life/beauty%20and%20anti%20aging%20technology/suma%20grand%201%20;Cleanser%20,lotion,toner%20-ksh%2011,500.jpg",
+        "featured": false
+      },
+      {
+        "name": "Suma Grand 2 (Cleanser, Lotion, Toner, Facemask Cream)",
+        "slug": "suma-grand-2-cleanser-lotion-toner-facemask-cream",
+        "description": "Complete anti-aging skincare set with cleanser, lotion, toner, and facemask cream.",
+        "price": 19550,
+        "category": "Better Life",
+        "images": "/uploads/bf%20suma%20photos/better%20life/beauty%20and%20anti%20aging%20technology/suma%20grand%202%20;Cleanser%20,lotion,toner,facemask%20cream-ksh%2019,550.jpg",
+        "featured": false
+      },
+      {
+        "name": "Youth Essence Lotion BF Suma",
+        "slug": "youth-essence-lotion-bf-suma",
+        "description": "Anti-aging youth essence lotion. Nourishes and rejuvenates the skin.",
+        "price": 3885,
+        "category": "Better Life",
+        "images": "/uploads/bf%20suma%20photos/better%20life/beauty%20and%20anti%20aging%20technology/youth%20essence%20lotion%20bf%20suma-ksh%203,885.jpg",
+        "featured": false
+      },
+      {
+        "name": "Youth Essence Toner",
+        "slug": "youth-essence-toner",
+        "description": "Refreshing anti-aging facial toner. Helps tighten pores and restore skin balance.",
+        "price": 4250,
+        "category": "Better Life",
+        "images": "/uploads/bf%20suma%20photos/better%20life/beauty%20and%20anti%20aging%20technology/youth%20essence%20toner-%20ksh%204,250.jpg",
+        "featured": false
+      },
+      {
+        "name": "Youth Refreshing Facial Cleanser",
+        "slug": "youth-refreshing-facial-cleanser",
+        "description": "Gentle anti-aging facial cleanser. Removes impurities while nourishing the skin.",
+        "price": 3450,
+        "category": "Better Life",
+        "images": "/uploads/bf%20suma%20photos/better%20life/beauty%20and%20anti%20aging%20technology/youth%20refreshing%20facial%20cleanser-ksh%203,450.jpg",
+        "featured": false
+      },
+      {
+        "name": "BF Suma Feminergy 60 Capsules",
+        "slug": "bf-suma-feminergy-60-capsules",
+        "description": "Women's health and wellness supplement. Supports hormonal balance and vitality.",
+        "price": 4650,
+        "category": "Better Life",
+        "images": "/uploads/bf%20suma%20photos/better%20life/women's%20Beauty/Bf%20Suma%20Feminergy%2060%20Capsules%20-%20ksh%204,650.webp",
+        "featured": false
+      },
+      {
+        "name": "BF Suma Prostatrelax Capsules 60's",
+        "slug": "bf-suma-prostatrelax-capsules-60-s",
+        "description": "Prostate health support supplement. Promotes healthy urinary function.",
+        "price": 3750,
+        "category": "Better Life",
+        "images": "/uploads/bf%20suma%20photos/better%20life/women's%20Beauty/Bf%20suma%20prostatrelax%20capsules%2060's-%20ksh%203,750.jpg",
+        "featured": false
+      },
+      {
+        "name": "BF Suma X Power Man Capsules 30 Capsules",
+        "slug": "bf-suma-x-power-man-capsules-30-capsules",
+        "description": "Men's vitality and energy booster. Supports stamina and overall performance.",
+        "price": 6530,
+        "category": "Better Life",
+        "images": "/uploads/bf%20suma%20photos/better%20life/women's%20Beauty/BF%20SUMA%20X%20Power%20Man%20Capsules%2030%20capsules%20-ksh%206530.jpg",
+        "featured": false
+      },
+      {
+        "name": "Xpower Coffee for Men 8 Sachets",
+        "slug": "xpower-coffee-for-men-8-sachets",
+        "description": "Energizing coffee blend for men. Boosts vitality and stamina.",
+        "price": 2350,
+        "category": "Better Life",
+        "images": "/uploads/bf%20suma%20photos/better%20life/women's%20Beauty/xpower%20coffee%20for%20men%208%20sachets-ksh%202,350.jpg",
+        "featured": false
+      },
+      {
+        "name": "Youth Essence Facial Cream",
+        "slug": "youth-essence-facial-cream",
+        "description": "Nourishing anti-aging facial cream. Hydrates and rejuvenates for a youthful glow.",
+        "price": 0,
+        "category": "Facial",
+        "images": "/uploads/bf%20suma%20photos/Facial/youth%20essence%20facial%20cream.jpg",
+        "featured": false
+      },
+      {
+        "name": "Youth Essence Face Mask",
+        "slug": "youth-essence-face-mask",
+        "description": "Rejuvenating anti-aging face mask. Deeply nourishes and revitalizes the skin.",
+        "price": 0,
+        "category": "Facial",
+        "images": "/uploads/bf%20suma%20photos/Facial/youth%20essence%20mask.jpg",
+        "featured": false
+      },
+      {
+        "name": "4-in-1 Ginseng Coffee 20 Sachets",
+        "slug": "4-in-1-ginseng-coffee-20-sachets",
+        "description": "Premium ginseng-infused coffee for energy and wellness.",
+        "price": 2150,
+        "category": "Immunity Builders",
+        "images": "/uploads/bf%20suma%20photos/immunity%20builders/4%20in%201%20ginseng%20Coffee%20,20%20sachetes%20,-ksh%202,150,ksh%20110@sachete%20.webp",
+        "featured": false
+      },
+      {
+        "name": "4-in-1 Reishi Coffee 20 Sachets",
+        "slug": "4-in-1-reishi-coffee-20-sachets",
+        "description": "Premium reishi mushroom-infused coffee for immunity support.",
+        "price": 2050,
+        "category": "Immunity Builders",
+        "images": "/uploads/bf%20suma%20photos/immunity%20builders/4%20in%201%20Reishi%20Coffee%20,20%20sachetes%20,-ksh%202,050,ksh%20105@sachete%20.webp",
+        "featured": false
+      },
+      {
+        "name": "4-in-1 Cordyceps Coffee 20 Sachets",
+        "slug": "4-in-1-cordyceps-coffee-20-sachets",
+        "description": "Premium cordyceps-infused coffee for energy and stamina.",
+        "price": 2250,
+        "category": "Immunity Builders",
+        "images": "/uploads/bf%20suma%20photos/immunity%20builders/4-in-1%20Cordyceps%20Coffee-20%20satchetes-ksh%202250,115%20@%20sachete.jpg",
+        "featured": false
+      },
+      {
+        "name": "Pure & Broken Ganoderma Oil 60 Capsules Deluxe",
+        "slug": "pure-broken-ganoderma-oil-60-capsules-deluxe",
+        "description": "Premium ganoderma oil supplement for immune support.",
+        "price": 19865,
+        "category": "Immunity Builders",
+        "images": "/uploads/bf%20suma%20photos/immunity%20builders/Pure%20&%20Broken%20Ganoderma%20oil%2060%20capsule%20Deluxe%20-ksh%2019,865.jpg",
+        "featured": false
+      },
+      {
+        "name": "Pure & Broken Ganoderma Spore Capsules",
+        "slug": "pure-broken-ganoderma-spore-capsules",
+        "description": "High-potency ganoderma spore supplement for immune system support.",
+        "price": 17100,
+        "category": "Immunity Builders",
+        "images": "/uploads/bf%20suma%20photos/immunity%20builders/Pure%20&%20Broken%20Ganoderma%20spore%20Goapsvies%20-ksh%2017,100.jpg",
+        "featured": false
+      },
+      {
+        "name": "Quad Reishi Capsules 60 Capsules",
+        "slug": "quad-reishi-capsules-60-capsules",
+        "description": "Premium reishi mushroom supplement for immunity and wellness.",
+        "price": 5000,
+        "category": "Immunity Builders",
+        "images": "/uploads/bf%20suma%20photos/immunity%20builders/Quad%20Reishi%20Capsules%20-%2060%20capsules%20-%20ksh%205,000.jpg",
+        "featured": false
+      },
+      {
+        "name": "Refined Yunzhi Essence 60 Capsules",
+        "slug": "refined-yunzhi-essence-60-capsules",
+        "description": "Premium Yunzhi (turkey tail mushroom) essence supplement. Supports immune health.",
+        "price": 74500,
+        "category": "Immunity Builders",
+        "images": "/uploads/bf%20suma%20photos/immunity%20builders/Refined%20Yunzhi%20Essence%20-%2060%20capsules%20-ksh%2074,500.jpg",
+        "featured": true
+      },
+      {
+        "name": "NMN Coffee 20 Sachets",
+        "slug": "nmn-coffee-20-sachets",
+        "description": "Premium NMN-infused coffee for anti-aging and cellular energy.",
+        "price": 3885,
+        "category": "Premium Selected",
+        "images": "/uploads/bf%20suma%20photos/Premium%20Selected/NMN%20Coffee%20-%2020%20sachets%20-ksh%203,885.jpg",
+        "featured": false
+      },
+      {
+        "name": "NMN Duo Release 30 Tablets",
+        "slug": "nmn-duo-release-30-tablets",
+        "description": "Advanced NMN supplement with dual-release technology for sustained anti-aging benefits.",
+        "price": 23130,
+        "category": "Premium Selected",
+        "images": "/uploads/bf%20suma%20photos/Premium%20Selected/NMN%20Duo%20release%20-30%20tablets-ksh%2023,%20130.jpg",
+        "featured": false
+      },
+      {
+        "name": "NMN Share Mind 60 Capsules",
+        "slug": "nmn-share-mind-60-capsules",
+        "description": "NMN brain health supplement for cognitive function and mental clarity.",
+        "price": 24830,
+        "category": "Premium Selected",
+        "images": "/uploads/bf%20suma%20photos/Premium%20Selected/nmn%20share%20mind%20mind%20-%2060%20capsules%20-ksh%2024,830.jpg",
+        "featured": false
+      },
+      {
+        "name": "Youth Ever Anti-Aging Supplement",
+        "slug": "youth-ever-anti-aging-supplement",
+        "description": "Premium anti-aging supplement for youthful vitality and longevity.",
+        "price": 15370,
+        "category": "Premium Selected",
+        "images": "/uploads/bf%20suma%20photos/Premium%20Selected/Youth%20Ever-ksh%2015,370.jpg",
+        "featured": true
+      },
+      {
+        "name": "Arthroxtra BF Suma 60 Tablets",
+        "slug": "arthroxtra-bf-suma-60-tablets",
+        "description": "Joint health and mobility supplement. Supports cartilage and reduces joint discomfort.",
+        "price": 6250,
+        "category": "Sport Fit",
+        "images": "/uploads/bf%20suma%20photos/sport%20fit/bone%20&%20Joint%20Care/arthroxtra%20bf%20suma%2060%20tablets-ksh%206,250.jpg",
+        "featured": false
+      },
+      {
+        "name": "Gluzojoint Ultra Pro 4-in-1 60 Tablets",
+        "slug": "gluzojoint-ultra-pro-4-in-1-60-tablets",
+        "description": "Advanced joint care formula with 4-in-1 action. Supports bone and joint health.",
+        "price": 6350,
+        "category": "Sport Fit",
+        "images": "/uploads/bf%20suma%20photos/sport%20fit/bone%20&%20Joint%20Care/gluzojoint%20ultra%20pro%204%20in%201%20-60%20tablets%20-%20kshs%206,350.jpg",
+        "featured": false
+      },
+      {
+        "name": "Gluzojoint-F 60 Capsules",
+        "slug": "gluzojoint-f-60-capsules",
+        "description": "Joint care supplement for flexibility and mobility.",
+        "price": 4350,
+        "category": "Sport Fit",
+        "images": "/uploads/bf%20suma%20photos/sport%20fit/bone%20&%20Joint%20Care/gluzojoint-f-60%20capsules%20-%20lsh%204,350.jpg",
+        "featured": false
+      },
+      {
+        "name": "ZaminoCal Plus Capsules 60 Capsules",
+        "slug": "zaminocal-plus-capsules-60-capsules",
+        "description": "Calcium and mineral supplement for bone health.",
+        "price": 3570,
+        "category": "Sport Fit",
+        "images": "/uploads/bf%20suma%20photos/sport%20fit/bone%20&%20Joint%20Care/ZaminoCal™%20Plus%20Capsules%2060%20capsules%20-%20ksh%203,570.jpg",
+        "featured": false
+      },
+      {
+        "name": "BF Suma Relivin Tea 20 Sachets",
+        "slug": "bf-suma-relivin-tea-20-sachets",
+        "description": "Revitalizing herbal tea for cardiovascular health and energy.",
+        "price": 2800,
+        "category": "Sport Fit",
+        "images": "/uploads/bf%20suma%20photos/sport%20fit/cardio%20vascular%20health/Heart%20&%20Blood%20Fit/BF%20SUMA%20RELIVIN%20TEA%2020%20SACHETS-%20ksh%202,800.jpg",
+        "featured": false
+      },
+      {
+        "name": "Cerebrain Tablets 60 Tablets",
+        "slug": "cerebrain-tablets-60-tablets",
+        "description": "Brain health supplement for cognitive function, memory, and mental clarity.",
+        "price": 3885,
+        "category": "Sport Fit",
+        "images": "/uploads/bf%20suma%20photos/sport%20fit/cardio%20vascular%20health/Heart%20&%20Blood%20Fit/Cerebrain%20Tablets-60%20Tablets-%20ksh%203,885.jpg",
+        "featured": false
+      },
+      {
+        "name": "Micro2 Cycle Tablets 100 Tablets",
+        "slug": "micro2-cycle-tablets-100-tablets",
+        "description": "Circulation and cardiovascular health supplement.",
+        "price": 3450,
+        "category": "Sport Fit",
+        "images": "/uploads/bf%20suma%20photos/sport%20fit/cardio%20vascular%20health/Heart%20&%20Blood%20Fit/Micro2TM%20Cycle%20Tablets%20100%20Tablets%20-%20ksh%203,450.jpg",
+        "featured": false
+      },
+      {
+        "name": "BF GymEffect Capsules 60 Capsules",
+        "slug": "bf-gymeffect-capsules-60-capsules",
+        "description": "Pre-workout and fitness supplement for energy, focus, and performance.",
+        "price": 3200,
+        "category": "Sport Fit",
+        "images": "/uploads/bf%20suma%20photos/sport%20fit/cardio%20vascular%20health/Power%20Your%20Brain/BF%20GymEffect%20Capsules-60%20capsules%20-ksh%203,200%201%20capsule-ksh%2050.jpg",
+        "featured": false
+      },
+      {
+        "name": "Detoxilive Capsules 60 Capsules",
+        "slug": "detoxilive-capsules-60-capsules",
+        "description": "Liver detox and cleansing supplement.",
+        "price": 2350,
+        "category": "Sport Fit",
+        "images": "/uploads/bf%20suma%20photos/sport%20fit/cardio%20vascular%20health/Power%20Your%20Brain/Detoxilive%20Capsules-60%20capsules-ksh%202,350.jpg",
+        "featured": false
+      },
+      {
+        "name": "BF Suma Calcium & Vitamin D3 Strawberry Flavour",
+        "slug": "bf-suma-calcium-vitamin-d3-strawberry",
+        "description": "Children's calcium and vitamin D3 supplement in delicious strawberry flavour.",
+        "price": 3750,
+        "category": "Suma Baby",
+        "images": "/uploads/bf%20suma%20photos/Suma%20Baby/bf%20suma%20calcium%20and%20vitamin%20d3%20strawberry%20flavour%20-ksh%203,750.jpg",
+        "featured": false
+      },
+      {
+        "name": "BF Suma Vitamin C 100mg Chewable Tablet",
+        "slug": "bf-suma-vitamin-c-100mg-chewable-tablet",
+        "description": "Children's vitamin C supplement in chewable tablet form.",
+        "price": 3150,
+        "category": "Suma Baby",
+        "images": "/uploads/bf%20suma%20photos/Suma%20Baby/bf%20suma%20essence%20vitamin%20c%20100mg%20chewable%20tablet%20ksh%203,150.jpg",
+        "featured": false
+      },
+      {
+        "name": "Sharp Vision Eye Health Chewable Tablets 90 Tablets",
+        "slug": "sharp-vision-eye-health-chewable-tablets-90",
+        "description": "Eye health supplement for children. Supports healthy vision.",
+        "price": 3750,
+        "category": "Suma Baby",
+        "images": "/uploads/bf%20suma%20photos/Suma%20Baby/sharp%20vision-eye%20health%20chewable%20Tablet(90%20tablets)%20-%20ksh%203,750.jpg",
+        "featured": false
+      },
+      {
+        "name": "BF Suma ConstiRelax Oral Solution",
+        "slug": "bf-suma-constirelax-oral-solution",
+        "description": "Digestive health oral solution for relief from constipation.",
+        "price": 4500,
+        "category": "Suma Digsetive Health",
+        "images": "/uploads/bf%20suma%20photos/Suma%20Digsetive%20health/BF%20SUMA%20ConstiRelax%20Oral%20Solution%20-ksh%204,500.png",
+        "featured": false
+      },
+      {
+        "name": "BF Suma Ez Xlim Tablets 90 Tablets",
+        "slug": "bf-suma-ez-xlim-tablets-90-tablets",
+        "description": "Weight management supplement. Supports healthy metabolism and appetite control.",
+        "price": 8075,
+        "category": "Suma Digsetive Health",
+        "images": "/uploads/bf%20suma%20photos/Suma%20Digsetive%20health/bf%20suma%20ez%20xlim%20tablets%2090%20tablets%20-%20ksh%208,075.jpg",
+        "featured": false
+      },
+      {
+        "name": "Novel Depile Capsules BF Suma 60 Tablets",
+        "slug": "novel-depile-capsules-bf-suma-60-tablets",
+        "description": "Digestive health supplement for gut wellness and regularity.",
+        "price": 3450,
+        "category": "Suma Digsetive Health",
+        "images": "/uploads/bf%20suma%20photos/Suma%20Digsetive%20health/novel%20depile%20capsules%20bf%20suma%2060%20tablets-%20ksh%203,450.jpg",
+        "featured": false
+      },
+      {
+        "name": "Probio3 BF Suma",
+        "slug": "probio3-bf-suma",
+        "description": "Probiotic supplement for digestive health and gut flora balance.",
+        "price": 3000,
+        "category": "Suma Digsetive Health",
+        "images": "/uploads/bf%20suma%20photos/Suma%20Digsetive%20health/probio3%20bf%20suma%20-ksh%203,000ksh.jpg",
+        "featured": false
+      },
+      {
+        "name": "Veggie Veggie BF Suma 15 Sachets",
+        "slug": "veggie-veggie-bf-suma-15-sachets",
+        "description": "Fruit and vegetable extract supplement for daily nutrition.",
+        "price": 4650,
+        "category": "Suma Digsetive Health",
+        "images": "/uploads/bf%20suma%20photos/Suma%20Digsetive%20health/veggie%20veggie%20bf%20suma%2015%20sachets%20-%20ksh%204,650.jpg",
+        "featured": false
+      },
+      {
+        "name": "BF Suma Anatic Herbal Essence Soap",
+        "slug": "bf-suma-anatic-herbal-essence-soap",
+        "description": "Natural herbal soap for gentle cleansing and skin care.",
+        "price": 345,
+        "category": "Suma Self Care",
+        "images": "/uploads/bf%20suma%20photos/Suma%20Self%20Care/BF%20SUMA%20Anatic%20Herbal%20Essence%20Soap%20ksh%20345.jpg",
+        "featured": false
+      },
+      {
+        "name": "BF Suma CoolRoll Oil",
+        "slug": "bf-suma-coolroll-oil",
+        "description": "Cooling massage oil for muscle and joint relief.",
+        "price": 1870,
+        "category": "Suma Self Care",
+        "images": "/uploads/bf%20suma%20photos/Suma%20Self%20Care/BF%20Suma%20CoolRoll%20Oil%20ksh%201870.jpg",
+        "featured": false
+      },
+      {
+        "name": "BF Suma Femicare Feminine Cleanser",
+        "slug": "bf-suma-femicare-feminine-cleanser",
+        "description": "Gentle feminine hygiene cleanser. Maintains intimate health and freshness.",
+        "price": 1750,
+        "category": "Suma Self Care",
+        "images": "/uploads/bf%20suma%20photos/Suma%20Self%20Care/Bf%20suma%20femicare%20feminine%20cleanser%20ksh%201,750.jpg",
+        "featured": false
+      },
+      {
+        "name": "Dr. Ts Toothpaste",
+        "slug": "dr-ts-toothpaste",
+        "description": "Natural herbal toothpaste for oral care. Fights plaque and promotes healthy gums.",
+        "price": 855,
+        "category": "Suma Self Care",
+        "images": "/uploads/bf%20suma%20photos/Suma%20Self%20Care/Dr%20Ts%20Toothpaste%20-%20Ksh%20855.jpg",
+        "featured": false
+      }
+    ];
+
+    function renderProducts() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const category = document.getElementById('categoryFilter').value;
+
+      let filtered = products.filter(p => {
+        const matchSearch = !query || p.name.toLowerCase().includes(query) || p.description.toLowerCase().includes(query) || p.category.toLowerCase().includes(query);
+        const matchCat = !category || p.category === category;
+        return matchSearch && matchCat;
+      });
+
+      const featured = filtered.filter(p => p.featured);
+      const rest = filtered.filter(p => !p.featured);
+
+      document.getElementById('featuredGrid').innerHTML = featured.map(card).join('');
+      document.getElementById('productGrid').innerHTML = rest.map(card).join('');
+    }
+
+    function card(p) {
+      const img = p.images || '/placeholder.jpg';
+      return `<div class="product-card">
+        <img src="${img}" alt="${p.name}" loading="lazy" onerror="this.src='https://placehold.co/300x300/e8f5e9/2e7d32?text=CH'">
+        <div class="product-info">
+          <div class="category">${p.category}</div>
+          <div class="name">${p.name}</div>
+          <div class="price">KSh ${p.price.toLocaleString()}</div>
+        </div>
+      </div>`;
+    }
+
+    function filterProducts() { renderProducts(); }
+
+    // Init
+    const cats = [...new Set(products.map(p => p.category))];
+    const select = document.getElementById('categoryFilter');
+    cats.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; select.appendChild(o); });
+    renderProducts();
+  </script>
+</body>
+</html>
