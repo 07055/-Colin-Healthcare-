@@ -88,7 +88,7 @@ export default function CheckoutPage() {
         try {
           const presFormData = new FormData();
           presFormData.append('file', file);
-          presFormData.append('orderId', orderResult.orderId);
+          presFormData.append('orderId', orderResult.orderId!);
           presFormData.append('notes', prescriptionNotes || '');
           await fetch('/api/prescriptions/upload', { method: 'POST', body: presFormData });
         } catch (err: any) {
